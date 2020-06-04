@@ -1,0 +1,28 @@
+created: 20200522084930632
+modified: 20200522085015949
+tags: archlinux
+title: ArchLinux Systemunterhalt
+
+[[01.02.2017 - Arch My Way 1 - Grundsystem installierenArch My Way 5 - Sicherheit und Backups - Btrfs Read Only SnapshotsArch My Way 6 - Dateisysteme und Systemwartung - 24:06|https://youtu.be/WeppT9SDmOA?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH&t=1445]]
+
+! [[ArchLinux periodischer Unterhalt]]
+
+[[System maintenance - ArchWiki|https://wiki.archlinux.org/index.php/System_maintenance]]
+
+! Pakete
+
+[[ArchLinux Downgrade]]
+
+[[Arch User Repository (AUR)|AUR]]
+
+[[Arch Build System]]
+
+! Kernel
+
+[[01.02.2017 - Arch My Way 1 - Grundsystem installierenArch My Way 5 - Sicherheit und Backups - Btrfs Read Only SnapshotsArch My Way 6 - Dateisysteme und Systemwartung - 26:11|https://youtu.be/WeppT9SDmOA?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH&t=1571]]
+
+[[Kernel - ArchWiki|https://wiki.archlinux.org/index.php/Kernel]]
+
+[[Compile kernel module - ArchWiki|https://wiki.archlinux.org/index.php/Compile_kernel_module]]
+
+[[Kernel/Traditional compilation - ArchWiki|https://wiki.archlinux.org/index.php/Kernel/Traditional_compilation]]

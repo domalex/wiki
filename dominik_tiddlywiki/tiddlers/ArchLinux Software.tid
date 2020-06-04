@@ -1,0 +1,106 @@
+created: 20200522084847669
+modified: 20200522084910712
+tags: archlinux
+title: ArchLinux Software
+
+[[List of applications - ArchWiki|https://wiki.archlinux.org/index.php/List_of_applications]]
+
+[[AUR]]
+
+! Auto-Mounting
+
+[[29.01.2017 - Arch My Way 1 - Grundsystem installierenArch My Way 4 - Kernel Rollback und LTS Kernel (Deutsch) - 01:40|https://youtu.be/yRnbh5SbRf8?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH&t=100]]
+
+Gnome Virtual File System - Automatisches Mounten von USB-Geräten:
+
+```
+sudo pacman -Ss gvfs
+sudo pacman -S gvfs gvfs-mtp gvfs-nfs gvfs-smb ntfs-3g exfat-utils f2fs-tools ifuse mtpfs
+```
+
+Dateimanager-Einstellungen - Fortgeschritten - Datenträgerverwaltung aktivieren -> anklicken - Konfigurieren - Auswahl treffen
+
+! Reflector
+
+[[29.01.2017 - Arch My Way 1 - Grundsystem installierenArch My Way 4 - Kernel Rollback und LTS Kernel (Deutsch) - 06:10|https://youtu.be/yRnbh5SbRf8?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH&t=370]]
+
+```
+sudo pacman -S reflector
+```
+[[Thunar - ArchWiki|https://wiki.archlinux.org/index.php/Thunar]]
+
+[[Arch Linux - catfish 1.4.13-2 (any)|https://www.archlinux.org/packages/community/any/catfish/]]
+
+[[Arch Linux - mediainfo 19.09-1 (x86_64)|https://www.archlinux.org/packages/community/x86_64/mediainfo/]]
+
+[[Arch Linux - keepassxc 2.5.4-2 (x86_64)|https://www.archlinux.org/packages/community/x86_64/keepassxc/]]
+
+[[KeePass - ArchWiki|https://wiki.archlinux.org/index.php/KeePass]]
+
+! [[Command-line shell - ArchWiki|https://wiki.archlinux.org/index.php/Command-line_shell]]
+
+[[Bash - ArchWiki|https://wiki.archlinux.org/index.php/Bash]]
+
+[[apps:terminal:start [Xfce Docs]|https://docs.xfce.org/apps/terminal/start]]
+
+! Terminal Text Editor
+
+[[nano - ArchWiki|https://wiki.archlinux.org/index.php/Nano]]
+
+[[Vim]]
+
+!! [[Clipboard - ArchWiki|https://wiki.archlinux.org/index.php/Clipboard]]
+
+[[panel-plugins:xfce4-clipman-plugin - Xfce Docs|https://docs.xfce.org/panel-plugins/xfce4-clipman-plugin]]
+
+[[Bluetooth - ArchWiki|https://wiki.archlinux.org/index.php/Bluetooth]]
+
+[[Arch Linux - screenfetch 3.9.1-1 (any)|https://www.archlinux.org/packages/community/any/screenfetch/]]
+
+[[htop]]
+
+[[Syncthing - ArchWiki|https://wiki.archlinux.org/index.php/Syncthing]]
+
+[[Git - ArchWiki|https://wiki.archlinux.org/index.php/Git]]
+
+[[AUR (en) - freeplane|https://aur.archlinux.org/packages/freeplane/]]
+
+[[Arch Linux - gpodder 3.10.13-1 (any)|https://www.archlinux.org/packages/community/any/gpodder/]]
+
+[[gPodder: Media aggregator and podcast client|https://gpodder.github.io/]]
+
+[[VLC media player - ArchWiki|https://wiki.archlinux.org/index.php/VLC_media_player]]
+
+!! Screen Recorder
+
+[[AUR (en) - simplescreenrecorder-git|https://aur.archlinux.org/packages/simplescreenrecorder-git/]]
+
+!! Video Editor
+
+[[Shotcut]]
+
+!! Bildbearbeitung
+
+[[ImageMagick - Convert, Edit, or Compose Bitmap Images|https://imagemagick.org/index.php]]
+
+[[ImageMagick - ArchWiki|https://wiki.archlinux.org/index.php/ImageMagick]]
+
+! Textverarbeitung
+
+[[LibreOffice - ArchWiki|https://wiki.archlinux.org/index.php/LibreOffice]]
+
+[[Arch Linux - libreoffice-fresh 6.4.3-3 (x86_64)|https://www.archlinux.org/packages/extra/x86_64/libreoffice-fresh/]]
+
+[[CUPS]]
+
+! KVM
+
+[[libvirt - ArchWiki|https://wiki.archlinux.org/index.php/Libvirt]]
+
+[[QEMU - ArchWiki|https://wiki.archlinux.org/index.php/QEMU]]
+
+! Weitere Software
+
+[[sysDMS|http://pinnau.biz/dms.html]]
+
+[[Peter Pinnau - Software Entwickler Blog: System Concept DMS: Release 1.0.11|https://pinnau.blogspot.com/2016/07/system-concept-dms-release-1011.html]]

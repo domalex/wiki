@@ -1,0 +1,12 @@
+created: 20200522091128525
+modified: 20200522091415150
+tags: bash
+title: journalctl
+
+! journalctl live verfolgen
+
+`-f` für follow. Wird in einem zweiten Terminal ein anderer Befehl ausgeführt, kann dieser im ersten Terminal live mitverfolgt werden.
+
+```
+journalctl -f
+```

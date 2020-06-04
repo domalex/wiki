@@ -1,0 +1,37 @@
+created: 20200604062410833
+modified: 20200604142353973
+tags: mind
+title: BrainDumpSystem
+type: text/vnd.tiddlywiki
+
+Dieses Thema fasst die Anforderungen an ein System für BrainDump zusammen.
+
+! Verständlichkeit
+
+Aussgehend von BrainBasic legt unser Gedächtnis BrainOutput in kleinen Broken ([[Nodes|Node]]) assoziativ und vernetzt ab. Um für unseren Verstand leicht zugänglich und unterstützend zu wirken, sollte ein System dieses Verhalten emulieren.
+
+! Ökonomie
+
+Einfach und effizient! Dies ist Voraussetzung damit wir ein System aktiv verwenden. Der Aufwand muss für den Betreiber einen klaren Nutzen abwerfen.
+
+! Verfügbarkeit
+
+Gedanken sind flüchtig. Unser Kopf arbeitet unentwegt. Deswegen benötigen wir ein System, das jederzeit und überall zur Verfügung steht.
+
+! Wiederverwendbarkeit
+
+Damit Gedanken effizient gesponnen und verwoben werden können (siehe BrainWork), müssen die zugrunde liegenden Informationen in einheitlicher, möglichst purer Form vorliegen ([[Nodes|Node]]).
+
+Deren einfache Bearbeitung muss sichergestellt sein.
+
+Ein Mosaik von Informationsaufzeichnungen in unterschiedlicher Form und verschiedenen Gefässen ist höchst ineffizient. Es beeinträchtigt einerseits das Wiederfinden, andererseits die Weiterverarbeitung.
+
+! Zukunftssicherheit
+
+Wenn wir schon alle Eier ins gleiche Körbchen legen benötigen wir Gewähr, dass sich das System unseren Bedürfnissen anpassen lässt und in technischer Hinsicht die nächsten 25 Jahre überlebt.
+
+! Autonomie
+
+Abhängigkeiten jeglicher Art gilt es auf ein Minimum zu reduzieren. Der Wissensschatz ist zu wertvoll als diesen unkontrollierbarem Einfluss preiszugeben.
+
+[[BrainDumpSystemReferenz]]

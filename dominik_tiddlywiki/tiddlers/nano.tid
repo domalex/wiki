@@ -1,0 +1,8 @@
+created: 20200522091516418
+modified: 20200522091526362
+tags: 
+title: nano
+
+! Suchen
+
+Suchen im Editor nano: `ctrl`+`w`SUCHBEGRIFF `↵ Ente`r Weitersuchen mit gleichem Suchbegriff erneut: `alt`+`w` oder `F16`

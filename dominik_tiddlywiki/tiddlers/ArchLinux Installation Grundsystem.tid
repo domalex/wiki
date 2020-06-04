@@ -1,0 +1,397 @@
+created: 20200522084029687
+modified: 20200522090826186
+tags: archlinux
+title: ArchLinux Installation Grundsystem
+
+[[Arch My Way - YouTube|https://www.youtube.com/playlist?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH]]
+
+! Live-System booten
+
+USB-Live-System im UEFI-Mode booten. Im Bios unter Boot-Optionen kontrollieren, dass der UEFI-Eintrag gebootet wird. Vor dem Device-Namen muss UEFI stehen.
+
+Nach dem Booten kontrollieren:
+
+Mit ctrl+alt+F2 in tty wechseln.
+
+login: root
+
+```
+efivar -l
+```
+
+Falls etwas aufgelisted wird, wurde der Rechner im UEFI-Mode gestartet.
+
+Mit ctrl+alt+F7 gelangt man wieder zum Desktop.
+
+!! Netzwerksverbindung herstellen
+
+Netzwerk- oder Wifi-Verbindung herstellen. Daran denken, dass zur Zeit noch eine englische Tastaturbelegung eingestellt ist.
+
+!! Live-System auf deutsch umstellen
+
+Installer durchlaufen und nach umstellung abbrechen.
+
+! ArchLinux installieren
+
+Den Terminal öffnen und die [[Anleitung für Einsteiger – wiki.archlinux.de|https://wiki.archlinux.de/title/Anleitung_für_Einsteiger]] im Browser öffnen. Beides nebeneinander anordnen.
+
+Root werden:
+
+```
+sudo su
+```
+
+[[Datenträger anzeigen]]
+
+!! Partitionieren
+
+[[ArchLinux Installation Partitionsschema]]
+
+UEFI-Systeme mit einer GPT-Partitionstabelle werden mit `gdisk` erstellt.
+
+`o` erzeugt nicht nur eine neue GUID Parttitionstabelle sondern löscht auch vorhandene Daten.
+
+```
+gdisk /dev/nvme0n1
+o
+```
+
+EFI-Boot-Partition erstellen (Code= ef00):
+
+```
+n
+[enter] # default 1
+[enter]
++256M
+ef00
+```
+
+Btrfs-Partition erstellen (Code= 8300/default). Die Grösse der Partition errechnent sich aus verbleibender Grösse minus dem benötigten SWAP-Speicher:
+
+```
+n
+[enter] # default 2
+[enter]
++[errechnete_Grösse]G
+[enter]
+```
+
+Anstelle einer SWAP-Partition kann neu unter Btrfs auch ein SWAP-File konfiguriert werden.
+
+Hier, Erstellung einer SWAP-Partition (Code= 8200):
+
+```
+n
+[enter] # default 3
+[enter]
+[enter]
+8200
+```
+
+Überprüfen und Änderungen schreiben:
+
+```
+p
+w
+```
+
+[[Datenträger anzeigen]]
+
+!! Formatieren
+
+```
+mkfs.vfat -F 32 -n EFI /dev/nvme0n1p1
+```
+
+```
+mkfs.btrfs -f -L ROOT /dev/nvme0n1p2
+```
+
+```
+mkswap -L SWAP /dev/nvme01p3
+swapon /dev/nvme0n1p3
+```
+
+SWAP überprüfen:
+
+```
+free-h
+```
+
+!! Btrfs-Subvolumes
+
+Anstelle der fogenden Einzelbefehle diesen ausprobieren:
+
+```
+btrfs sub create {@root_TESTING,@home,@pkg,@log,@images}
+```
+
+Btrfs-Subvolumes erstellen:
+
+```
+mount /dev/nvme0n1p2 /mnt
+cd /mnt
+```
+
+Subvolume für `/`(evtl. `/@root_TESTING` zwecks späterer Rollback konfiguration):
+
+```
+btrfs sub create @
+```
+
+Subvolume für `/home`:
+
+```
+btrfs sub create @home
+```
+
+Subvolume für `/var/cache/pacman/pkg`:
+
+```
+btrfs sub create @pkg
+```
+
+Damit bei einem Rollback des Systems die Logdateien nicht verloren gehen. Subvolume für `/var/log`:
+
+```
+btrfs sub create @log
+```
+
+Für die spätere Installation von KVM (Virtuelle Maschine). Subvolume `/var/lib/libvirt/images`:
+
+```
+btrfs sub create @images
+```
+
+Evtl. Sammel-Subvolume für den Rollback des Systems. Hier werden später die Snapshots `@root_TESTING`, `@root_STABLE` und `@root_OLD-STABLE` abgelegt.
+
+```
+btrfs sub create @snapshots
+```
+
+Subvolumes überprüfen:
+
+```
+ls
+```
+
+Btrfs unmounten:
+
+```
+umount /mnt
+```
+
+!! Mounten
+
+Erstellte Partitionen und Subvolumes anhand geplantem System-Aufbau mounten.
+
+Bei grossen Systemen (viele Terrabytes) als Mount-Option u. U. `space_cache=v2` verwenden.
+
+```
+mount -o noatime,compress=lzo,space_cache,ssd,subvol=@root_TESTING /dev/nvme0n1p2 /mnt
+
+```
+
+Mount-Ordner erstellen. Evtl. zusätzlich `.snapshots`:
+
+`/btrfs` wird später als Default-Subvolume verwendet, also das oberste Level unseres Btrfs-Dateisystems.
+
+```
+mkdir -p /mnt/{boot,btrfs,home,var/cache/pacman/pkg,var/log,var/lib/libvirt/images}
+ls /mnt
+```
+
+```
+mount /dev/nvme0n1p1 /mnt/boot
+mount -o noatime,ssd,space_cache,compress=lzo,subvolid=5 /dev/nvme0n1p2 /mnt/btrfs
+mount -o noatime,ssd,space_cache,compress=lzo,subvol=@home /dev/nvme0n1p2 /mnt/home
+mount -o noatime,ssd,space_cache,compress=lzo,subvol=@pkg /dev/nvme0n1p2 /mnt/var/cache/pacman/pkg
+mount -o noatime,ssd,space_cache,compress=lzo,subvol=@log /dev/nvme0n1p2 /mnt/var/log/
+mount -o noatime,ssd,space_cache,compress=lzo,subvol=@images /dev/nvme0n1p2 /mnt/var/lib/libvirt/images
+```
+
+Überprüfung:
+
+```
+df -Th
+```
+
+!! Basissystem
+
+https://wiki.archlinux.de/title/Anleitung_für_Einsteiger#Installation_der_Basispakete
+
+```
+pacstrap /mnt base base-devel linux linux-firmware nano
+```
+
+!! Weitere Pakete
+
+Für `systemd-boot` werden später folgende Pakete benötigt: `efibootmgr`, `dosfstools`, `gptfdisk`. Also gleich mitinstallieren:
+
+```
+pacman --root /mnt -S btrfs-progs dosfstools bash-completion efibootmgr dosfstools gptfdisk dhcpcd wpa-supplicant netctl dialog
+```
+
+!! fstab erzeugen
+
+```
+genfstab -Lp /mnt >> /mnt/etc/fstab
+cat /mnt/etc/fstab
+```
+
+!! Systemkonfiguration
+
+Hinweis: `>` in Datei schreiben/überschreiben, `>>` innerhalb Datei anhängen (bestehendes geht nicht verloren)
+
+Ins neu installierte System wechseln:
+
+```
+arch-chroot /mnt/
+```
+
+Rechnernamen:
+
+```
+echo archbox > /etc/hostname
+```
+
+Spracheinstellung:
+
+```
+echo LANG=de_CH.UTF-8 > /etc/locale.conf
+```
+
+```
+nano /etc/locale.gen
+```
+
+Folgende Einträge in [[nano]] suchen und das # am Anfang folgender Zeilen entfernen. Anschliessend speichern:
+
+```
+de_CH.UTF-8 UTF-8
+en_DK.UTF-8 UTF-8
+```
+
+```
+locale-gen
+```
+
+Tastaturbelegung festlegen:
+
+```
+echo KEYMAP=de_CH-latin1 > /etc/vconsole.conf
+```
+
+(Schriftart festlegen:)
+
+```
+echo FONT=lat9w-16 >> /etc/vconsole.conf
+```
+
+Zeitzone durch einen symbolischen Link festlegen:
+
+```
+ln -sf /usr/share/zoneinfo/Europe/Zurich /etc/localtime
+```
+
+Bei einer Btrfs Raid Installation kann man unter `Hooks=` `fsck` löschen. In jedem Fall aber `btrfs `vor Eintrag `filesystems` eintragen:
+
+https://youtu.be/oT7gs2CmsnQ?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH&t=1298
+
+Damit die Spracheinstellungen auch in der Konsole und nicht nur in der graphischen Umgebung geladen werden `keymap keyboard` vor `btrfs` und `filesystems` zufügen. `keyboard` am Zeilenende löschen. `keymap` ist besonders bei verschlüsselten Systemen wichtig:
+
+https://youtu.be/wqXg8LrxSAk?list=PLTeOo_Khba2PLTV7zEeLPSTYyDdwwLsdo&t=382
+
+Änderungen speichern:
+
+```
+nano /etc/mkinitcpio.conf
+```
+
+Ohne Raid:
+
+```
+HOOKS=(base udev autodetect modconf block keymap keyboard filesystems fsck)
+```
+
+`initramfs` mit gemachten Änderungen neu erzeugen:
+
+```
+mkinitcpio -p linux
+```
+
+Root-Passwort eingeben:
+
+```
+passwd
+```
+
+!! Systemd-Boot
+
+[[Systemd-boot – wiki.archlinux.de|https://wiki.archlinux.de/title/Systemd-boot]]
+
+```
+bootctl --path=/boot install
+```
+
+Kontrolle:
+
+```
+cd /boot/
+ls
+cd loader/
+ls
+```
+
+Inhalt von `loader.conf` löschen:
+
+```
+nano loader.conf
+```
+
+Ersetzen mit:
+
+```
+default   arch-uefi
+timeout   1
+```
+
+EFI-Booteintrag erzeugen:
+
+```
+cd entries/
+nano arch-uefi_05-testing.conf
+```
+
+Inhalt:
+
+```
+title    Arch Linux Xfce
+linux    /vmlinuz-linux
+initrd   /initramfs-linux.img
+options  root=LABEL=ROOT rootflags=subvol=@root_TESTING rw resume=LABEL=SWAP
+```
+
+Booteinträge bereinigen:
+
+[[Arch My Way 1 - Grundsystem installieren|https://youtu.be/oT7gs2CmsnQ?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH&t=1578]]
+
+```
+efibootmgr
+```
+
+!! `fstab` bereinigen
+
+Bei der Verwendung von eindeutigen Labeln die `subvol=/@[]` sowie `subvolid=[]` aus den Einträgen löschen. Ausnahme `/btrfs` mit `subvolid=5`. Der Eintrag `subvol=@[]` genügt.
+
+Durch den Rollback verändert sich später die `subvolid=[]` von `@root_TESTING`, `@root_STABLE` und `@root_OLDSTABLE`. Das Label bleibt dabei konstant.
+
+`subvol=/@[]` ist doppelt mit `subvol=@[]` und wird daher entfernt. Das [[Script Update Rollback]] kann dadurch u. a. einfacher gehalten werden.
+
+```
+nano /etc/fstab
+```
+
+[[fstab Beispiel]]
+
+Weiterfahren mit [[ArchLinux Installation Xfce-Desktop]]

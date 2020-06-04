@@ -1,0 +1,14 @@
+created: 20200522091050275
+modified: 20200522091116174
+tags: bash
+title: htop
+
+Freier Prozessmanager für Linux zeigt eine dynamische Übersicht der laufenden Prozesse sowie der belegten Systemressourcen an. Gegenüber dem Klassiker `top` bietet dieser Prozessmanager jedoch Komfortfunktionen.
+
+[[htop – Wikipedia|https://de.wikipedia.org/wiki/Htop]]
+
+```
+htop [OPTION]
+```
+
+Beispiel: [[27.01.2017 - Arch My Way 1 - Grundsystem installierenArch My Way 5 - Sicherheit und Backups - Btrfs Read Only SnapshotsArch My Way 6 - Dateisysteme und Systemwartung - 21:18|https://youtu.be/WeppT9SDmOA?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH&t=1278]]

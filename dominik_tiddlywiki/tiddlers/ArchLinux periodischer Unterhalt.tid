@@ -1,0 +1,91 @@
+created: 20200522084706788
+modified: 20200522084732314
+tags: archlinux
+title: ArchLinux periodischer Unterhalt
+
+Von Hand mit Timern oder mittels Scripten für periodischen Unterhalt sorgen:
+
+! Pacman
+
+Nicht mehr benötigte Pakete aus dem Pacman cache löschen: [[Pacman Cache leeren]]
+
+! Log-Datei
+
+Nicht mehr benötigte Log-Dateien löschen.
+
+! Backup
+
+[[Btrfs Backup inkrementell]]
+
+! Btrfs
+
+[[Btrfs Dateisystem-Informationen]]
+
+`/btrfs/` ist in meinem Fall Default Subvolume. Darunter werden alle übrigen Subvolumes gemounted.
+
+Operationen können mittels `watch` mmtverfolgt werden. Dazu zwei Terminals öffnen.
+
+!! Balance
+
+Ersten Terminal öffnen:
+
+''Überprüfen:'' Befehl ohne `watch`. Beides nebeneinander ausführen.
+
+```
+sudo watch btrfs balance status /btrfs/
+```
+
+Zweiten Terminal öffnen:
+
+```
+sudo btrfs balance start /btrfs/
+```
+
+!! Scrub
+
+Checksummen überprüfen:
+
+Ersten Terminal öffnen:
+
+''Überprüfen:'' Befehl ohne `watch`. Beides nebeneinander ausführen.
+
+```
+sudo watch btrfs scrub status /btrfs/
+```
+
+Zweiten Terminal öffnen:
+
+```
+sudo btrfs scrub start /btrfs/
+```
+
+Am Ende kann das Resultat jederzeit angezeigt werden:
+
+```
+sudo btrfs scrub status /btrfs/
+```
+
+oder
+
+`@btrfs` entspricht Mountpunkt `/btrfs`. Mittels [[journalctl]] und Option `-f` kann der ausgeführte Befehl live mitverfolgt werden. 
+
+1. Terminal
+
+```
+journalctl -f
+```
+
+2.Terminal
+
+```
+sudo systemctl enable btrfs-scrub@btrfs.timer
+sudo systemctl start btrfs-scrub@btrfs.service
+```
+
+! SSD
+
+Nach Aktivierung des Timers wird einmal wöchentlich ein file system trim durchgeführt:
+
+```
+sudo systemctl enable fstrim.timer
+```

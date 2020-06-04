@@ -1,0 +1,59 @@
+created: 20200522085033177
+modified: 20200522085047313
+tags: archlinux
+title: AUR
+
+Arch User Repository
+
+! Programm installieren
+
+[[01.02.2017 - Arch My Way 1 - Grundsystem installierenArch My Way 5 - Sicherheit und Backups - Btrfs Read Only SnapshotsArch My Way 6 - Dateisysteme und Systemwartung - 31:50|https://youtu.be/WeppT9SDmOA?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH&t=1910]]
+
+[[24.08.2017 - Arch Linux - AUR nutzen + Bonus Pacaur (AUR Helper) - 07:46|https://youtu.be/WaDqZa-cGTs?t=466]] 
+
+[[AUR - Home|https://aur.archlinux.org/]]
+
+[[Arch User Repository|https://wiki.archlinux.org/index.php/Arch_User_Repository]]
+
+Sammelordner für AUR-Pakete erstellen:
+
+```
+mkdir ~/.aur-packages
+```
+
+In ordner wechseln und Paket herunterladen:
+
+```
+cd .aur-packages/
+git clone https://aur.archlinux.org/package_name.git
+```
+
+In den Paketordner wechseln. Paket bauen, installieren und nicht mehr benötigte Abhängikeiten, die zum Bau verwendet wurden sowie temporäre Dateien entfernen:
+
+```
+cd package_name`
+makepkg -sirc
+```
+
+! Update
+
+In Paketordner wechseln. Änderungen herunterladen. Paket bauen, installieren und nicht mehr benötigte Abhängikeiten, die zum Bau verwendet wurden sowie temporäre Dateien entfernen:
+
+```
+cd package_name
+git pull
+makepkg -sirc
+```
+
+Die alten Pakete werden im Ordner beibehalten und müssen von Zeit zu Zeit von Hand entfernt werden. Dazu innerhalb des Paketordners den Inhalt auflisten:
+
+```
+ls 
+```
+
+Nicht mehr benötigte `tar.xz`- sowie `zip`-Dateien entfernen mit Suffix `*` z. B.:
+
+```
+rm freeplane-1.7*
+rm freeplane_bin-1.7*
+```

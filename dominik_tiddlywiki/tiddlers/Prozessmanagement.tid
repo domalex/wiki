@@ -1,0 +1,13 @@
+created: 20200601081816244
+modified: 20200604115529850
+tags: qm
+title: Prozessmanagement
+type: text/vnd.tiddlywiki
+
+Im Qualitätsmanagement <<tag qm>> oder Prozessmanagement ist ein Prozess ein festgelegter Ablauf von Tätigkeiten nach bestimmten Kriterien, welcher definierte Anforderungen erfüllen muss.
+
+Daher könnte man sagen, ein Prozess ist nichts anderes als ein gespeicherter StoryRiver in TiddlyWiki. Vorausgesetzt die Anforderungen, Tätigkeiten, Verantwortungen und Messgrössen sind als [[Tiddler]] abgefasst. Das könnte ein [[Template für Prozesse|Template Prozess]] sicherstellen.
+
+Diese Erkenntnis sollte dazu dienen mit TiddlyWiki nicht nur [[Wissensmanagement]] sonder im selben System [[Prozessmanagement]] zu organisieren.
+
+Der Vorteil wäre ein ökonomisches dynamisches System, welches Wissen und Tätigkeit miteinander symbiotisch verbände. Darüber hinaus könnte Wissen und Tätigkeiten in verschiedenen Prozessen verlinkt und genutzt werden. Dadurch wäre sichergestellt, dass in jedem Prozess auf dieselben Informationen zugegriffen wird. Diese könnten wiederum zentral, einfach und übersichtlich administriert werden.

@@ -1,0 +1,356 @@
+created: 20200522083813454
+modified: 20200522083904148
+tags: 
+title: ArchLinux Installation - markdown
+
+___
+
+### Mehrere Ordner erstellen
+mkdir -p /mnt/{boot,home,var/log,var/cache/pacman/pkg,.snapshots,btrfs}
+mount /dev/sda1 /mnt/boot
+mkdir /mnt/boot/efi
+mount /dev/sda2 /mnt/boot/efi
+___
+
+# Installation für dritte
+[Arch Linux - Secret 1 | Verschlüsselung mit Btrfs (dm-crypt)](https://www.youtube.com/watch?v=OrMjJcU0hF4&list=PLTeOo_Khba2PLTV7zEeLPSTYyDdwwLsdo)
+[Arch Linux - Secret 2 | Windows für DualBoot vorbereiten](https://www.youtube.com/watch?v=iRG94lUMrDM)
+-> [Arch Linux - Secret 3 | Partitionierung und Verschlüsselung](https://www.youtube.com/watch?v=P5dX_e8_BEI&index=3&list=PLTeOo_Khba2PLTV7zEeLPSTYyDdwwLsdo)
+[Arch Linux - Secret 4 | Grundsystem installieren](https://www.youtube.com/watch?v=VnmJJMY_d5Q&index=4&list=PLTeOo_Khba2PLTV7zEeLPSTYyDdwwLsdo)
+[Arch Linux - Secret 5 | Desktopumgebung installieren](https://www.youtube.com/watch?v=wqXg8LrxSAk&index=5&list=PLTeOo_Khba2PLTV7zEeLPSTYyDdwwLsdo)
+
+[Windows 10 & Arch Linux KDE Teil 1 | UEFI Dual Boot!](https://www.youtube.com/watch?v=bIN5Tl5IyUM)
+-> Systemd-Boot [Arch Linux | UEFI Installation + Bonus DualBoot mit Windows](https://www.youtube.com/watch?v=Stnx-G6m2U4)
+-> efi & boot partition [Total Arch Linux | S3.1 BtrFS - Snapper - Pamac](https://www.youtube.com/watch?v=2L_qg3CRIXc&t=0s&list=PLTeOo_Khba2MlTJnuW1RLmwQSdaUrwzbx&index=21)
+[Arch Linux | Virtualbox Installation und Einführung & Windows VM (Deutsch)](https://www.youtube.com/watch?v=14D6T5DIr9o)
+
+[Virtualisierung - Kurz vorgestellt | KVM, Xen, LXC, Hyper-V etc.](https://www.youtube.com/watch?v=w5F_XYDPv08)
+[Arch Linux | GPU Passthrough 1 - KVM Einrichtung](https://www.youtube.com/watch?v=jpvRg741p_o)
+[Arch Linux | GPU Passthrough 2 - Windows 10](https://www.youtube.com/watch?v=1i-kXtk-_Zk)
+[Arch Linux | GPU Passthrough 3 - GTA-V](https://www.youtube.com/watch?v=64EIKr6OkFE)
+
+KVM - @images: [NAS im Eigenbau | 4. Arch Linux & BtrFS Raid 1](https://www.youtube.com/watch?v=06u2ldOTsiI&list=PLTeOo_Khba2OdJpvQT0Yj5DABfcJJqc69&index=4)
+[Virtualisierung mit KVM/Qemu | NAS im Eigenbau (10)](https://www.youtube.com/watch?v=t6dXq20dbP4&list=PLTeOo_Khba2OdJpvQT0Yj5DABfcJJqc69&index=10)
+[Arch Linux | Virt-Manager - Windows 10 KVM mit OVMF](https://www.youtube.com/watch?v=YfwcG8UE3MQ)
+[Total Arch Linux | 3.4 Snapper auf die leichte Art!Total Arch Linux | 3.4 Snapper auf die leichte Art!](https://www.youtube.com/watch?v=GgGirRYAkF0&list=PLTeOo_Khba2MlTJnuW1RLmwQSdaUrwzbx&index=23)
+Bestehende alte Einträge aus dem EFI Boot Manager löschen, falls von einer vorgängigen Linux-Installation bereits vorhanden: efibootmgr -b (z.B. 0) -B
+
+## EFI-Partition anlegen falls nicht vorhanden (Windows)
+gdisk /dev/sdd
+n
+Enter
+200M
+ef00
+p
+w
+mkfs.vfat -F 32 -n EFI /dev/sdd1
+
+# Installations-Schritte
+[Arch Linux - Anleitung für Einsteiger](https://wiki.archlinux.de/title/Anleitung_f%C3%BCr_Einsteiger)
+**[Arch Linux - Dual boot with Windows](https://wiki.archlinux.org/index.php/Dual_boot_with_Windows)**
+
+Windows Datenträgerverwaltung - Volume verkleinern
+cmd - powercfg /H off - oder - Systemsteuerung - Hardware und Sound - Energieoptionen - Systemeinstellungen - Schnellstartfunktion abwählen
+Neustarten
+cmd - regedit - HKEY_LOCAL_MACHINE - SYSTEM - CurrentContolSet - Control - TimeZoneInformation - NEU devert 32 bit RealTimeIsUniversal - öffnen hexidezimal 1
+USB Stick im Uefi Mode starten
+loadkeys de_CH-latin1
+wifi-menu
+fdisk -l - EFI-System merken
+efibootmgr - Einträge überprüfen
+efibootmgr -b 0 -B - löscht einträge 0 für Nr.
+gdisk /dev/nvme0n1
+n Hexcode 8300 - root
+n Hexcode 8200 - swap
+w
+mkfs.btrfs -L ROOT /dev/nvme0n1p7
+mkswap -L SWAP /dev/nvme01p8
+swapon /dev/nvme01p8
+free -h - check swapon
+ls /dev/disk/by-label - check - u.U. wiederholen mit -f (force) mkfs.btrfs -f -L ROOT /dev/nvme0n1p7
+mount /dev/nvme0n1p7 /mnt
+
+btrfs sub create /mnt/@
+btrfs sub create /mnt/@home
+btrfs sub create /mnt/@pkg
+btrfs sub create /mnt/@snapshots
+ls /mnt -check
+umount /mnt
+mount -o noatime,ssd,space_cache=v2,compress=lzo,subvol=@ /dev/nvme0n1p7 /mnt
+mkdir -p /mnt/boot
+mkdir -p /mnt/home
+mkdir -p /mnt/var/cache/pacman/pkg
+mkdir -p /mnt/.snapshots
+mkdir -p /mnt/btrfs
+mount -o noatime,ssd,space_cache=v2,compress=lzo,subvol=@home /dev/nvme0n1p7 /mnt/home
+mount -o noatime,ssd,space_cache=v2,compress=lzo,subvol=@pkg /dev/nvme0n1p7 /mnt/var/cache/pacman/pkg
+mount -o noatime,ssd,space_cache=v2,compress=lzo,subvol=@snapshots /dev/nvme0n1p7 /mnt/.snapshots
+mount -o noatime,ssd,space_cache=v2,compress=lzo,subvolid=5 /dev/nvme0n1p7 /mnt/btrfs
+
+mount /dev/nvme0n1p1 /mnt/boot - EFI Windows einhängen
+ls /mnt/boot
+df -h - check
+-> pacstrap /mnt base base-devel wpa_supplicant dialog btrfs-progs bash-completion (dosfstools gptfdisk efibootmgr)
+genfstab -Lp /mnt >> /mnt/etc/fstab
+blkid /dev/nvme0n1p1
+blkid /dev/nvme0n1p1 >> /mnt/etc/fstab - blkid and fstab schicken
+nano /mnt/etc/fstab - Zeilenanfang ctrl + k - ausschneiden - oberhalb einfügen und alles weglöschen bis auf blkid die /dev/nvme0n1p1 ersetzt
+ctrl + o - ctrl + x
+arch-chroot /mnt
+echo KEYMAP=de_CH-latin1 > /etc/vconsole.conf
+
+## Grub Bootloader Bios
+pacman -S grub
+grub-mkconfig -o /boot/grub/grub.cfg
+grub-install /dev/sda
+---
+
+echo micro > /etc/hostname - micro ist Rechnername
+echo LANG=de_CH.UTF-8 > /etc/locale.conf
+echo LANGUAGE=de_CH >> /etc/locale.conf
+nano /etc/locale.conf - check
+nano /etc/locale.gen - de_CH.UTF-8 UTF-8 aktivieren
+locale-gen
+ln -sf /usr/share/zoneinfo/Europe/Zurich /etc/localtime - symbolische Verlinkung
+
+## Systemctl-Boot Dualboot Windows
+bootctl install
+nano -w /boot/loader/loader.conf
+default arch
+timeout 3
+editor 0
+ctrl + o - ctrl + x
+nano -w /boot/loader/entries/arch.conf
+title Arch Linux
+linux /vmlinuz-linux
+initrd /initramfs-linux.img
+options root=LABEL=ROOT rw
+-> Mit BTRFS zusätzlich rootflags= subvol= - SWAP auch miteintragen!
+ctrl + o - ctrl + x
+
+
+## Systemd-Boot
+man bootctl - manpage
+bootctl --path=/boot install
+cd /boot
+ls
+ls EFI
+ls EFI/Boot
+ls EFI/systemd
+cd loader
+ls
+pwd
+nano loader.conf ->
+-#timeout 3
+-#default 2b88293fd1bf4ee49d8ffb6b0b15b4a2-*
+default arch
+timeout 5
+editor 0
+ctrl + o - ctrl + x
+ls
+cd entries
+nano arch.conf
+title Arch Linux
+linux /vmlinuz-linux
+initrd /initramfs-linux.img
+options root=LABEL=ROOT rw
+ctrl + o - ctrl + x
+cp arch.conf arch-fallback.conf
+nano arch-fallback.conf
+title Arch Linux Fallback
+linux /vmlinuz-linux
+initrd /initramfs-linux-fallback.img
+options root=LABEL=ROOT rw
+ctrl + o - ctrl + x
+ls
+---
+
+passwd
+useradd -m -g users -G wheel,audio,video -s /bin/bash niggi
+passwd niggi
+EDITOR=nano visudo
+%wheel ALL=(ALL) ALL - unkommentieren
+ctrl + o - ctrl + x
+exit
+
+## Efibootmgr kontrollieren
+efibootmgr - check
+efibootmgr -b 0 -B - Alte Einträge (0) löschen
+efibootmgr - Rheienfolge ändern: Zurst 1. Linux, 2. Windows, 3. Rest anfügen
+efibootmgr -o 0,2,1,4,8
+efibootmgr - check
+umount -R /mnt
+reboot
+sudo wifi-menu
+sudo pacman -S (bash-completion) - Fenster schliessen und neues öffnen
+
+## Xorg Server installieren
+sudo pacman -S acpid (ntp) cronie avahi cups
+sudo systemctl enable acpid.service ntpd cronie.service avahi-deamon.service org.cups.cupsd.service
+systemctl enable systemd-timesyncd.service
+date - falls es stimmt weiter sonst nach Neustart
+hwclock -w
+sudo pacman -S xorg-server xorg-xinit (xorg-utils xorg-server-utils)
+(Grafik-Karte auswählen) - Intel oder AMD = 1
+sudo pacman -S xf86-video-intel
+
+sudo pacman -S (XFCE)
+sudo pacman -S libreoffice-fresh libreoffice-fresh-de hunspell-de
+sudo systemctl enable NetworkManager
+
+## Systemd-Boot installieren
+bootctl --path=/boot install
+nano /boot/loader/loader.conf
+-#timeout 3
+-# default ...
+default arch
+timeout 4
+editor 0
+ctrl + o - ctrl + x
+nano /boot/loader/entries/arch.conf
+title Arch Linux
+linux /vmlinuz-linux
+initrd /initramfs-linux.img
+options ... root=LABEL=ROOT=...=rootflags=subvol=@ rw
+ctrl + o - ctrl + x
+blkid /dev/btrfs >> /boot/loader/entries/arch.conf
+nano /boot/loader/entries/arch.conf - UUID einfügen
+ctrl + o - ctrl + x
+ls /boot
+cp /boot/loader/entries/arch.conf /boot/loader/entries/arch-fallback.conf
+nano /boot/loader/entries/arch-fallback.conf
+title Arch Linux Fallback
+linux /vmlinuz-linux
+initrd /initramfs-linux-fallback.img
+options ... root=LABEL=ROOT=...=rootflags=subvol=@ rw
+ctrl + o - ctrl + x
+
+## IP-Adresse anfordern
+ip a - zeigt Name der Netzwerkkarte z.B. eno1
+sudo dhcpcd eno1 - fordert IP-Adresse an
+
+## Konsolen-Tastatur festlegen und speichern
+[Linux console/Keyboard configuration - ArchWiki](https://wiki.archlinux.org/index.php/Linux_console/Keyboard_configuration)
+
+```
+sudo nano /etc/vconsole.conf
+
+KEYMAP=de_CH-latin1
+```
+
+German
+
+## Basissystem / Desktopumgebung installieren
+timedatectl set-ntp true
+timedatectl status
+systemctl enable ntpd cronie avahi-daemon acpid
+hwclock --systohc - Synchronisation mit Bios
+pacman -S xorg-server xorg-utils xorg-xinit xorg-server-utils
+1 - Auswahl für Intel und AMD
+pacman -S xf86-video-intel
+pacman -S xfce4 xfce4-goodies lightdm lightdm-gtk-greater networkmanager nm-connection-editor network-manager-applet alsa-tools alsa-utils pulseaudio-alsa pavucontrol
+systemctl enable lightdm.service NetworkManager
+pacman -S firefox chromium mpv youtube-dl vlc reflector
+pacman -S rsync wget svn linux-headers git libgnome-keyring gnome-keyring
+reflector --verbose -l 5 -p https --sort rate --save /etc/pacman.d/mirrorlist
+pacman -Syu
+reboot
+
+## XFCE Desktop
+
+[Arch Linux + Xfce = Win-win-Situation (Deutsch) - YouTube](https://www.youtube.com/watch?v=gaTu-ju-YE0)
+Mediainfo (Thunar-Plugin):
+
+```
+mediainfo -i %f | zenity --text-info --title %N --width=720 --height=1280
+```
+
+[Arch Linux + Xfce | HiDPI Unterstützung - YouTube](https://www.youtube.com/watch?v=I-T5ZS59tFw)
+[Arch Linux - Secret 5 | Desktopumgebung installieren](https://www.youtube.com/watch?v=wqXg8LrxSAk&index=5&list=PLTeOo_Khba2PLTV7zEeLPSTYyDdwwLsdo)
+
+List of Applications - Arch Wiki
+pacman -S xfce4 xfce4-goodies lightdm lightdm-gtk-greeter networkmanager network-manager-applet nm-connection-editor alsa-tools alsa-utils pulseaudio-alsa pavucontrol - Auswahl treffen oder keine Auswahl treffen und alles installieren
+systemctl enable lightdm.service NetworkManager
+pacman -S firefox firefox-i18n-de chromium
+pacman -s (gnome-keyring)
+pacman -S libreoffice-fresh libreoffice-fresh-de hunspell-de
+pacman -S vlc mpv (qt4)
+pacman -Ss ttf - nach Fonts suchen
+pacman -S ttf-ubuntu-font-family ttf-liberation ttf-droid ttf-freefont noto-fonts
+pacman -Ss icon-theme
+pacman -S human-icon-theme elementary-icon-theme arc-icon-theme faenza-icon-theme gnome-icon-theme gnome-icon-theme-extra
+pacman -Ss gtk-theme
+pacman -S deepin-gtk-theme numix-gtk-theme
+pacman -S gtk-engine-murrine
+exit - aus change-root
+umount -R /mnt
+reboot
+---
+
+[Total Arch Linux | S3.1 BtrFS - Snapper - Pamac](https://www.youtube.com/watch?v=2L_qg3CRIXc&list=PLTeOo_Khba2MlTJnuW1RLmwQSdaUrwzbx&index=20)
+btrfs sub create /mnt/@
+btrfs sub create /mnt/@pkg
+(btrfs sub create /mnt/@log)
+btrfs sub create /mnt/@images -> libvirt, KVM
+btrfs sub create /mnt/@snapshots
+umount /mnt
+mount -o noatime,ssd,space_cache=v2,compress=lzo,subvol=@ /dev/sda3 /mnt
+mkdir -p /mnt/{boot,home,var/log,var/cache/pacman/pkg,var/lib/libvirt/images,btrfs}
+ls /mnt
+mount /dev/sda1 /mnt/boot
+mkdir /mnt/boot/efi
+mount /dev/sda2 /mnt/boot/efi
+mount /dev/sda4 /mnt/home
+mount -o noatime,ssd,space_cache=v2,compress=lzo,subvol=@log /dev/sda3 /mnt/var/log
+mount -o noatime,ssd,space_cache=v2,compress=lzo,subvol=@pkg /dev/sda3 /mnt/var/cache/pacman/pkg
+mount -o noatime,ssd,space_cache=v2,compress=lzo,subvol=@images /dev/sda3 /mnt/var/lib/libvirt/images
+chattr +C /mnt/var/lib/libvirt/images -> Copy On Write ausschalten weil nicht gut für Performance KVM
+mount -o noatime,ssd,space_cache=v2,compress=lzo,subvolid=5 /dev/sda3 /mnt/btrfs
+### Default Subvolume setzen
+Somit muss das @ nicht in fstab aufgeführt werden sondern nur:
+# /dev/sda1 LABEL=ROOT
+UUID=7abc7084-59999-4746-a1dd-8d0bc1f33e7f / btrfs rw,relatime,compress=lzo,ssd,space_cache=v2 0 0
+[NAS im Eigenbau | 4. Arch Linux & BtrFS Raid 1](https://www.youtube.com/watch?v=06u2ldOTsiI&list=PLTeOo_Khba2OdJpvQT0Yj5DABfcJJqc69&index=4)
+btrfs su get-default /mnt -> überprüft, ob bereits default vorhanden
+ID 5 (FS_TREE) -> bedeutet nicht vorhanden
+btrfs su list -p /mnt -> zeigt Subvolume-IDs
+btrfs su set-default 256 /mnt -> macht beispielsweise @ mit ID 256 zu Default-Subvolume
+btrfs su get-default /mnt -> zeigt jetzt:
+ID 256 gen 18 top level 5 path @
+
+df -Th - check
+pacstrap /mnt base base-devel bash-completion btrfs-progs dosfstools xfsprogs gub efibootmgr
+genfstab -L /mnt >> /mnt/etc/fstab
+gedit /mnt/etc/fstab - enferne in jeder Zeile subvolid=(257),subvol=/@(), kommentier LABEL=ROOT / - bei suvolid=5 ,subvol=/ löschen
+ctrl+o - ctrl+x
+
+## Grub Bootloader UEFI
+pacman -S grub
+grub-mkconfig -o /boot/grub/grub.cfg
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=grub
+exit
+umount -R /mnt
+reboot
+sudo nano -w /etc/systemd/journald.conf
+Storage=volatile - unkommentieren und ändern
+
+## Root Passwort deaktivieren
+passwd -l root
+
+btrfs sub list /btrfs
+ls /btrfs
+systemctl enable fstrim.timer - anstelle discard in fstab
+
+## Bluetooth
+
+```
+sudo pacman -Syu bluez bluez-utils pulseaudio-bluetooth blueman
+```
+
+### Disable auto power-on
+
+Blueman automatically enables Bluetooth adapter when certain events (on boot, laptop lid is opened, ...) occur. This can be disabled with the `auto-power-on` in `org.blueman.plugins.powermanager`:
+
+```
+$ gsettings set org.blueman.plugins.powermanager auto-power-on false
+```

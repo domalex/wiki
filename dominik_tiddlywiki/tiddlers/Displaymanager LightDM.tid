@@ -1,0 +1,88 @@
+created: 20200522090116699
+modified: 20200522090140189
+tags: archlinux
+title: Displaymanager LightDM
+
+[[LightDM - ArchWiki|https://wiki.archlinux.org/index.php/LightDM]]
+
+! Konfigruation
+
+Konfigurationsdatei:
+
+```
+sudo nano /etc/lightdm/lightdm-gtk-greeter.conf
+```
+
+!! An Desktop-Thema anpassen
+
+[[15.02.2017 - Arch My Way 1 - Grundsystem installierenArch My Way 5 - Sicherheit und Backups - Btrfs Read Only SnapshotsArch Linux - Lightdm - Login individualisieren (Deutsch) - 03:17|https://youtu.be/z9ncBLZ8KOk?t=197]]
+
+!! Hintergrund/Wallpaper
+
+[[15.02.2017 - Arch My Way 1 - Grundsystem installierenArch My Way 5 - Sicherheit und Backups - Btrfs Read Only SnapshotsArch Linux - Lightdm - Login individualisieren (Deutsch) - 04:54|https://youtu.be/z9ncBLZ8KOk?t=292]]
+
+Hintergrundbild als `.png`-Datei kopieren/verschieben:
+
+Pfad in Konfigurationsdatei unter `[Greeter]` als `background=` eintragen. Darunter # entfernen vor `theme-name=`, `icon-theme=`, `font-name=`sowie vor `background=`.
+
+!! 4K Auflösung aktivieren
+
+`xft-dpi=` Wert in der Konfigurationsdatei angeben und damit die Grösse beeinflussen.
+
+!! Login-Fenster Position
+
+Vor `position=` # entfernen und mit verschiedenen Werten ausprobieren:
+
+```
+position = 50% 50%
+```
+
+!! Anmeldungsbild - Avatar
+
+https://wiki.archlinux.org/index.php/LightDM#Changing_your_avatar
+
+Muss quadratisch, 96x96 pixel sein
+
+Zusätzliches Paket installieren:
+
+```
+sudo pacman -S accountsservice
+```
+
+Datei erstellen:
+
+```
+sudo nano /var/lib/AccountsService/users/niggi
+```
+
+Inhalt:
+
+```
+[User]
+Icon=/var/lib/AccountsService/icons/niggi
+```
+
+Bild ablegen, `chmod` von Bild und Konfigurationsdatei:
+
+```
+sudo cp /Bilder/[bildname].png /var/lib/AccountsService/icons/niggi
+sudo chmod 644 /var/lib/AccountsService/icons/niggi
+sudo chmod 644 /var/lib/AccountsService/users/niggi
+```
+
+! Displaymanager deaktivieren
+
+[[29.01.2017 - Arch My Way 1 - Grundsystem installierenArch My Way 4 - Kernel Rollback und LTS Kernel (Deutsch) - 13:03|https://youtu.be/yRnbh5SbRf8?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH&t=783]]
+
+Um Bootprobleme mit der Grafikumgebung auszuschliessen.
+
+```
+sudo systemctl disable lightdm.service
+```
+
+Nach dem Start die Grafikumgebung starten:
+
+```
+sudo systemctl start lightdm.service
+sudo systemctl enable lightdm.service
+```

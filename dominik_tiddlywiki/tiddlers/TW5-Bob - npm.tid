@@ -1,0 +1,104 @@
+created: 20200522094432942
+modified: 20200522094457059
+tags: tw5 node
+title: TW5-Bob - npm
+
+[[OokTech/TW5-Bob: A plugin that makes tiddlywiki a multi-user wiki on node|https://github.com/OokTech/TW5-Bob]]
+
+! Installation
+
+# [[Node.js]] Installation
+# [[TiddlyWiki Installation Linux]] oder [[TiddlyWiki Installation Windows]]
+
+Plugin herunterladen:
+
+```
+[niggi@archbox Bob]$ sudo git clone --depth=1 https://github.com/OokTech/TW5-Bob.git /usr/lib/node_modules/tiddlywiki/plugins/OokTech/Bob
+Klone nach '/usr/lib/node_modules/tiddlywiki/plugins/OokTech/Bob' ...
+remote: Enumerating objects: 277, done.
+remote: Counting objects: 100% (277/277), done.
+remote: Compressing objects: 100% (263/263), done.
+remote: Total 277 (delta 21), reused 97 (delta 6), pack-reused 0
+Empfange Objekte: 100% (277/277), 296.35 KiB | 468.00 KiB/s, Fertig.
+Löse Unterschiede auf: 100% (21/21), Fertig.
+```
+
+Neues TiddlyWiki initialisieren:
+
+```
+[niggi@archbox ~]$ tiddlywiki /mnt/nfs/syn/1_gtd/1.7_referenzmaterial/1.7.2_tiddlywiki/wikis --init server
+```
+
+In den Ordner gehen und `tiddlywiki.info` umbenennen, damit es später nicht überschrieben wird:
+
+```
+cd /mnt/nfs/syn/1_gtd/1.7_referenzmaterial/1.7.2_tiddlywiki/wikis 
+mv tiddlywiki.info _tiddlywiki.info
+```
+
+Ordner `MultiUserWiki` in neues TiddlyWiki-Verzeichnis kopieren:
+
+```
+[niggi@archbox ~]$ cp -r /usr/lib/node_modules/tiddlywiki/plugins/OokTech/Bob/MultiUserWiki /mnt/nfs/syn/1_gtd/1.7_referenzmaterial/1.7.2_tiddlywiki/wikis/
+```
+
+`tiddlywiki.info` vorbereiten:
+
+```
+mv tiddlywiki.info bob_tiddlywiki.info
+mv _tiddlywiki.info tiddlywiki.info
+nano tiddlywiki.info
+```
+
+`"OokTech/Bob"` unter `"plugins":` eintragen. Komma nach "tiddlywiki/highlight" nicht vergessen:
+
+```
+{
+    "description": "Basic client-server edition",
+    "plugins": [
+        "tiddlywiki/tiddlyweb",
+        "tiddlywiki/filesystem",
+        "tiddlywiki/highlight",
+        "OokTech/Bob"
+    ],
+    "themes": [
+        "tiddlywiki/vanilla",
+        "tiddlywiki/snowwhite"
+    ],
+    "build": {
+        "index": [
+            "--rendertiddler",
+            "$:/plugins/tiddlywiki/tiddlyweb/save/offline",
+            "index.html",
+            "text/plain"
+        ],
+        "static": [
+            "--rendertiddler",
+            "$:/core/templates/static.template.html",
+            "static.html",
+            "text/plain",
+            "--rendertiddler",
+            "$:/core/templates/alltiddlers.template.html",
+            "alltiddlers.html",
+            "text/plain",
+            "--rendertiddlers",
+            "[!is[system]]",
+            "$:/core/templates/static.tiddler.html",
+            "static",
+            "text/plain",
+            "--rendertiddler",
+            "$:/core/templates/static.template.css",
+            "static/static.css",
+            "text/plain"
+        ]
+    }
+}
+```
+
+! Starten
+
+```
+[niggi@archbox ~]$ tiddlywiki /mnt/nfs/syn/1_gtd/1.7_referenzmaterial/1.7.2_tiddlywiki/wikis/ --wsserver
+```
+
+! [[TW5-Bob Settings]]

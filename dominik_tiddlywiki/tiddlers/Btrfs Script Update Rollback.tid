@@ -1,0 +1,111 @@
+created: 20200522085852436
+modified: 20200522085910944
+tags: btrfs
+title: Btrfs Script Update Rollback
+
+[[27.01.2017 - Arch My Way 1 - Grundsystem installierenArch My Way 3 - Snapshot und Rollback (Deutsch)20:10|https://youtu.be/J9jaVH9DjTU?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH&t=1210]]
+
+! Erstellung
+
+```
+mkdir ~/.scripts/
+nano .scripts/update.sh
+```
+Die im ersten Teil auskommentierten Variablen, kommen evtl. später einmal zum Zug, werden gegenwärtig aber noch nicht verwendet. Mit Variablen wird gearbeitet, damit das Script auch unter anderen Distributionen verwendet werden könnte, wo die Programmpfade u. U. anders verlaufen.
+
+Der Pfad kann mit `which` gefolgt vom Befehl gefunden werden:
+
+```
+[niggi@archbox ~]$ which btrfs
+/usr/bin/btrfs
+```
+
+Inhalt:
+
+```
+#!/bin/bash
+# System Update
+# ---------------------------
+# Snapshot - Rollback - Btrfs
+# ---------------------------
+
+SUDO=/usr/bin/sudo
+MV=/usr/bin/mv
+BTRFS=/usr/bin/btrfs
+#MOUNT/usr/bin/mount
+#UMOUNT/usr/bin/umount
+SED=/usr/bin/sed
+PACMAN=/usr/bin/pacman
+#PACAUR=/usr/bin/pacaur
+CP=/usr/bin/cp
+REFLECTOR=/usr/bin/reflector
+
+# ---------------------------
+#      Snapshot System
+# ---------------------------
+
+# -------- OLDSTABLE --------
+
+$SUDO $BTRFS subvolume delete /.snapshots/OLDSTABLE
+$SUDO $MV /.snapshots/STABLE /.snapshots/OLDSTABLE
+$SUDO $SED -i 's/STABLE/OLDSTABLE/g' /.snapshots/OLDSTABLE/etc/fstab
+$SUDO $CP /boot/vmlinuz-linux-stable /boot/vmlinuz-linux-oldstable
+$SUDO $CP /boot/initramfs-linux-stable.img /boot/initramfs-linux-oldstable.img
+
+# --------- STABLE ----------
+
+$SUDO $BTRFS subvolume snapshot / /.snapshots/STABLE
+$SUDO $SED -i 's/TESTING/STABLE/g' /.snapshots/STABLE/etc/fstab
+$SUDO $CP /boot/vmlinuz-linux /boot/vmlinuz-linux-stable
+$SUDO $CP /boot/initramfs-linux.img /boot/initramfs-linux-stable.img
+
+# ---------------------------
+#      Update System
+# ---------------------------
+
+$SUDO $REFLECTOR --verbose -l 5 -p https --sort rate --save /etc/pacman.d/mirro>
+$SUDO $PACMAN -Syu
+
+# ---------------------------
+#    Balance Filesystem
+# ---------------------------
+
+$SUDO $BTRFS balance start -dusage=5 /btrfs
+```
+
+Script ausführbar machen:
+
+```
+chmod u+x ~/.scripts/update.sh
+```
+
+! Verwendung
+
+Das System updaten unter Verwendung des Scripts:
+
+```
+.scripts/update
+```
+
+nicht mehr
+
+```
+sudo pacman -Syu
+```
+
+! Verwendung LTS-Kernel
+
+[[29.01.2017 - Arch My Way 1 - Grundsystem installierenArch My Way 4 - Kernel Rollback und LTS Kernel (Deutsch) - 16:09|https://youtu.be/yRnbh5SbRf8?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH&t=969]]
+
+```
+sudo nano ~/.scripts/update
+```
+
+Unter Abschnitt STABLE den `vmlinuz-linux` und `initramfs-linux.img` mit `-lts` ergänzen:
+
+```
+$SUDO $CP /boot/vmlinuz-linux-lts /boot/vmlinuz-linux-stable
+$SUDO $CP /boot/initramfs-linux-lts.img /boot/initramfs-linux-stable.img
+```
+
+[[Rollback durchführen]]

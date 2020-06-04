@@ -1,0 +1,67 @@
+created: 20200522090404043
+modified: 20200522090520464
+tags: bash
+title: Datenträger anzeigen
+
+Verschiedene Möglichkeiten:
+
+```
+[niggi@archbox ~]$ lsblk
+NAME        MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
+nvme0n1     259:0    0 465.8G  0 disk 
+├─nvme0n1p1 259:1    0   250M  0 part /boot
+├─nvme0n1p2 259:2    0 449.5G  0 part /btrfs
+└─nvme0n1p3 259:3    0    16G  0 part [SWAP]
+```
+
+```
+[niggi@archbox ~]$ blkid -o list
+device     fs_type label    mount point    UUID
+-------------------------------------------------------------------------------
+/dev/nvme0n1p1
+                            /boot          
+/dev/nvme0n1p2
+                            (nicht eingehängt) 
+/dev/nvme0n1p3
+                            [SWAP]         
+```
+
+```
+[niggi@archbox ~]$ sudo fdisk -l
+[sudo] Passwort für niggi: 
+Festplatte /dev/nvme0n1: 465.78 GiB, 500107862016 Bytes, 976773168 Sektoren
+Festplattenmodell: Samsung SSD 970 EVO 500GB               
+Einheiten: Sektoren von 1 * 512 = 512 Bytes
+Sektorgröße (logisch/physikalisch): 512 Bytes / 512 Bytes
+E/A-Größe (minimal/optimal): 512 Bytes / 512 Bytes
+Festplattenbezeichnungstyp: gpt
+Festplattenbezeichner: 5538468E-ABD1-464F-AABB-A113C6714B8B
+
+Gerät             Anfang      Ende  Sektoren  Größe Typ
+/dev/nvme0n1p1      2048    514047    512000   250M EFI-System
+/dev/nvme0n1p2    514048 943218702 942704655 449.5G Linux-Dateisystem
+/dev/nvme0n1p3 943220736 976773134  33552399    16G Linux Swap
+```
+
+Nicht akurat unter Btrfs:
+
+```
+[niggi@archbox ~]$ df -Th
+Dateisystem    Typ      Größe Benutzt Verf. Verw% Eingehängt auf
+dev            devtmpfs   16G       0   16G    0% /dev
+run            tmpfs      16G    1.4M   16G    1% /run
+/dev/nvme0n1p2 btrfs     450G    181G  269G   41% /
+tmpfs          tmpfs      16G    450M   16G    3% /dev/shm
+tmpfs          tmpfs      16G       0   16G    0% /sys/fs/cgroup
+tmpfs          tmpfs      16G    1.6M   16G    1% /tmp
+/dev/nvme0n1p2 btrfs     450G    181G  269G   41% /.snapshots
+/dev/nvme0n1p2 btrfs     450G    181G  269G   41% /btrfs
+/dev/nvme0n1p2 btrfs     450G    181G  269G   41% /home
+/dev/nvme0n1p2 btrfs     450G    181G  269G   41% /var/cache/pacman/pkg
+/dev/nvme0n1p2 btrfs     450G    181G  269G   41% /var/lib/libvirt/images
+/dev/nvme0n1p2 btrfs     450G    181G  269G   41% /var/log
+/dev/nvme0n1p2 btrfs     450G    181G  269G   41% /home/.home_snapshots
+tmpfs          tmpfs     2.0G    318M  1.7G   16% /home/niggi/.cache
+/dev/nvme0n1p1 vfat      247M    127M  120M   52% /boot
+tmpfs          tmpfs     3.2G     16K  3.2G    1% /run/user/1000
+```

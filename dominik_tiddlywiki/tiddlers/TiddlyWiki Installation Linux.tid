@@ -1,0 +1,78 @@
+created: 20200522093621792
+modified: 20200531121300984
+tags: tw5 node
+title: TiddlyWiki Installation Linux
+type: text/vnd.tiddlywiki
+
+[[TiddlyWiki — GettingStarted - Node.js|https://tiddlywiki.com/#GettingStarted%20-%20Node.js]]
+
+Mit Option `-g` wird tiddlywiki global installiert:
+
+```
+[niggi@archbox node]$ sudo npm install -g tiddlywiki
+/usr/bin/tiddlywiki -> /usr/lib/node_modules/tiddlywiki/tiddlywiki.js
++ tiddlywiki@5.1.22
+added 1 package from 1 contributor in 1.969s
+```
+
+!! Überprüfung der installierten Version:
+
+```
+tiddlywiki --version
+```
+
+! TiddlyWiki-Folder erstellen
+
+In Ordner gehen, worin das neue TiddlyWiki erstellt werden soll.
+
+```
+[niggi@archbox ~]$ cd /mnt/nfs/syn/1_gtd/1.7_referenzmaterial/1.7.2_tiddlywiki/node/
+```
+
+Der Name des hier erstellten TiddlyWiki lautet "notizbuch".
+
+```
+[niggi@archbox node]$ tiddlywiki notizbuch --init server
+Copied edition 'server' to notizbuch
+```
+
+! TiddlyWiki-Folder unter node starten
+
+```
+[niggi@archbox ~]$ tiddlywiki /mnt/nfs/syn/1_gtd/1.7_referenzmaterial/1.7.2_tiddlywiki/node/notizbuch --listen
+ syncer-server-filesystem: Dispatching 'save' task: $:/StoryList 
+Serving on http://127.0.0.1:8080
+(press ctrl-C to exit)
+```
+
+!! Starten mit Angabe des Ports
+
+```
+tiddlywiki.js /mnt/nfs/syn/1_gtd/1.7_referenzmaterial/1.7.2_tiddlywiki/node/notizbuch --server 7123
+```
+
+Gebe die genannte IP-Nummer:Port-Nummer im Browser ein und erstelle Tiddler.
+
+! TiddlyWiki auf neue Version aktualisieren
+
+```
+sudo npm update -g tiddlywiki
+```
+
+! Plugins installieren
+
+[[TiddlyWiki — Installing a plugin from the plugin library|https://tiddlywiki.com/#Installing a plugin from the plugin library]]
+
+Plugins werden über die Datei `tidllywiki.info` konfiguriert, welche im Root-System des Folder liegt.
+
+Verzeichnis für native Plugins:
+
+`/usr/lib/node_modules/tiddlywiki/plugins/tiddlywiki/`
+
+Verzeichnis für ''nicht'' native Plugins (z. B. [[TiddlyMap]]):
+
+`/usr/lib/node_modules/tiddlywiki/plugins/`
+
+! Tiddler organisation
+
+[[Make tiddler file paths configurable by nome · Pull Request #2379 · Jermolene/TiddlyWiki5|https://github.com/Jermolene/TiddlyWiki5/pull/2379]]

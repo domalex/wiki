@@ -1,0 +1,21 @@
+created: 20200602074048139
+modified: 20200602204014614
+tags: tw5
+title: Tiddler
+type: text/vnd.tiddlywiki
+
+[[Tiddler - TiddlyWiki — a non-linear personal web notebook|https://tiddlywiki.com/#Tiddlers]]
+
+TiddlyWiki ist aus Tiddlern aufgebaut. Sie sind somit dessen kleinste Informationseinheit.
+
+Synonyme für Tiddler sind etwa Eintrag oder [[Node]]
+
+Es ist entscheidend die notwendige Granularität bei der Erstellung von Tiddlern zu finden. Nur so können diese wiederverwendet und miteinander verwoben werden.
+
+Grundsätzlich gilt Tidder so klein wie möglich zu halten. Sie behandeln ein in sich abgeschlossenes Thema.
+
+Durch Tags können Tiddler kategorisiert und später mittels Abfragen daraus Listen und Seiten erstellt werden. Dazu verwendet man die eingebaute Abfragesprache.
+
+Beispiel: `<<list-links "[tag[todo]!tag[done]]">>`
+
+Diese Abfrage listet alle Tiddlertitel mit dem Tag `todo` aber ohne Tag `done`. Mit anderen Worten alle noch zu erledigenden Aufgaben werden angezeigt.

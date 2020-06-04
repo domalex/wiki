@@ -1,0 +1,88 @@
+created: 20200522085716690
+modified: 20200522085745342
+tags: btrfs
+title: Btrfs Dateisystem-Informationen
+
+[[30.01.2017 - Arch My Way 1 - Grundsystem installierenArch My Way 5 - Sicherheit und Backups - Btrfs Read Only Snapshots - 08:36|https://youtu.be/IZCKlGGSyGM?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH&t=516]]
+
+`/btrfs` ist Root aller Subvolumes und Default Subvolume. In den folgenden Abfragen erzielte ich mit `/` dieselben Ergebnisse.
+
+Bei einigen Abfragen kann Anstelle sogar der Datenträger `/dev/nvme0n1p2` angegeben werden.
+
+! Festplatten-Belegung
+
+```
+[niggi@archbox ~]$ sudo btrfs filesystem show /dev/nvme0n1p2
+Label: 'ROOT'  uuid: 64b4b84e-2b18-4f5d-87cd-723a9b7a689b
+	Total devices 1 FS bytes used 178.46GiB
+	devid    1 size 449.52GiB used 195.04GiB path /dev/nvme0n1p2
+```
+entspricht
+
+```
+[niggi@archbox ~]$ sudo btrfs filesystem show /btrfs
+Label: 'ROOT'  uuid: 64b4b84e-2b18-4f5d-87cd-723a9b7a689b
+	Total devices 1 FS bytes used 178.46GiB
+	devid    1 size 449.52GiB used 195.04GiB path /dev/nvme0n1p2
+```
+
+```
+[niggi@archbox ~]$ sudo btrfs filesystem df /btrfs/
+Data, single: total=193.01GiB, used=177.68GiB
+System, single: total=32.00MiB, used=48.00KiB
+Metadata, single: total=2.00GiB, used=804.36MiB
+GlobalReserve, single: total=207.25MiB, used=0.00B
+```
+
+```
+[niggi@archbox ~]$ sudo btrfs filesystem usage /btrfs 
+Overall:
+    Device size:		 449.52GiB
+    Device allocated:		 195.04GiB
+    Device unallocated:		 254.48GiB
+    Device missing:		     0.00B
+    Used:			 178.46GiB
+    Free (estimated):		 269.81GiB	(min: 269.81GiB)
+    Data ratio:			      1.00
+    Metadata ratio:		      1.00
+    Global reserve:		 207.25MiB	(used: 0.00B)
+
+Data,single: Size:193.01GiB, Used:177.68GiB (92.06%)
+   /dev/nvme0n1p2	 193.01GiB
+
+Metadata,single: Size:2.00GiB, Used:804.36MiB (39.28%)
+   /dev/nvme0n1p2	   2.00GiB
+
+System,single: Size:32.00MiB, Used:48.00KiB (0.15%)
+   /dev/nvme0n1p2	  32.00MiB
+
+Unallocated:
+   /dev/nvme0n1p2	 254.48GiB
+```
+
+! Subvolumes
+
+```
+[niggi@archbox ~]$ sudo btrfs subvolume list /btrfs 
+ID 257 gen 912272 top level 5 path @
+ID 258 gen 914209 top level 5 path @home
+ID 259 gen 914209 top level 5 path @log
+ID 260 gen 913816 top level 5 path @pkg
+ID 261 gen 913815 top level 5 path @snapshots
+ID 263 gen 710535 top level 257 path @/var/lib/portables
+ID 264 gen 710535 top level 257 path @/var/lib/machines
+ID 268 gen 914208 top level 261 path @snapshots/TESTING
+ID 556 gen 912276 top level 5 path @images
+ID 625 gen 710541 top level 268 path @snapshots/TESTING/.snapshots/OLDSTABLE
+ID 626 gen 710541 top level 268 path @snapshots/TESTING/.snapshots/STABLE
+ID 765 gen 912275 top level 5 path @home_snapshots
+ID 771 gen 912276 top level 5 path @images_snapshots
+ID 1158 gen 860272 top level 261 path @snapshots/@_backup_2020-04-08_12:32
+ID 1159 gen 860443 top level 765 path @home_snapshots/home_backup_2020-04-08_12:33
+ID 1160 gen 860443 top level 771 path @images_snapshots/image_backup_2020-04-08_12:33
+ID 1226 gen 912272 top level 261 path @snapshots/@_backup_2020-05-04_14:11
+ID 1227 gen 912276 top level 765 path @home_snapshots/home_backup_2020-05-04_14:12
+ID 1228 gen 912276 top level 771 path @images_snapshots/image_backup_2020-05-04_14:13
+ID 1231 gen 913815 top level 261 path @snapshots/OLDSTABLE
+ID 1232 gen 913816 top level 261 path @snapshots/STABLE
+```

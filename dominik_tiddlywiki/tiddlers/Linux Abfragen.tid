@@ -1,0 +1,13 @@
+created: 20200522091335309
+modified: 20200522091405167
+tags: bash
+title: Linux Abfragen
+
+! Pipe
+
+Datei nach Begriff `tmpfs` durchsuchen und besagte Zeile ausgeben:
+
+```
+[niggi@archbox entries]$ cat /etc/fstab | grep tmpfs
+tmpfs			/home/niggi/.cache	tmpfs	noatime,nodev,nosuid,size=2G	0 0
+```

@@ -1,0 +1,218 @@
+created: 20200522092947648
+modified: 20200522093012569
+tags: 
+title: Systemd
+
+# Debugging
+
+## journald - view log
+
+[How To Use Journalctl to View and Manipulate Systemd Logs | DigitalOcean](https://www.digitalocean.com/community/tutorials/how-to-use-journalctl-to-view-and-manipulate-systemd-logs)
+
+```
+journalctl
+```
+
+newest first `--reverse`
+
+```
+journalctl -r
+```
+
+go to the end and show new entries live `--follow`
+
+```
+journalctl -f
+```
+
+```
+journalctl -f -u apache
+```
+
+`-o` verbose 	Zeigt zu jedem Logeintrag alle verfügbaren Metadaten an. Dadurch wird die Ausgabe sehr detailliert - und sehr lang. 
+
+Displaying Logs from the Current Boot:
+
+```
+journalctl -b
+```
+
+This will display a line for each boot:
+
+```
+journalctl --list-boots
+```
+
+To display information from these boots, you can use information from either the first or second column.
+
+```
+journalctl -b -1
+```
+or 
+
+```
+journalctl -b caf0524a1d394ce0bdbcff75b94444fe
+```
+
+Time Windows
+
+```
+journalctl --since "2015-01-10 17:15:00"
+```
+
+```
+journalctl --since "2015-01-10" --until "2015-01-11 03:00"
+```
+
+```
+journalctl --since "2016-07-01" --until "2 minutes ago"
+```
+
+
+```
+journalctl --since yesterday
+```
+
+```
+journalctl --since yesterday
+```
+
+By Unit
+
+```
+journalctl -u nginx.service
+```
+
+```
+journalctl -u nginx.service --since today
+```
+
+This can make it much easier to spot the interactions between different programs and debug systems instead of individual processes:
+
+```
+journalctl -u nginx.service -u php-fpm.service --since today
+```
+
+```
+journalctl -u home.mount -u networking.service 
+```
+
+```
+journalctl -f -u apache
+```
+
+```
+journalctl _PID=8088
+```
+
+`_UID` or `_GID` filters
+
+```
+id -u www-data
+
+33
+```
+
+```
+journalctl _UID=33 --since today
+```
+
+filter by providing a path location
+
+```
+journalctl /usr/bin/bash
+```
+
+Kernel messages, those usually found in `dmesg` output (`-b` = current boot)
+
+```
+journalctl -k -b
+```
+
+specified priority or above
+
+*   0: emerg
+*   1: alert
+*   2: crit
+*   3: err
+*   4: warning
+*   5: notice
+*   6: info
+*   7: debug
+
+only entries logged at the error level or above. use either the priority name or its corresponding numeric value.
+
+```
+journalctl -p err -b
+```
+
+to show the errors of the last boot:
+
+```
+journalctl -p 3 -xb
+```
+
+to save output to a file:
+
+```
+cat journalctl -p 3 -xb > errors.txt
+```
+
+all errors ever since…:
+
+```
+journalctl -p 3
+```
+
+all messages, even positive about firefox:
+
+```
+journalctl -p 7 -xb | grep firefox
+```
+
+By default, it will display the most recent 10 entries:
+
+```
+journalctl -n
+```
+
+specify the number of entries
+
+```
+journalctl -n 20
+```
+
+# Finding Current Disk Usage
+
+```
+journalctl --disk-usage
+```
+
+# Deleting Old Logs
+
+[Clear systemd journal](https://ma.ttias.be/clear-systemd-journal/)
+
+[systemd/Journal - ArchWiki](https://wiki.archlinux.org/index.php/Systemd/Journal)
+
+```
+sudo journalctl --vacuum-size=1G
+```
+
+```
+sudo journalctl --vacuum-time=1years
+```
+
+# Limiting Journal Expansion
+
+You can configure your server to place limits on how much space the journal can take up. This can be done by editing the `/etc/systemd/journald.conf` file.
+
+The following items can be used to limit the journal growth:
+
+*   **`SystemMaxUse=`**: Specifies the maximum disk space that can be used by the journal in persistent storage.
+*   **`SystemKeepFree=`**: Specifies the amount of space that the journal should leave free when adding journal entries to persistent storage.
+*   **`SystemMaxFileSize=`**: Controls how large individual journal files can grow to in persistent storage before being rotated.
+*   **`RuntimeMaxUse=`**: Specifies the maximum disk space that can be used in volatile storage (within the `/run` filesystem).
+*   **`RuntimeKeepFree=`**: Specifies the amount of space to be set aside for other uses when writing data to volatile storage (within the `/run` filesystem).
+*   **`RuntimeMaxFileSize=`**: Specifies the amount of space that an individual journal file can take up in volatile storage (within the `/run` filesystem) before being rotated.
+
+By setting these values, you can control how `journald` consumes and preserves space on your server. Keep in mind that **`SystemMaxFileSize`** and **`RuntimeMaxFileSize`** will target archived files to reach stated limits. This is important to remember when interpreting file counts after a vacuuming operation.

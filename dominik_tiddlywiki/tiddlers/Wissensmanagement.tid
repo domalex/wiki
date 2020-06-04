@@ -1,0 +1,23 @@
+created: 20200528075409067
+modified: 20200604143135084
+tags: mind
+title: Wissensmanagement
+type: text/vnd.tiddlywiki
+
+! "Work in Progress"
+
+Wissen verändert sich laufend. Wissensmanagement bedeutet Entwicklung und Innovation (BrainWork).
+
+Nur ein aktuelles System entfaltet den gewünschten Nutzen (BrainDump). Damit ein System aktiv betrieben wird und somit lebt, sollten beim Aufbau verschiedene Aspekte berücksichtigt werden.
+
+BrainBasic: wie funktioniert unser Verstand?
+
+BrainWork: wie verarbeiten wir Informationen?
+
+BrainDump: Motivation für ein System ausserhalb unseres Kopfes
+
+BrainDumpSystem: Anforderungen an ein Wissensmanagement-System
+
+Alle Tiddler:
+
+<$list filter="[!title[Wissensmanagement]!has[draft.of]tag[mind]sort[title]]"/>

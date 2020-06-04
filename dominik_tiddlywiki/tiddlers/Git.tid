@@ -1,0 +1,106 @@
+created: 20200604150948994
+modified: 20200604151526362
+tags: git
+title: Git
+type: text/vnd.tiddlywiki
+
+! Basic commands
+
+All commands need to be executed within the repository folder
+
+`git init` initialize local git repository
+
+`touch <file>` create a file = modified file
+
+`git status`
+
+`git add <file>` add file(s)  or `*` or `-a` ( add all) or `.` (for every changes made) to index = tracked file
+
+`git add <file name>` add to staging area only specific files with changes or new ones
+
+`git status` check status of working tree
+
+-> create on github a new repository (without a `README.md`?) and follow the given instructions on the local machine:
+
+`git remote add origin <url>`
+...
+
+`git commit -m "<message>"` commit changes with explanation in index
+
+`git log` shows all the commits made locally
+
+`git log --pretty=oneline` shows commits in a compact version
+
+`git log --pretty=oneline -2` shows commits in a compact version = only last 2 commits
+
+`git push origin master` push to remote origin master branch
+
+`git pull` pull latest from remote repository
+
+`git clone` clone repository into a new directory
+
+`git config --global user.name "dominikalexander"`
+
+`git config --global user.email "dschmid@gmx.net"`
+
+`git config user.name` check
+
+`git config user.email` check
+
+`git config --list` check all configuration
+
+!! Branches
+
+`git branch <new branch name> -b` make new branch and `-b` flag switches directly into it
+
+`git checkout <new branch name>` switches you from the current working branch to the new branch
+
+`git push origin <new branch name>` push to remote origin new repository branch
+
+`git checkout master` checkout from current branch and switch to the master branch
+
+`git status` double check current branch location I am currently in
+
+`git branch` shows all created branches and the current working branch
+
+`git remote` lists all of my remote locations (e.g. github = called origin)
+
+`git remote -v` lists all of my remotes with their address `-v` with option verbose
+
+`git merge <name of branch>` merges into current working directory
+
+`git branch -d <name of not needed branch>` delete branch locally
+
+`git push origin --delete <name branch>` deletes branch on github (origin = standard name in github for the repository it came from)
+
+`git push origin master` pushes merged master branch to github
+
+!! Ignore files
+
+For sensitive information: just add the name of the file you want to be ignored to the `.gitignore` file.
+
+`touch .gitignore` creation of file
+
+`git help gitignore` documentation about gitignore
+
+Write the name of the files to be ignored into the `.gitignore` file. Then ...
+
+`git add .gitignore`
+
+`git status`
+
+`git commit -m "Added .gitignore file"`
+
+`git push`
+
+!! Flags / options
+
+! Github pages
+
+[[1.8: GitHub Pages - Git and GitHub for Poets|https://youtu.be/bFVtrlyH-kc]]
+
+[[9.13: GitHub Pages for Hosting p5.js Sketches - p5.js Tutorial|https://youtu.be/8HPYsDTk17A]]
+
+! Merge
+
+[[1.10: Git Remotes - Git and GitHub for Poets|https://youtu.be/lR_hYwCAaH4]]

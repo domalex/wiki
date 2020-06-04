@@ -1,0 +1,59 @@
+created: 20200522084122922
+modified: 20200522084148941
+tags: archlinux
+title: ArchLinux Installation LTS-Kernel
+
+[[29.01.2017 - Arch My Way 1 - Grundsystem installierenArch My Way 4 - Kernel Rollback und LTS Kernel (Deutsch)- 13:57|https://youtu.be/yRnbh5SbRf8?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH&t=837]]
+
+```
+sudo pacman -S linux-lts
+```
+
+Root werden:
+
+```
+sudo su
+```
+
+```
+cd /boot/
+ls
+```
+
+Booteintrag erstellen!
+
+```
+cd /boot/loader/entries/
+cp arch-uefi_05-testing.conf arch-uefi_15-lts.conf
+```
+
+Inhalt
+
+```
+title    Arch Linux Xfce LTS
+linux    /vmlinuz-linux-lts
+initrd   /initramfs-linux-lts.img
+options  root=LABEL=ROOT rootflags=subvol=@snapshots/TESTING rw resume=LABEL=SWAP
+```
+
+! Neustart
+
+System neu starten in LTS:
+
+```
+reboot
+```
+
+Überprüfung:
+
+Subvolume:
+
+```
+mount
+```
+
+evtl. Kernel:
+
+```
+uname -r
+```
