@@ -1,5 +1,5 @@
 created: 20200604150948994
-modified: 20200604151526362
+modified: 20200607102515716
 tags: git
 title: Git
 type: text/vnd.tiddlywiki
@@ -104,3 +104,24 @@ Write the name of the files to be ignored into the `.gitignore` file. Then ...
 ! Merge
 
 [[1.10: Git Remotes - Git and GitHub for Poets|https://youtu.be/lR_hYwCAaH4]]
+
+! Fehlerbehebung
+
+!! Mehrere GitHub Accounts
+
+[[git - Multiple github accounts on the same computer? - Stack Overflow|https://stackoverflow.com/questions/3860112/multiple-github-accounts-on-the-same-computer]]
+
+Bei `git push` gibt es folgede Fehlermeldung:
+
+```
+remote: Permission to domalex/wiki.git denied to zoom.into
+```
+
+Lösung:
+
+```
+git credential reject
+protocol=https
+host=github.com
+<empty line here>
+```
