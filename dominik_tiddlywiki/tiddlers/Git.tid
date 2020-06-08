@@ -1,10 +1,12 @@
 created: 20200604150948994
-modified: 20200608065857363
+modified: 20200608082830121
 tags: git
 title: Git
 type: text/vnd.tiddlywiki
 
 ! Basic commands
+
+[[GIT and GITHUB Tutorial for Beginners - YouTube|https://www.youtube.com/watch?v=RvnM6EEwp1I]]
 
 All commands need to be executed within the repository folder
 
