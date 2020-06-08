@@ -1,5 +1,5 @@
 created: 20200604150948994
-modified: 20200607102515716
+modified: 20200608065857363
 tags: git
 title: Git
 type: text/vnd.tiddlywiki
@@ -110,6 +110,8 @@ Write the name of the files to be ignored into the `.gitignore` file. Then ...
 !! Mehrere GitHub Accounts
 
 [[git - Multiple github accounts on the same computer? - Stack Overflow|https://stackoverflow.com/questions/3860112/multiple-github-accounts-on-the-same-computer]]
+
+[[How to have 2 or more GitHub accounts on one machine (Windows)|https://medium.com/@pinglinh/how-to-have-2-github-accounts-on-one-machine-windows-69b5b4c5b14e]]
 
 Bei `git push` gibt es folgede Fehlermeldung:
 
