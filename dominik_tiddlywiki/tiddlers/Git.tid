@@ -1,5 +1,5 @@
 created: 20200604150948994
-modified: 20200608082830121
+modified: 20200609091159514
 tags: git
 title: Git
 type: text/vnd.tiddlywiki
@@ -16,7 +16,7 @@ All commands need to be executed within the repository folder
 
 `git status`
 
-`git add <file>` add file(s)  or `*` or `-a` ( add all) or `.` (for every changes made) to index = tracked file
+`git add <file1> <file2>` add file(s)  or `*` or `-a` ( add all) or `.` (for every changes made) to index = tracked file
 
 `git add <file name>` add to staging area only specific files with changes or new ones
 

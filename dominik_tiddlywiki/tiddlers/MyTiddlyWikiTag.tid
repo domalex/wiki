@@ -1,0 +1,41 @@
+created: 20200609112531303
+modified: 20200609140448014
+tags: filing
+title: MyTiddlyWikiTag
+type: text/vnd.tiddlywiki
+
+Hier wird meine Tag-Strategie erläutert.
+
+[[TagSystem]]
+
+! Eigene Tags und deren Verwendung
+
+<<tag android>> IT, Android Betriebsystem
+
+<<tag archlinux>> IT, ArchLInux
+
+<<tag bash>> IT, Bash, Terminal
+
+<<tag btrfs>> IT, Btrfs File System
+
+<<tag business>> Methodik, relevantes über Business, also das Geschäfte machen
+
+<<tag fee>> FEE Methode, FEE Consult AG
+
+<<tag filing>> Organisation, eigenes Ablagesystem erklärt
+
+<<tag git>> IT, Git, GitHub
+
+<<tag gtd>> Methodik, Aufgabenmanagement, Methode Getting Things Done erklärt
+
+<<tag Journal>> ist ein System-Tiddler, wird bei Erstellung eins Journal-Tiddlers automatisch erstellt, Journale werden verwendet für Meeting-Notitzen. Diese dienen zur Weiterverarbeitung in Wissenseinträge oder Aufgaben. Danach werden sie gelöscht. Ziel: keine Journal-Tiddler!
+
+<<tag mind>> Methodik, Wissensmanagement: relevantes über unseren Verstand
+
+<<tag node>> IT, Node.js
+
+<<tag qm>> Methodik, Qualitätsmanagement, Prozessmanagement
+
+<<tag todo>> Organisation, Aufgaben, zu erledigen
+
+<<tag tw5>> IT, alles über TiddlyWiki 5
