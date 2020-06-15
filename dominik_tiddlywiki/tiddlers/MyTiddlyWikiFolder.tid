@@ -1,0 +1,17 @@
+created: 20200609163309377
+modified: 20200609163729279
+tags: filing
+title: MyTiddlyWikiFolder
+type: text/vnd.tiddlywiki
+
+Hier wird erklärt welche Tiddler in Welchen Folder abgelegt werden sollen.
+
+/Wiki (Hauptverzeichnis)
+
+json-File
+
+/Tiddlers (Standardverzeichnis)
+
+/digitalgarden (für Vollständig entwickelte Tiddlers)
+
+/fee (für Tiddler die ins FEE-Wissensmanagement kopiert werden können)

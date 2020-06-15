@@ -1,8 +1,10 @@
 created: 20200609131621705
-modified: 20200609145355269
+modified: 20200615174843571
 tags: fee
 title: FeeTiddlyWikiTag
 type: text/vnd.tiddlywiki
+
+! Project Xanadu
 
 Hier wird die Tag-Strategie rund um die FEE Methode erläutert. Darin eingeschlossen ist deren Umsetzung, Vermittlung und Verbreitung.
 
@@ -21,7 +23,5 @@ Hier wird die Tag-Strategie rund um die FEE Methode erläutert. Darin eingeschlo
 <<tag competition>> Wissenswertes über unsere Konkurrenten (Organisationen, Systeme)
 
 <<tag trend>> massgebliche Trends
-
-<<tag source>> nützliche Quellen
 
 lecture: zusammengestellte Lektionen und Workshops (allenfalls zu verteilende Scripts in Papierform werden in der webFee verwaltet)
