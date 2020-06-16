@@ -1,5 +1,5 @@
 created: 20200604062410833
-modified: 20200615162823672
+modified: 20200616091817262
 tags: mind
 title: BrainDumpSystem
 type: text/vnd.tiddlywiki
@@ -10,7 +10,7 @@ Folgende Punkte gilt es bei einem Wissensmanagementsystem zu berücksichtigen.
 
 !! Verständlichkeit
 
-Aussgehend von BrainBasic legt unser Gedächtnis Informationen in kleinen Broken ([[Nodes|Node]]) assoziativ und vernetzt ab. Um für unseren Verstand leicht zugänglich und unterstützend zu wirken, sollte ein System dieses Verhalten abstrahieren. Hypertext und Textverlinkungen kommen der Funktionsweise unseres Gehirns dabei am nächsten.
+Aussgehend von BrainBasic legt unser Gedächtnis Informationen in kleinen Brocken ([[Nodes|Node]]) assoziativ und vernetzt ab. Um für unseren Verstand leicht zugänglich und unterstützend zu wirken, sollte ein System dieses Verhalten abstrahieren. Hypertext und Textverlinkungen kommen der Funktionsweise unseres Gehirns dabei am nächsten.
 
 !! Ökonomie
 
