@@ -1,0 +1,92 @@
+created: 20200618103539270
+modified: 20200619154830053
+tags: filing
+title: MyFileExplorer
+type: text/vnd.tiddlywiki
+
+file://mnt/nfs/syn/1_gtd/1.7_referenzmaterial/1.7.1_mindmaps/
+
+! Namenskonvention
+
+Alles klein schreiben ohne Leerzeichen.
+
+Leerzeichen = `_`
+
+Zusammenhängende Begriffe = `-`
+
+```
+<art/thema>_<titel/inhalt>_<yymmdd>_<referenz>_<evtl.-aufbewahrungsdauer>
+```
+
+Beispiel:
+
+```
+rechnung-garantie_garten-utensilien_180308_jumbo_02
+```
+
+! Ablagestruktur
+
+7-File-System (nicht mehr als 7 Ordner in einem Ordner)
+
+!! Ebenen
+
+Zweicks Reihenfolge können die Ordner nummeriert werden:
+
+* 1_ebene_eins
+** 1.1_ebene_zwei
+*** 1.1.1_ebene_drei
+
+* ''1_gtd''
+** 1.1_tickler-file
+** 1.2_read-review
+** 1.3_someday-maybe
+** 1.7_referenzmaterial `<oberbegriff>_<inhalt>_<yymmdd>_<referenz>` (Zusatzmaterial, welches nach wie vor relevant ist und regelmässig bei der Arbeit konsultiert werden muss)
+*** 1.7.1_mindmaps
+*** 1.7.2_tiddlywiki
+*** 1.7.6_manuals
+*** 1.7.7_vorlagen
+***> logos
+** 1.7..._presse
+
+* ''2_dokumente_privat''
+** 2.7_ vorlagen_privat
+
+* ''3_dokumente_business''
+** 3.1_kunden `<abkürzung-kunde>_<name-kunde>`
+**> fee_fee-consult-ag
+**> pnb_paul-n-burch
+**> bb_bruno-bölschterli
+** 3.7_vorlagen_business
+
+* ''4_fee_mbh''
+* ''5_mindmaps''
+
+* ''archiv'' (Unterlagen, die nicht mehr konsultiert werden müssen. Sie unterstehen entweder der gesetzlichen Aufbewahrungspflicht oder sind anderweitig von Wichtigkeit.)
+** manuals `<firma>_<produkt>_<bezeichnung>_<yymmdd>_<referenz>`
+** cv
+** urkunden `<yymmdd>_<firma/organisation>_<titel>_<referenz>_<evtl.-aufbewahrungsdauer>`
+*** arbeitsverträge
+*** zeugnisse
+*** ausweise
+** quittungen
+** steuern `st_2017`
+** vertragspartner (Namenskonvention = <abkürzung bereich>_<abkürzung kunde>
+t.b.a. Abkürzung Kunde = Beginn Dateiname oder Referenz)
+*** finanz_cs
+*** finanz_ubs
+*** finanz_tkb
+*** finanz_profi
+*** vers_ahv
+*** haus_lb
+
+* ''medien''
+** bilder `<yymmdd>_<art/thema>_<titel/inhalt/ort>_<referenz>_temp / _orig / _retouchiert / _select` (aus chronologischen Gründen Datum an Anfang)
+** e-books
+** [[musik|NamenskonventionMusik]]
+** videos
+** filme
+
+* ''backup''
+
+* ''Cloud''
+ 

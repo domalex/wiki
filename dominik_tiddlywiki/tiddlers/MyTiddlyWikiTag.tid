@@ -1,5 +1,5 @@
 created: 20200609112531303
-modified: 20200609140448014
+modified: 20200618103500400
 tags: filing
 title: MyTiddlyWikiTag
 type: text/vnd.tiddlywiki
@@ -19,6 +19,8 @@ Hier wird meine Tag-Strategie erläutert.
 <<tag btrfs>> IT, Btrfs File System
 
 <<tag business>> Methodik, relevantes über Business, also das Geschäfte machen
+
+<<tag concept>> verschiedene Konzepte
 
 <<tag fee>> FEE Methode, FEE Consult AG
 

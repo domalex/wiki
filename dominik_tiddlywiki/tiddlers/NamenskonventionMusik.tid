@@ -1,0 +1,44 @@
+created: 20200619151803661
+modified: 20200619153636280
+tags: filing
+title: NamenskonventionMusik
+type: text/vnd.tiddlywiki
+
+Personally, i use the classic Artist/Album/Track in a way that the music organizes by itself. For example, the Abbey Road album (The Beatles)  ''/Beatles-The /1969-09-26_Abbey-Road /BT-19690926-AR_01''
+
+This way, the first song will always be the first one, no matter the name of the song. Also the album is organized chronologically, because i put the date when it was released. This is their second to last album, so this way it can be organized in a Beatles folder as such, in spite the fact that the album starts with the letter "A". The name of the band will be organized within the "B" letter, in spite of the "The" before the name "Beatles". All the rest of the info can be done within the ID tag environment, but now you have your music in chronological order. This works very well with live albums, where they were recorded and released at two different dates.
+ 
+Weitere Ideen:
+
+''[album artist] - [album]/[track artist] - [track #] - [title]''
+
+''[album artist]/[year]-[album]/[track #] [title][suffix]''
+
+''Various/[year]-[album]/[track #] [title] - [track artist][suffix]''
+
+To sync newly purchased CDs, I've a self-made script to calculate a scaling factor with wavgain in album gain, extract tags by filename and encode using ''LAME''. It's all automatic.
+
+''%artist%-'('%date%')'-%album%\%tracknumber% - %title%''
+
+This allows for folder art for both the artist and the album. Resulting in something such as Classic Rock\Boston\(1976) Boston\01. More Than A Feeling.mp3
+For various artists releases, I use a rather messy 
+
+''%Genre%\Various Artists\(%Year%) %Album%[%~AlbumArtist%]\$pad(%Track%,2). %Title% [%Artist%].mp3''
+
+Resulting in Electronic\Various Artists\(2001) Deep & Chilled Euphoria Compilation [Red Jerry]\04. Autumn Leaves [Coldcut].mp3
+I am debating whether to separate %~AlbumArtist% from the album folder which would allow for additional folder art.
+I'm currently in a predicament with my brother in whether to include disc numbers when sorting. 
+
+this is the scheme I use for multiple-artist albums and should work for you as a catch-all:
+
+''%album artist%\['['%date%']' ]%album%\[%discnumber%.]%tracknumber% - [%artist% - ]%title%''
+
+ This produces a path similar to the following: X:\fileroot\The Police\[1992-09-22] Not an Album\1.34 - Sting - This is a Song.file You can pick out what information you want to keep. Personally, I use a modified version with single-artist albums to avoid redundancy, as %album artist% takes the value of %artist% if the former is missing, so I really don't need that twice in my path.
+
+''%Genre%\%Artist%\(%Year%) %Album%\$pad(%Track%,2). %Title%.ext''
+
+EAC set as follows:
+
+''%D - %C (%Y)\%N - %A - %T VA - %C (%Y)\%N - %A - %T''
+
+EAC FAQ:  placeholder  meaning  %s  Source filename  %d  Destination filename  %h...%h  Text "..." only when High quality selected  %l...%l  Text "..." only when Low quality selected  %c...%c  Text "..." only when CRC checksum selected  %r  Bitrate ("32".."320") as chosen in the Bit rate option  %a  CD artist  %g  CD title  %t  Track title  %y  Year  %n  Track number  %m  MP3 music genre  %o  Original filename (without temporary renaming)  %e  Comment (as selected in EAC)  %b  CRC of extracted track  %f  freedb ID  %x  Number of tracks on album

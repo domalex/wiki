@@ -1,7 +1,8 @@
 created: 20200522085505419
-modified: 20200522085521265
+modified: 20200728170856241
 tags: btrfs
 title: Btrfs
+type: text/vnd.tiddlywiki
 
 [Why you should consider using btrfs ... like Google does. - YouTube](https://www.youtube.com/watch?time_continue=1732&v=6DplcPrQjvA)
 
@@ -15,8 +16,6 @@ title: Btrfs
 
 [Experimenting with btrfs in production](https://drwho.virtadpt.net/archive/2019-10-19/experimenting-with-btrfs-in-production)
 
-
-
 sudo btrfs scrub status /
 
 ```
@@ -27,7 +26,7 @@ retrieve results as often as desired:
 
 ```
 sudo btrfs scrub status /dev/nvme0n1p2
-``` 
+```
 
 Behobene Fehler werden unter "corrected errors" angezeigt. 
 
@@ -45,7 +44,7 @@ sudo btrfs device stats -z /<daten>
 
 oder
 
- **Achtung**: zwischen `-d` und `-f24` müssen zwei Leehrschläge eingefügt werden!
+ ''Achtung'': zwischen `-d` und `-f24` müssen zwei Leehrschläge eingefügt werden!
 
 `dmesg | grep "checksum error at" | cut -d\  -f24- | sed 's/.$//' | sort | uniq`
 
@@ -92,10 +91,12 @@ sudo btrfs sub list -p / -> Kontrolle
 mount -> Kontrolle ID unter ROOT -> /dev/sda2 subvolid= (entsprechende ID)
 sudo btrfs sub snapshot -r / /.snapshots/ROOT01
 
-# Subvolume
+! Subvolume
+
 [btrfs-subvolume(8)](https://github.com/kdave/btrfs-progs/blob/devel/Documentation/btrfs-subvolume.asciidoc) = [Manpage/btrfs-subvolume](https://btrfs.wiki.kernel.org/index.php/Manpage/btrfs-subvolume)
 
-# Kopieren
+! Kopieren
+
 Dubplicate a file while reusing the same data blocks, but allows you to modify dest (can't do this with hardlinks):
 
 ```
@@ -112,11 +113,11 @@ cp --reflink /mnt/btrfs_pool/subvol_1/src /mnt/btrfs_pool/subvol_2/dest
 
 `btrfs-diff` shows most files changed, use this to sync changes with `cp --reflink` instead of reboot
 
-# Backup auf externe Festplatte
+! Backup auf externe Festplatte
 
-## Einstellungen
+!! Einstellungen
 
-### XFCE
+!!! XFCE
 
 - Fensterverwaltung_Tastatur
 - Tastatur_Tastaturkürzel-für-Anwendungen
@@ -135,21 +136,24 @@ Uhr - Zeiteinstellungen - Benutzerdefiniertes Format: `%a %d %b %Y | %X %Z`
 [Easy sync BTRFS snapshots with btrfs-sync](https://ownyourbits.com/2018/03/09/easy-sync-of-btrfs-snapshots-with-btrfs-sync/)
 [Marc's Blog: btrfs - Btrfs Tips: Doing Fast Incremental Backups With Btrfs Send and Receive](http://marc.merlins.org/perso/btrfs/post_2014-03-22_Btrfs-Tips_-Doing-Fast-Incremental-Backups-With-Btrfs-Send-and-Receive.html)
 
-## /boot
+!! /boot
+
 [rsync Ubuntu](https://wiki.ubuntuusers.de/rsync/)
 [rsync Arch Linux](https://wiki.archlinux.org/index.php/Rsync)
 
-### verwenden für mein Backup
+!!! verwenden für mein Backup
+
 `--delete` für das Löschen und `-b` für die Sicherung gelöschter und veränderter Dateien. Diese Dateien finden sich später in dem mit `--backup-dir` angegebenen Verzeichnis.
 
 `sudo rsync --delete -avb /boot /run/media/niggi/BACKUP/@NUC_archbox/boot_backup --backup-dir=/run/media/niggi/BACKUP/@NUC_archbox/boot_backup/boot_old-files`
 
-### (alternativ z.B. bei Sicherung via SSH)
+!!! (alternativ z.B. bei Sicherung via SSH)
+
 `--numeric-ids` und `-z` scheinen nur bei Speicherung übers Netzwerk sinnvoll
 
 `sudo rsync --numeric-ids -avz /boot /run/media/niggi/BACKUP/@NUC_archbox/`
 
-## Vorgehen für jedes btrfs subvolume
+!! Vorgehen für jedes btrfs subvolume
 
 1. aktuellen Snapshot erstellen
 2. **initiales** verschieben des gesamten Snapshots auf die USB-Festplatte
@@ -163,7 +167,8 @@ Uhr - Zeiteinstellungen - Benutzerdefiniertes Format: `%a %d %b %Y | %X %Z`
 sudo btrfs send -p /btrfs/@snapshots/@_backup_OLD /btrfs/@snapshots/@_backup_NEW | sudo btrfs receive /run/media/niggi/BACKUP/@NUC_archbox/
 ```
 
-## @
+!! @
+
 `sudo btrfs sub snap -r /btrfs/@ /btrfs/@snapshots/@_backup_$(date +%F_%R)`
 
 (erstmaliger Übertrag)
@@ -180,7 +185,8 @@ alte Subvolumes löschen
 
 `sudo btrfs sub del /run/media/niggi/BACKUP/@NUC_archbox/@_backup_2019-10-09_15\:22/`
 
-## /home
+!! /home
+
 `sudo btrfs sub snap -r /home/ /home/.home_snapshots/home_backup_$(date +%F_%R)`
 
 (erstmaliger Übertrag)
@@ -197,7 +203,8 @@ alte Subvolumes löschen
 
 `sudo btrfs sub del /run/media/niggi/BACKUP/@NUC_archbox/home_backup_2019-10-09_10\:06/`
 
-## @images
+!! @images
+
 `sudo btrfs sub snap -r /btrfs/@images /btrfs/@images_snapshots/image_backup_$(date +%F_%R)`
 
 (erstmaliger Übertrag)
@@ -214,7 +221,8 @@ alte Subvolumes löschen
 
 `sudo btrfs sub del /run/media/niggi/BACKUP/@NUC_archbox/image_backup_2019-10-09_10\:37/`
 
-## balance
+!! balance
+
 `sudo btrfs balance start -dusage=5 -musage=5 /btrfs`
 
 `sudo btrfs balance start -dusage=5 -musage=5 /run/media/niggi/BACKUP`
@@ -245,7 +253,7 @@ sudo btrfs filesystem df /mnt
 sudo btrfs filesystem balance start -dconvert=raid1 /mnt
 sudo btrfs filesystem df /mnt - Kontrolle (falls Raid0 und Raid1 angezeigt werden reboot und Prozedur wiederholen)
 
-# Reparatur
+! Reparatur
 
 [How to recover a BTRFS partition](https://ownyourbits.com/2019/03/03/how-to-recover-a-btrfs-partition/)
 
