@@ -1,0 +1,8 @@
+created: 20200522093917881
+modified: 20200522094007291
+tags: node tw5
+title: TW5-Bob Settings
+
+!! Settings TiddlyWiki
+
+Die Konfiguration wird pro TiddlyWiki in dessen `/TiddlyWiki5/wikis/[wikiname]/settings/settings.json` vorgenommen.

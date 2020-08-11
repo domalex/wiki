@@ -1,0 +1,266 @@
+created: 20200522083608227
+modified: 20200522083657241
+tags: archlinux
+title: ArchLinux - persistent installation on pen-drive
+
+## Partitioning
+`sudo fdisk -l` or `lsblk`
+`sudo gdisk /dev/sdX `
+`d` -> wipe every partition
+`o` -> create new GUID partition table
+`n` `+256MB` `EF00` -> create a 256–512 MiB ESP partition (for EFI)
+`n` -> create a NTFS or FAT32 formatted storage partition
+`n` `8300` -> allocate the remaining space to the Linux partition
+`p` -> double check the new partition table
+`w`
+`lsblk /dev/sdX `
+`sudo mkfs.vfat -F 32 -n EFI /dev/sdX1` -> EFI partition
+-> `sudo mkfs.ext4 -L ROOT -O "^has_journal" /dev/sdX2` -> ROOT partition, journaling off
+`sudo mkfs.ext4 -L HOME /dev/sdX3` -> HOME partition
+
+## Install base package
+`sudo mount /dev/sdX2 /mnt`
+
+```
+sudo mkdir /mnt/boot
+sudo mount /dev/sdX1 /mnt/boot
+sudo mkdir /mnt/home
+sudo mount /dev/sdX3 /mnt/home
+```
+
+`sudo pacstrap /mnt base base-devel wpa_supplicant dialog btrfs-progs bash-completion dosfstools (gptfdisk efibootmgr)`
+
+`sudo su`
+`genfstab -Lp /mnt >> /mnt/etc/fstab` -> oder -U (UUID)
+``nano /mnt/etc/fstab` -> check
+
+## Configure system
+`arch-chroot /mnt`
+
+`echo arch-usb > /etc/hostname` -> set hostname
+`echo LANG=de_CH.UTF-8 > /etc/locale.conf`
+`nano /etc/locale.gen` -> edit
+`locale-gen`
+`echo KEYMAP=de_CH-latin1 > /etc/vconsole.conf`
+`ln -sf /usr/share/zoneinfo/Europe/Zurich /etc/localtime`
+
+passwd
+Bootloader
+###systemd-boot
+`arch-chroot /mnt` 
+
+(`bootctl --path=/boot install`)
+`lsblk -f`
+
+`sudo nano /boot/loader/loader.conf`
+timeout 3
+default arch-*
+
+(für btrfs-Installation)
+`sudo nano /boot/loader/entries/arch.conf`
+title Arch Linux
+linux /vmlinuz-linux
+initrd /initramfs-linux.img
+options root=LABEL=BTRFS rootflags=subvol=@ rw
+
+(für andere Dateisysteme)
+`sudo nano /boot/loader/entries/arch.conf`
+title Arch Linux
+linux /vmlinuz-linux
+initrd /initramfs-linux.img
+options root=LABEL=ROOT rw
+
+cp arch.conf arch-fallback.conf
+nano arch-fallback.conf
+title Arch Linux Fallback
+linux /vmlinuz-linux
+initrd /initramfs-linux-fallback.img
+options root=LABEL=ROOT rw
+
+reboot
+
+pacman -S dosfstools efibootmgr ...
+
+
+(`hwclock --systohc`)
+
+
+
+
+`nano /etc/hosts`
+`127.0.1.1    arch-usb.localdomain    arch-usb` -> add this line
+Ensure that block device support is properly loaded before any attempt at loading the filesystem.
+
+##Configure a custom RAM disk image:
+
+`nano /etc/mkinitcpio.conf`
+Ensure the `block` hook comes before the `filesystems` hook and directly after the `udev` hook like the following:
+`HOOKS=(base udev block filesystems keymap keyboard fsck)`
+`mkinitcpio -p linux` -> regenerate the initial RAM disk image with the changes made
+
+(Ensure that the ethernet and wifi interfaces will always be respectively named eth0 and wlan0, revert the Arch Linux USB back to traditional device naming:
+`ln -s /dev/null /etc/udev/rules.d/80-net-setup-link.rules`)
+
+`nano /etc/systemd/journald.conf` -> enable journal keeping entirely in RAM
+`Storage=volatile` -> set the storage variable to volatile
+`SystemMaxUse=16M` -> set the max-use variable to prevent RAM overfill
+(`RuntimeMaxUse=30M`)
+Reduce writes to the flash device:
+`nano /etc/fstab` -> change the mount options from `relatime` to `noatime`
+
+## [Installing Arch Linux on a USB key](https://wiki.archlinux.org/index.php/Installing_Arch_Linux_on_a_USB_key)
+Before creating the initial RAM disk, in /etc/mkinitcpio.conf move the block and keyboard hooks before the autodetect hook. This is necessary to allow booting on multiple systems each requiring different modules in early userspace.
+
+___
+
+[Systemd-boot deutsch](https://wiki.archlinux.de/title/Systemd-boot)
+[Systemd-boot english](https://wiki.archlinux.org/index.php/Systemd-boot)
+[Installing Arch Linux on a USB key](https://wiki.archlinux.org/index.php/Installing_Arch_Linux_on_a_USB_key)
+[USB flash installation media](https://wiki.archlinux.org/index.php/USB_flash_installation_media)
+[persistent installation identical to that on a normal hard drive](http://valleycat.org/linux/arch-usb.html?i=1)
+[Install Arch Linux onto a USB device](https://www.youtube.com/watch?v=1nPesiEhuic)
+[Multiboot USB drive](https://wiki.archlinux.org/index.php/Multiboot_USB_drive)
+
+# Step by step
+`loadkeys de_CH-latin1`
+
+## Partitioning
+`lsblk`
+``sudo gdisk /dev/sdX `
+`d` -> wipe every partition
+`o` -> create new GUID partition table
+`n` `+256MB` `EF00` -> create a 256–512 MiB ESP partition (for EFI)
+`n` -> create a NTFS or FAT32 formatted storage partition
+`n` `8300` -> allocate the remaining space to the Linux partition
+`p` -> double check the new partition table
+`w`
+`lsblk /dev/sdX `
+`sudo mkfs.fat -F 32 /dev/sdX1` -> EFI partition
+`sudo mkfs.ext4 /dev/sdX2` -> storage partition USB jump drive
+-> `sudo mkfs.ext4 -O "^has_journal" /dev/sdX3` -> ROOT partition
+
+## Install base package
+`mount /dev/sdX3 /mnt`
+
+```
+mkdir /mnt/usb/boot
+mount /dev/sdX1 /mnt/boot
+```
+
+`pacstrap /mnt base base-devel `
+`genfstab -Up /mnt >> /mnt/etc/fstab` -> oder -L (Label)
+`e2label /dev/sdX3 arch-usb` -> e2label will display or change the filesystem label on the ext2, ext3, or ext4 filesystem located on device.
+`nano /mnt/etc/fstab` -> check
+
+## Configure system
+`arch-chroot /mnt`
+`ln -sf /usr/share/zoneinfo/Europe/Zurich /etc/localtime`
+(`hwclock --systohc`)
+`nano /etc/locale.gen` -> edit
+`locale-gen`
+`echo LANG=de_CH.UTF-8 > /etc/locale.conf`
+`echo KEYMAP=de_CH-latin1 > /etc/vconsole.conf`
+`echo arch-usb > /etc/hostname` -> set hostname
+`nano /etc/hosts`
+`127.0.1.1    arch-usb.localdomain    arch-usb` -> add this line
+Ensure that block device support is properly loaded before any attempt at loading the filesystem. configure a custom RAM disk image:
+`nano /etc/mkinitcpio.conf`
+Ensure the `block` hook comes before the `filesystems` hook and directly after the `udev` hook like the following:
+`HOOKS=(base udev block filesystems keyboard fsck)`
+`mkinitcpio -p linux` -> regenerate the initial RAM disk image with the changes made
+
+(Ensure that the ethernet and wifi interfaces will always be respectively named eth0 and wlan0, revert the Arch Linux USB back to traditional device naming:
+`ln -s /dev/null /etc/udev/rules.d/80-net-setup-link.rules`)
+
+`nano /etc/systemd/journald.conf` -> enable journal keeping entirely in RAM
+`Storage=volatile` -> set the storage variable to volatile
+`SystemMaxUse=16M` -> set the max-use variable to prevent RAM overfill
+(`RuntimeMaxUse=30M`)
+Reduce writes to the flash device:
+`nano /etc/fstab` -> change the mount options from `relatime` to `noatime`
+
+### Bootloader
+
+#### Grub
+`pacman -S grub efibootmgr`
+`lsblk` -> determine the target USB device
+`grub-install --target=x86_64-efi --efi-directory /boot --boot-directory /boot --removable` -> UEFI boot
+`grub-mkconfig -o /boot/grub/grub.cfg` -> generate a GRUB configuration
+
+### Network support
+(`pacman -S ifplugd` -> automatic IP leasing on ethernet devices)
+`pacman -S iw wpa_supplicant dialog` -> wifi support with a basic command line interface
+
+### Video support
+To support most common GPUs, install all four basic open source
+video drivers:
+`pacman -S xf86-video-ati xf86-video-intel xf86-video-nouveau xf86-video-vesa`
+
+### Battery support
+`pacman -S acpi`
+
+### Root password
+`passwd` -> set root password
+
+### User account
+`useradd -m niggi`
+`passwd niggi`
+
+ wheel
+(Enable sudo for user by creating a rule in /etc/sudoers.d/:
+`echo 'user ALL=(ALL) ALL' > /etc/sudoers.d/10-user`)
+
+`exit ` -> exit chroot environment
+`umount /mnt/boot /mnt`
+`poweroff`
+
+### (ifplugd)
+Automatically connect to any available wired network:
+`cp /etc/netctl/examples/ethernet-dhcp /etc/netctl/eth0-arch_usb` -> copy the example ethernet profile to /etc/netctl/
+`systemctl start netctl-ifplugd@eth0.service`
+`systemctl enable netctl-ifplugd@eth0.service`
+
+### wifi-menu
+`wifi-menu -o` -> connect to wifi network
+
+### network time protocol
+`timedatectl set-ntp true` -> once connected to the internet, enable network time synchronization
+
+### logout
+`logout` -> logout of the root user account
+___
+
+## Installation tweaks
+Before [creating the initial RAM disk](https://wiki.archlinux.org/index.php/Mkinitcpio#Image_creation_and_activation), in /etc/mkinitcpio.conf move the block and keyboard hooks before the autodetect hook.
+
+[Reduce disk reads/writes](https://wiki.archlinux.org/index.php/Improving_performance#Reduce_disk_reads.2Fwrites) prior to selecting a filesystem.
+To sum up, [ext4 without a journal](http://fenidik.blogspot.com/2010/03/ext4-disable-journal.html) should be fine, which can be created with `mkfs.ext4 -O "^has_journal" /dev/sdXX`.
+
+If you want to be able to continue to use the USB mass storage device as a cross-platform removable drive, this can be accomplished by creating a partition housing an appropriate file system (most likely NTFS or exFAT). Note that the data partition may need to be the first partition on the device. Remember to install `dosfstools` and `ntfs-3g`.
+
+Use UUID or label in `/etc/fstab/`. To get the proper UUIDs for your partitions issue `blkid`. 
+
+###GRUB
+On GPT with UEFI installations, make sure you follow the instructions on [GRUB#UEFI systems](https://wiki.archlinux.org/index.php/GRUB#UEFI_systems) and include the --removable option: `grub-install --target=x86_64-efi --efi-directory=esp  --removable --recheck`
+
+###Video drivers
+To support most common GPUs, install `xf86-video-vesa`, `xf86-video-ati`, `xf86-video-intel`, `xf86-video-amdgpu`, and `xf86-video-nouveau`.
+
+###Persistent block device naming
+It is recommended to use UUID in both fstab and bootloader configuration. See [Persistent block device naming](https://wiki.archlinux.org/index.php/Persistent_block_device_naming) for details.
+
+##Minimizing disk access
+You may want to configure [systemd journal](https://wiki.archlinux.org/index.php/Systemd/Journal) to store its journals in RAM, e.g. by creating a custom configuration file:
+
+```
+/etc/systemd/journald.conf.d/usbstick.conf
+
+[Journal]
+Storage=volatile
+RuntimeMaxUse=30M
+```
+To disable `fsync` and related system calls in web browsers and other applications that do not write essential data, use the eatmydata command from [libeatmydata](https://www.archlinux.org/packages/?name=libeatmydata) to avoid such system calls:
+
+```
+$ eatmydata firefox
+```

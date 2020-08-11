@@ -1,32 +1,10 @@
 created: 20200522084502664
-modified: 20200522095130992
+modified: 20200805193920966
 tags: archlinux
 title: ArchLinux Installation Xfce-Desktop
+type: text/vnd.tiddlywiki
 
 Stabilität & Performance: [[01.02.2017 - Arch My Way 1 - Grundsystem installierenArch My Way 5 - Sicherheit und Backups - Btrfs Read Only SnapshotsArch My Way 6 - Dateisysteme und Systemwartung - 19:20|https://youtu.be/WeppT9SDmOA?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH&t=1160]]
-
-[[27.01.2017 - Arch My Way 1 - Grundsystem installierenArch My Way 2 - Desktop-Umgebung - 04:24|https://youtu.be/QFNjmGehsYk?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH&t=265]]
-
-https://wiki.archlinux.de/title/Anleitung_für_Einsteiger#Teil_2:_Installation_von_X_und_Konfiguration
-
-Installation von X. `mesa-libgl` wählen für Intel- und AMD-Grafikkarten:
-
-```
-pacman -S xorg-server xorg-xinit
-```
-
-! Grafiktreiber
-
-Welchen Treiber man braucht, bekommt man am einfachsten wie folgt heraus:
-
-```
-[niggi@archbox loader]$ lspci |grep VGA
-00:02.0 VGA compatible controller: Intel Corporation Iris Plus Graphics 655 (rev 01)
-```
-
-```
-pacman -S xf86-video-intel
-```
 
 ! Xfce-Desktop-Umgebung
 
@@ -50,67 +28,11 @@ Nick hat probleme beim erstaligen Einrichten einer WLAN-Verbindung. Daher `nm-co
 [[27.01.2017 - Arch My Way 2 - Desktop-Umgebung-13:54|https://youtu.be/QFNjmGehsYk?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH&t=834]]
 
 ```
-pacman -S netowrkmanager network-manager-applet (nm-connection-editor)
+pacman -S (netowrkmanager) network-manager-applet (nm-connection-editor)
 systemctl enable NetworkManager
 ```
 
-!! Weitere nüthliche Dienste -> unter Systemkonfiguration
-
-https://wiki.archlinux.de/title/Anleitung_für_Einsteiger#Weitere_nützliche_Dienste
-
-Sollte mittlerweile schon installiert sein `dbus avahi`
-
-```
-pacman -S acpid ntp (dbus avahi) cups cronie
-```
-
-Energieverwaltung aktivieren:
-
-```
-systemctl enable acpid
-```
-
-Zeitsynchronisierung aktivieren, anstossen, überprüfen:
-
-```
-systemctl enable ntpd
-ntpd -gq
-date
-```
-
-Check: [[ArchLinux Installation - überprüfen]]
-
-Netzwerkerkennung aktivieren:
-
-```
-systemctl enable avahi-daemon
-```
-
-Druckertreiber aktivieren:
-
-```
-systemctl enable org.cups.cupsd.service
-```
-
-Cronjobs aktivieren:
-
-```
-systemctl enable cronie
-```
-! Benutzer hinzufügen
-
-https://wiki.archlinux.de/title/Anleitung_für_Einsteiger#Einen_Benutzer_hinzufügen_und_Gruppen_wählen
-
-`-m`= `/home`-Verzeichnis wird erstellt für neuen Benutzer
-`-g`= Hautpgruppe des neuen Benutzers
-`-G`= zusätzliche Gruppen des neuen Benutzers
-`-s`= Shell des Benutzers
-zum Schluss den Benutzernamen angeben
-
-```
-useradd -m -g users -G wheel,audio,video -s /bin/bash niggi
-passwd niggi
-```
+[[ArchLinx Installation weitere nützliche Dienste]]
 
 schauen, ob `firefox` und `libreoffice-fresh`automatisch mit dem deutschen Sprachpacket installiert wird. Falls nachgefragt wird `libx264`-Variante
 
@@ -146,31 +68,9 @@ Evtl.
 pacman -S arc-icon-theme
 ```
 
-
 ```
 umount -R /mnt
 reboot
-```
-
-root werden:
-
-```
-su
-EDITOR=nano visudo
-```
-
-# entfernen vor `%wheel ALL=(ALL) ALL` und speichern.
-
-Test:
-
-```
-sudo su
-```
-
-root deaktivieren, Passwort ablaufen lassen:
-
-```
-passwd -l root
 ```
 
 [[ArchLinux Installation Rollback]]

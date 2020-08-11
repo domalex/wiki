@@ -1,0 +1,71 @@
+created: 20200522094039629
+modified: 20200522094218508
+tags: tw5 node
+title: TW5-Bob - GitHub
+
+[[OokTech/TW5-Bob: A plugin that makes tiddlywiki a multi-user wiki on node|https://github.com/OokTech/TW5-Bob]]
+
+! Installation
+
+TiddlyWiki5 klonen:
+
+''Achtung'': neueste Versionsnummer angeben!
+
+Das Klonen funtioniert auch ohne Angabe `--branch v[nummer]`. Es ist vermutlich die bessere Lösung - auzuprobieren.
+
+```
+[niggi@archbox ~]$ cd projects/
+[niggi@archbox projects]$ git clone --depth=1 --branch v5.1.22 https://github.com/Jermolene/TiddlyWiki5.git
+Klone nach 'TiddlyWiki5' ...
+remote: Enumerating objects: 6484, done.
+remote: Counting objects: 100% (6484/6484), done.
+remote: Compressing objects: 100% (5727/5727), done.
+remote: Total 6484 (delta 866), reused 3831 (delta 543), pack-reused 0
+Empfange Objekte: 100% (6484/6484), 8.35 MiB | 6.99 MiB/s, Fertig.
+Löse Unterschiede auf: 100% (866/866), Fertig.
+Hinweis: Wechsle zu '71c026355def438dafca9683da9acb2588c2ad3a'.
+
+Sie befinden sich im Zustand eines 'losgelösten HEAD'. Sie können sich
+umschauen, experimentelle Änderungen vornehmen und diese committen, und
+Sie können alle möglichen Commits, die Sie in diesem Zustand machen,
+ohne Auswirkungen auf irgendeinen Branch verwerfen, indem Sie zu einem
+anderen Branch wechseln.
+
+Wenn Sie einen neuen Branch erstellen möchten, um Ihre erstellten Commits
+zu behalten, können Sie das (jetzt oder später) durch Nutzung von
+'switch' mit der Option -c tun. Beispiel:
+
+  git switch -c <neuer-Branchname>
+
+Oder um diese Operation rückgängig zu machen:
+  git switch -
+
+Sie können diesen Hinweis ausschalten, indem Sie die Konfigurationsvariable
+'advice.detachedHead' auf 'false' setzen.
+```
+
+TW5-Bob klonen und Ordner erstellen:
+
+```
+[niggi@archbox ~]$  git clone --depth=1 https://github.com/OokTech/TW5-Bob.git ~/projects/TiddlyWiki5/plugins/OokTech/Bob
+mkdir ~/projects/TiddlyWiki5/wikis
+```
+
+! Neues TiddlyWiki erstellen
+
+```
+cp -r ~/projects/TiddlyWiki5/plugins/OokTech/Bob/MultiUserWiki ~/projects/TiddlyWiki5/wikis/testwiki/
+```
+
+! Starten
+
+```
+[niggi@archbox ~]$ node ~/projects/TiddlyWiki5/./tiddlywiki.js ~/projects/TiddlyWiki5/wikis/testwiki/ --wsserver
+NodeSettings - Parsed raw settings.
+TiddlyWiki version 5.1.23-prerelease with Bob version 1.5.2
+Bob saver server running on 127.0.0.1:61192
+Serving on 127.0.0.1:8080
+(press ctrl-C to exit)
+```
+
+! [[TW5-Bob Settings]]

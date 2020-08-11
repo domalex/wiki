@@ -1,0 +1,73 @@
+created: 20200522083343532
+modified: 20200522083409003
+tags: android
+title: Android Tools
+
+! Vorbereitung Computer
+
+!! Android-Geräte-Erkennung unter Ubuntu 14.04 sicherstellen
+
+[img[dropcap-ubuntu-android.png]]
+
+# ''Entwicklermodus'' auf Android-Gerät aktivieren:
+#* Einstellungen -> Über das Telefon -> mehrmals auf Build-Nummer tippen
+# ''USB Debug Modus'' auf Android-Gerät aktivieren:
+#* Einstellungen -> Entwickleroptionen -> USB-Debuggin
+
+Anschliessend Android-Gerät und Computer mittels USB-Kabel verbinden.
+
+Bei der ersten ADB-Verbindung muss der Computer auf dem Android-Gerät als sicher eingestuft und der Zugriff genehmigt werden. Permanent-Option ankreuzen.
+
+Anschliessend sollte im Terminal eine das Android-Gerät erkannt werden:
+
+```
+# lsusb
+...
+Bus 002 Device 059: ID 18d1:4e42 Google Inc.
+```
+Dieses Resultat zeigt eine korrekte Erkennung für ein Google Nexus 7 an. Es befindet sich im MTP Modus und USB-Debugging aktiviert.
+
+; ID
+: Manufacturer ID (18d1)
+; :
+: Model ID (4e42)
+
+Bei Nichterkennung sieht die Meldung folgendermassen aus:
+
+```
+# adb devices
+List of devices attached
+015d2d426d640c1a      unauthorized
+```
+
+In diesem Falle muss zusätzlich eine ADB Udev Anweisung für das entsprechende Android-Gerät aufgesetzt werden.
+
+!!! [[Setup ADB Udev Rule|http://bernaerts.dyndns.org/linux/74-ubuntu/328-ubuntu-trusty-android-adb-fastboot-qtadb]]
+
+Damit das Nexus-Gerät erkannt wird entsprechende Udev Datei erstellen:
+
+`sudo wget -O /etc/udev/rules.d/51-android.rules https://raw.githubusercontent.com/NicolasBernaerts/ubuntu-scripts/master/android/51-android.rules`
+
+`sudo chmod a+r /etc/udev/rules.d/51-android.rules`
+
+`sudo service udev restart`
+
+Noch einmal überprüfen, ob das Android-Gerät jetzt korrekt erkannt wird:
+
+`lsusb`
+
+!! Installation von Android Tools (''ADB'' & ''fastboot'')
+
+`sudo apt-get install android-tools-adb android-tools-fastboot`
+
+Update auf ADB 1.0.32. Falls diese noch nicht im Repository vorhanden ist, kann dies folgendermassen bewerkstelligt werden:
+
+```
+# adb version
+Android Debug Bridge version 1.0.31
+# wget -O - https://skia.googlesource.com/skia/+archive/cd048d18e0b81338c1a04b9749a00444597df394/platform_tools/android/bin/linux.tar.gz | tar -zxvf - adb
+# sudo mv adb /usr/bin/adb
+# sudo chmod +x /usr/bin/adb
+# adb version
+Android Debug Bridge version 1.0.32
+```

@@ -1,0 +1,24 @@
+created: 20200522090008759
+modified: 20200522090028334
+tags: 
+title: Dateisysteme
+
+[[01.02.2017 - Arch My Way 1 - Grundsystem installierenArch My Way 5 - Sicherheit und Backups - Btrfs Read Only SnapshotsArch My Way 6 - Dateisysteme und Systemwartung - 12:24|https://youtu.be/WeppT9SDmOA?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH&t=744]]
+
+! f2fs
+
+flash friendly file system für SSD's, USB-Sticks, SD-Karten
+
+! cow
+
+copy on write file system
+
+!! zfs
+
+!! [[Btrfs]]
+
+!! xfs
+
+!! bcachefs
+
+! [[RAM-Disk]]

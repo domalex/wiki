@@ -1,0 +1,31 @@
+created: 20200522093711267
+modified: 20200531121531165
+tags: tw5 node
+title: TiddlyWiki Installation Windows
+type: text/vnd.tiddlywiki
+
+# Installation Node.js
+
+In Powershell mit Option `--global` wird tiddlywiki installiert:
+
+```
+PS C:\Users\niggi> npm install tiddlywiki --global
+```
+
+Installationspfad:
+
+```
+C:\Users\niggi\AppData\Roaming\npm\node_modules\tiddlywiki
+```
+
+Starten:
+
+```
+PS C:\Users\niggi> tiddlywiki.cmd \\192.168.188.80\volume1\sdsniggi\1_gtd\1.7_referenzmaterial\1.7.2_tiddlywiki\node\notizbuch --listen
+```
+
+Starten mit Angabe des Ports
+
+```
+tiddlywiki.cmd \\192.168.188.80\volume1\sdsniggi\1_gtd\1.7_referenzmaterial\1.7.2_tiddlywiki\node\notizbuch --server 7123
+```

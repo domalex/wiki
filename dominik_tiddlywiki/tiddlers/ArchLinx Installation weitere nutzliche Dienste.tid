@@ -1,0 +1,51 @@
+created: 20200805093429977
+modified: 20200808095756042
+title: ArchLinx Installation weitere nützliche Dienste
+type: text/vnd.tiddlywiki
+
+[[Anleitung für Einsteiger - Weitere nützliche Dienste – wiki.archlinux.de|https://wiki.archlinux.de/title/Anleitung_f%C3%BCr_Einsteiger#Weitere_n.C3.BCtzliche_Dienste]]
+
+Sollte mittlerweile schon installiert sein `dbus`
+
+evtl. `inetutils` - überprüfen
+
+evtl. (`intel-ucode`) - überprüfen. Der Intel CPU [[Microcode - ArchWiki|https://wiki.archlinux.org/index.php/Microcode]] müsste noch in die Bootloader-Konfiguration von `systemd-boot` unter `/boot/loader/entries/arch.conf` integriert werden: [[systemd-boot - Adding loaders - ArchWiki|https://wiki.archlinux.org/index.php/Systemd-boot#Adding_loaders]]
+
+`wget`
+
+`git`
+
+`xdg-user-dirs` XDG user directories
+
+```
+pacman -S acpid (dbus) avahi cups cronie man-db man-pages
+```
+
+Energieverwaltung aktivieren:
+
+```
+systemctl enable acpid
+```
+
+Check: [[ArchLinux Installation - überprüfen]]
+
+Netzwerkerkennung aktivieren:
+
+```
+systemctl enable avahi-daemon
+```
+
+Druckertreiber aktivieren:
+
+```
+systemctl enable org.cups.cupsd.service
+```
+
+Cronjobs aktivieren:
+
+```
+systemctl enable cronie
+```
+
+! Audio
+

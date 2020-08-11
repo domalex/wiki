@@ -1,0 +1,19 @@
+created: 20200805063606968
+modified: 20200805080210207
+title: NetworkManager
+type: text/vnd.tiddlywiki
+
+[[NetworkManager - ArchWiki|https://wiki.archlinux.org/index.php/NetworkManager]]
+
+Installation:
+
+```
+sudo pacman -S networkmanager
+```
+
+NetworkManager starten
+
+```
+sudo systemctl enable NetworkManager
+```
+

@@ -1,0 +1,541 @@
+created: 20200522084800165
+modified: 20200522084819877
+tags: archlinux
+title: ArchLinux Rollback - Nick
+
+# Konfiguration
+
+## Systemd Boot
+
+[Btrfs Snapshots - Systemwiederherstellung - Grub [Natenoms Wiki]](https://wiki.natenom.de/linux/verschiedenes/btrfs/snapshots)
+
+Grundinstallation: [Arch Linux - Secret 6 | System/Kernel Rollback](https://www.youtube.com/watch?v=q1rlsHzNQDc&list=PLTeOo_Khba2PLTV7zEeLPSTYyDdwwLsdo&index=6)
+
+Nach Updates suchen:
+
+```
+pacman -Syu
+```
+
+-> ein neuer Kernel wird vorgeschlagen!
+
+
+Anzeige bestehender Subvolumes:
+
+```
+sudo btrfs subvolume list /
+```
+
+### STABLE erstellen
+
+System als STABLE sichern:
+
+```
+btrfs subvolume snapshot / /.snapshots/STABLE
+```
+
+Überprüfen ob neues Subvolume STABLE erstellt wurde:
+
+```
+sudo btrfs subvolume list /
+```
+
+`/etc/fstab` in `/.snapshot/STABLE/` anpassen: 
+
+```
+sudo nano /.snapshot/STABLE/etc/fstab
+```
+
+Subvolume, welches unter `/` gemounted wird ändern auf:
+`subvol=@snapshots/STABLE`
+`subvolid=<no.>` löschen!
+`subvol=/@` löschen!
+
+Resultat:
+
+```
+# /dev/nvme0n1p2 UUID=64b4b84e-2b18-4f5d-87cd-723a9b7a689b
+LABEL=ROOT              /               btrfs           rw,noatime,compress=lzo,ssd,space_cache=v2,subvol=@sapshots/STABLE     0 0
+```
+
+Aus Standardkonfiguration passenden Eintrag für Bootloader erstellen:
+
+```
+cp /boot/loader/entries/arch.conf /boot/loader/entries/arch-stable.conf
+```
+
+Funktionierenden Kernel kopieren:
+
+```
+cp /boot/vmlinuz-linux /boot/vmlinuz-linux-stable
+```
+
+Funktionierende Init-Ram-Disk kopieren:
+
+```
+cp /boot/initramfs-linux.img /boot/initramfs-linux-stable.img
+```
+
+Neue Konfigurationsdatei/Bootloadereintrag auf STABLE editieren:
+
+```
+nano /boot/loader/entries/arch-stable.conf
+```
+
+ Resultat:
+
+```
+title    Arch Linux Stable
+linux    /vmlinuz-linux-stable
+initrd   /initramfs-linux-stable.img
+options  root=LABEL=ROOT rootflags=subvol=@snapshots/STABLE rw resume=LABEL=SWAP
+```
+
+Speichern:
+ctrl+o - ctrl+x
+
+Vorhandensein der Bootloader-Einträge kontrollieren:
+
+
+```
+ls /boot/
+
+```
+
+Update mit neuem Kernel vornehmen:
+
+```
+pacman -Syu
+```
+
+Gegenwärtigen neuen Kernel anzeigen:
+
+
+```
+ls /usr/lib/modules
+```
+
+Alten Kernel anzeigen:
+
+```
+ls /.snapshots/STABLE/usr/lib/modules
+```
+
+reboot - beide Einträge testen
+
+Verwendeter Kernel jeweils überprüfen:
+
+```
+uname -a
+```
+
+### TESTING erstellen
+
+In Standard-Eintrag booten (neuer Kernel)
+
+`/etc/fstab` anpassen:
+(siehe `/etc/fstab` in `/.snapshot/STABLE/` anpassen)
+
+```
+nano /etc/fstab
+```
+
+Resultat:
+
+```
+# /dev/nvme0n1p2 UUID=64b4b84e-2b18-4f5d-87cd-723a9b7a689b
+LABEL=ROOT          	/         	btrfs     	rw,noatime,compress=lzo,ssd,space_cache=v2,subvol=@snapshots/TESTING	0 0
+```
+
+Neues System als TESTING sichern:
+
+
+```
+btrfs subvolume snapshot / /.snapshots/TESTING
+```
+
+Erstellung von Subvolume TESTING kontrollieren:
+
+```
+sudo btrfs subvolume list /
+```
+
+Bootloader anpassen:
+
+```
+nano /boot/loader/entries/arch.conf
+```
+
+```
+title    Arch Linux Xfce
+linux    /vmlinuz-linux
+initrd   /initramfs-linux.img
+options  root=LABEL=ROOT rootflags=subvol=@snapshots/TESTING rw resume=LABEL=SWAP
+```
+
+Speichern:
+ctrl+o - ctrl+x
+
+### Script für System-Update erstellen
+
+In vorher erstellten `.scripts`-Ordner auf `/home/niggi/` wechseln und Inhalt begutachten:
+
+```
+cd .scripts
+ls
+```
+
+Script erstellen:
+
+```
+nano update.sh
+```
+
+Inhalt einfügen:
+
+```
+#!/bin/bash
+# System Update
+# ---------------------------
+# Snapshot - Rollback - Btrfs
+# ---------------------------
+
+SUDO=/usr/bin/sudo
+MV=/usr/bin/mv
+BTRFS=/usr/bin/btrfs
+#MOUNT/usr/bin/mount
+#UMOUNT/usr/bin/umount
+SED=/usr/bin/sed
+PACMAN=/usr/bin/pacman
+#PACAUR=/usr/bin/pacaur
+CP=/usr/bin/cp
+REFLECTOR=/usr/bin/reflector
+
+# ---------------------------
+#      Snapshot System
+# ---------------------------
+
+# -------- OLDSTABLE --------
+
+$SUDO $BTRFS subvolume delete /.snapshots/OLDSTABLE
+$SUDO $MV /.snapshots/STABLE /.snapshots/OLDSTABLE
+$SUDO $SED -i 's/STABLE/OLDSTABLE/g' /.snapshots/OLDSTABLE/etc/fstab
+$SUDO $CP /boot/vmlinuz-linux-stable /boot/vmlinuz-linux-oldstable
+$SUDO $CP /boot/initramfs-linux-stable.img /boot/initramfs-linux-oldstable.img
+
+# --------- STABLE ----------
+
+$SUDO $BTRFS subvolume snapshot / /.snapshots/STABLE
+$SUDO $SED -i 's/TESTING/STABLE/g' /.snapshots/STABLE/etc/fstab
+$SUDO $CP /boot/vmlinuz-linux /boot/vmlinuz-linux-stable
+$SUDO $CP /boot/initramfs-linux.img /boot/initramfs-linux-stable.img
+
+# ---------------------------
+#      Update System
+# ---------------------------
+
+$SUDO $REFLECTOR --verbose -l 5 -p https --sort rate --save /etc/pacman.d/mirrorlist
+$SUDO $PACMAN -Syu
+
+# ---------------------------
+#    Balance Filesystem
+# ---------------------------
+
+$SUDO $BTRFS balance start -dusage=5 /btrfs
+```
+
+Nicht benutzte Variablen sind auskommentiert.
+
+Variablen, die nur unter Root ausgeführt werden können, wurde noch `$SUDO` vorangestellt. Damit das script ohne `sudo su` ausgeführt werden kann.
+
+Zusätzlich wurde am Ende noch Balace Filesystem angefügt. Für Metadaten könnte noch vor oder nach `-dusage=5` `-musage=5` angefügt werden.
+
+**Für den ersten Durchlauf** folgende Zeile auskommentieren und danach wieder aktiv schalten. Da OLDSTABLE noch nicht existiert:
+
+`#$SUDO $BTRFS subvolume delete /.snapshots/OLDSTABLE`
+
+Abspeichern:
+
+ctrl+o - ctrl+x
+
+Speicherung von Script überprüfen:
+
+```
+ls .scripts
+```
+
+Überprüfung Neustart in Testing:
+
+```
+sudo reboot
+```
+
+Überprüfen welcher Snapshot gemounted wurde:
+
+```
+mount
+```
+
+`subvol=/@snapshots/TESTING`
+
+Vorhandene Subvolumes kontrollieren:
+
+```
+btrfs subvolume list /
+```
+
+STABLE & TESTING vorhanden
+
+Script ausführbar machen:
+
+```
+cd .scripts
+chmod u+x update.sh
+```
+Falls im Script keine `$SUDO` den Root-Befehlen vorangestellt wurde mit `sudo su` Rootrechte erlangen und Script ausführen:
+
+```
+./update.sh
+```
+
+Vorhandene Subvolumes kontrollieren:
+
+```
+btrfs subvolume list /
+```
+
+OLDSTABLE wurde neu erstellt
+
+OLDSTABLE - im Script undokumentieren:
+
+`$SUDO $BTRFS subvolume delete /.snapshots/OLDSTABLE`
+
+Alle `fstab` kontrollieren nach den jeweiligen `/`-Einträgen:
+
+```
+cat /.snapshots/TESTING/etc/fstab
+```
+
+`subvol=@snapshots/TESTING`
+
+```
+cat /.snapshots/STABLE/etc/fstab - check
+```
+
+`subvol=@snapshots/STABLE`
+
+```
+cat /.snapshots/OLDSTABLE/etc/fstab - check
+```
+
+`subvol=@snapshots/OLDSTABLE`
+
+Booteinträge kontrollieren:
+
+```
+ls /boot
+```
+
+`initramfs-linux.img`
+`initramfs-linux-stable.img`
+`initramfs-linux-oldstable.img`
+
+`vmlinuz-linux.img`
+`vmlinuz-linux-stable.img`
+`vmlinuz-linux-oldstable.img`
+
+Eintrag für Bootloader kopieren:
+
+```
+cp /boot/loader/entries/arch-stable.conf /boot/loader/entries/arch-oldstable.conf
+```
+
+`arch-oldstable.conf` editieren:
+
+```
+nano /boot/loader/entries/arch-oldstable.conf
+```
+
+```
+title    Arch Linux Old-Stable
+linux    /vmlinuz-linux-oldstable
+initrd   /initramfs-linux-oldstable.img
+options  root=LABEL=ROOT rootflags=subvol=@snapshots/OLDSTABLE rw resume=LABEL=SWAP
+```
+
+Speichern:
+
+ctrl+o - ctrl+x
+
+```
+reboot
+```
+
+Old-Stable starten
+
+Gebootetes Subvolume kontrollieren:
+
+```
+mount
+```
+
+OLDSTABLE wird angezeigt
+
+Kernel-Version kontrollieren:
+
+```
+uname -a
+```
+
+Alter Kernel wird angezeigt
+
+```
+sudo reboot
+```
+
+TESTING auswählen
+
+Kernel-Version kontrollieren:
+
+```
+uname -a
+```
+
+Neuer Kernel ist zu sehen
+
+Gebootetes Subvolume kontrollieren:
+
+```
+mount
+```
+
+TESTING wird angezeigt
+
+### Feinschliff
+
+```
+sudo su
+```
+
+Default-Subvolume mit `subvolid=5` (oberstes Level in BTRFS) unter `/btrfs` mounten. Eintrag für Root von BTRFS festlegen und mit Optionen mounten für einfachen Zugriff:
+
+```
+nano /etc/fstab
+```
+
+Ergänzung (falls noch nicht vorhanden):
+
+```
+# /dev/nvme0n1p2 UUID=64b4b84e-2b18-4f5d-87cd-723a9b7a689b
+LABEL=ROOT              /btrfs          btrfs           rw,noatime,compress=lzo,ssd,space_cache=v2,subvolid=5   0 0
+```
+
+Mount-Verzeichnis erstellen:
+
+```
+mkdir /btrfs
+```
+
+Verzeichnis mounten:
+
+```
+mount /btrfs
+```
+
+Mount kontrollieren:
+
+```
+mount
+```
+`/btrfs` vorhanden
+
+In Script Balance-Befehl einfügen (falls noch nicht vorhanden):
+
+```
+nano -w update.sh
+```
+
+Folgende Zeilen anfügen:
+
+```
+# ---------------------------
+#    Balance Filesystem
+# ---------------------------
+
+$SUDO $BTRFS balance start -dusage=5 /btrfs
+```
+
+Für Metadaten könnte noch vor oder nach `-dusage=5` `-musage=5` angefügt werden.
+
+Abspeidchern:
+
+ctrl+o - ctrl+x
+
+`fstrim.timer` aktivieren:
+
+```
+sudo systemctl enable fstrim.timer
+```
+
+Arbeitsspeicher kontrollieren:
+
+```
+free -h
+```
+
+Bei Copy on Write ist es nicht gut, wenn häufig viele kleine Daten auf die SSD geschrieben werden.
+
+Ram-Disk für Cache erstellen:
+
+```
+sudo nano -w /etc/fstab
+```
+
+Folgende Zeilen ans Ende anfügen:
+
+```
+# Ramdisk
+tmpfs                   /home/niggi/.cache      tmpfs   noatime,nodev,nosuid,size=2G    0 0
+```
+
+(1 GB sollte auch genügen)
+
+Abspeichern:
+
+ctrl+o - ctrl+x
+
+Ramdisk-Mount kontrollieren:
+
+```
+mount
+```
+
+tmpfs on `/home/niggi/.cache` type tmpfs
+
+Belegung des Cache begutachten:
+
+```
+ls .cache/
+```
+
+Arbeitsspeicher anzeigen (jetzt minus die Grösse der Ramdisk):
+
+```
+free -h
+```
+
+
+sudo reboot
+mount - check tmpfs on /home/niggi/.cache type tmpfs
+
+
+### Anpassung für Virtuelle Maschinen:
+
+-> kein Copy on Write für VirtualBox: chattr +C /Verzeichnisname
+-> Incremental Backup Btrfs
+
+### Backup
+
+[Arch My Way 5 | Sicherheit und Backups - Btrfs Read Only Snapshots](https://www.youtube.com/watch?v=IZCKlGGSyGM&list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH&index=6)
+
+btrfs fi usage /btrfs -> besser als df -Th

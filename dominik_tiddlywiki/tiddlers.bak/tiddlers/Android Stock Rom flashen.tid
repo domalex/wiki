@@ -1,0 +1,105 @@
+created: 20200522083145009
+modified: 20200522083314163
+tags: android
+title: Android Stock Rom flashen
+
+! Vorbereitung
+
+!! [[Android Tools]] installieren
+
+!! Dateien auf Computer downloaden und entpacken
+
+* Download [[Factory Image|https://developers.google.com/android/nexus/images#hammerhead]]
+** Unzip Factory Image und das Zip-File innerhalb
+* Falls noch nicht von vorheriger Installation vorhanden. Download [[TWRP Custom Recovery|https://dl.twrp.me/hammerhead/]]
+** Unzip in denselben Ordner, wie das zuvor erstellte Factory Image
+
+!! Vorbereitung Android-Gerät
+
+* Download [[ElementalX Kernel|http://elementalx.org/devices/nexus-5/]]
+* Download [[SuperSu|http://forum.xda-developers.com/showthread.php?t=1538053]]
+** Download [[SuperSu Beta|http://forum.xda-developers.com/showpost.php?p=64161125&postcount=3]]
+
+! [[Unlock Bootloader|http://schier.co/blog/2013/11/09/how-to-root-nexus-5-in-linux.html]]
+
+Überprüfen, ob Gerät mittels adb erkannt wird:
+
+```
+adb devices
+```
+Bootloader neu starten:
+
+```
+adb reboot bootloader
+```
+Bootloader entsperren (evtl. wird vor dem Befehl sudo benötigt):
+
+```
+fastboot oem unlock
+```
+
+! Neues Android-Betriebsystem flashen
+
+Unter Ubuntu in Nautilus den Ordner mit den entpackten Dateien öffen. Mit rechter Maustaste darauf klicken und im Kontextmenu "im Terminal öffen" auswählen.
+
+Das Android-Gerät in den Fastboot Modus versetzen (Lautstärkentaste leiser und Einschaltaste gleichzeitig drücken und Gerät starten)
+
+Gerät und Computer mit USB-Kabel verbinden und überprüfen, ob das Android-Gerät von fastboot erkannt wird.
+
+```
+fastboot devices
+```
+
+!! Erster Teil
+
+Eingeben + [Tab]:
+
+```
+fastboot flash radio radio-hammerhead-
+```
+
+Unbedingt Bestätigungsmeldung abwarten! Kann einige Minuten dauern.
+
+```
+fastboot reboot-bootloader
+```
+
+!! (Zweiter Teil)
+
+''Recovery Image nur falls benötigt flashen''
+
+Falls __kein Root__ gewünscht:
+
+```
+fastboot flash recovery recovery.img
+```
+
+Falls __Root gewünscht__ und noch kein Custom Recovery Image von vorheriger Installation vorhanden:
+
+Eingeben + [Tab]:
+
+```
+fastboot flash recovery twrp-
+```
+
+!! Dritter Teil
+
+```
+fastboot flash boot boot.img
+```
+
+```
+fastboot flash system system.img
+```
+
+! Android Rooten
+
+```
+fastboot reboot-bootloader
+```
+
+Mittels Lautstärkentaste den ''Recovery Mode'' wählen und mit dem Einschaltknopf bestätigen. ''Install'' wählen und den zuvor runtergeladenen ''~ElementalX-Kernel'' flashen. Danach dasselbe mit ''~SuperSu'' durchführen. Anschliessend ''wipe Cache & Dalvik Cache''.
+
+''__Wichtig__'': Allfälige Frage von TWRP verneinen und auf keinen Fall ~SuperSu noch einmal instalieren!
+
+''Reboot'' -> ''System'' wählen.

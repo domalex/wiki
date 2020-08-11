@@ -1,0 +1,50 @@
+created: 20200805070108022
+modified: 20200805180615593
+title: ArchLinux Installation Partitionierung fdisk
+type: text/vnd.tiddlywiki
+
+Bei Verwendung von `fdisk` die Erstellung einer neuen Partition mit `t` Typ wählen und abschliessen.
+
+```
+fdisk /dev/nvme0n1
+```
+
+`g` erzeugt nicht nur eine neue GUID Parttitionstabelle sondern löscht auch vorhandene Daten.
+
+EFI-Boot-Partition erstellen (Code=1)
+
+```
+n
+[enter] # default 1
+[enter]
++256M
+t
+1
+```
+
+Btrfs-Partition erstellen (Code= 24 Linux root (x86-64) / default?). Die Grösse der Partition errechnent sich aus verbleibender Grösse minus dem benötigten SWAP-Speicher
+
+```
+n
+[enter] # default 2
+[enter]
++[errechnete_Grösse]G
+t
+24
+```
+
+Anstelle einer SWAP-Partition kann neu unter Btrfs auch ein SWAP-File konfiguriert werden. Überprüfen, ob Systemd-Boot damit zurecht kommt.
+
+Hier, Erstellung einer SWAP-Partition (Code= 19):
+
+```
+n
+[enter] # default 3
+[enter]
+[enter]
+19
+```
+
+```
+w
+```

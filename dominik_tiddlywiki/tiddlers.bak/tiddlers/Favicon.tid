@@ -1,0 +1,12 @@
+created: 20200601091728700
+modified: 20200601091749895
+tags: tw5
+title: Favicon
+type: text/vnd.tiddlywiki
+
+! Eigenes Favicon für Browsertab erstellen
+
+# Bild im Format .ico oder .png importieren
+#* dazu die "Büroklammer"/Import-Schaltfäche im Tools-Tab des Seitenmenüs lokalisieren
+#* entsprechendes Bild auswählen und "importieren"-Taste betätigen
+#* auf den entstandenen Link klicken um den Tiddler zu öffnen und diesen in ``$:/favicon.ico`` umbenennen

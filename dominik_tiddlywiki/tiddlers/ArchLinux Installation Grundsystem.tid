@@ -1,17 +1,61 @@
 created: 20200522084029687
-modified: 20200522090826186
+modified: 20200809035620220
 tags: archlinux
 title: ArchLinux Installation Grundsystem
+type: text/vnd.tiddlywiki
 
 [[Arch My Way - YouTube|https://www.youtube.com/playlist?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH]]
+
+Hinweis: Arch Linux kann von einem bereits installierten Arch Linux-System installiert werden. Dazu `arch-install-scripts` installieren.
 
 ! Live-System booten
 
 USB-Live-System im UEFI-Mode booten. Im Bios unter Boot-Optionen kontrollieren, dass der UEFI-Eintrag gebootet wird. Vor dem Device-Namen muss UEFI stehen.
 
-Nach dem Booten kontrollieren:
+!! System auf deutsch umstellen
 
-Mit ctrl+alt+F2 in tty wechseln.
+Evtl. Installer durchlaufen und nach Umstellung abbrechen.
+
+Mindestens Tastatur umstellen:
+
+```
+loadkeys de
+loadkeys de_CH-latin1
+```
+
+!! Netzwerkverbindung erstellen
+
+mit NetworkManager
+
+Network Manager Terminal User Interface:
+
+```
+nmtui
+```
+
+oder
+
+```
+wifi-menu
+```
+
+Eigene IP-Adresse überprüfen:
+
+```
+ip a
+```
+
+!! Network Time Protocol synchronisieren
+
+```
+timedatectl set-ntp true
+```
+
+!! UEFI-Mode
+
+Vergewissern, dass im UEFI-Mode gebootet wurde.
+
+Terminal öffnen oder falls in Desktopumgebung mit ctrl+alt+F2 in tty wechseln.
 
 login: root
 
@@ -19,17 +63,9 @@ login: root
 efivar -l
 ```
 
-Falls etwas aufgelisted wird, wurde der Rechner im UEFI-Mode gestartet.
+Falls etwas aufgelisted wird, wurde der Rechner im UEFI-Mode gestartet und mit der Installation kann begonnen werden.
 
 Mit ctrl+alt+F7 gelangt man wieder zum Desktop.
-
-!! Netzwerksverbindung herstellen
-
-Netzwerk- oder Wifi-Verbindung herstellen. Daran denken, dass zur Zeit noch eine englische Tastaturbelegung eingestellt ist.
-
-!! Live-System auf deutsch umstellen
-
-Installer durchlaufen und nach umstellung abbrechen.
 
 ! ArchLinux installieren
 
@@ -47,53 +83,23 @@ sudo su
 
 [[ArchLinux Installation Partitionsschema]]
 
-UEFI-Systeme mit einer GPT-Partitionstabelle werden mit `gdisk` erstellt.
+Partitionen:
 
-`o` erzeugt nicht nur eine neue GUID Parttitionstabelle sondern löscht auch vorhandene Daten.
+# EFI ''256M''
+# BTRFS 465.8G (SSD) - 16G (SWAP) = ''450G''
+# SWAP Rest (ca. ''16G'' bei 32G Arbeitsspeicher)
 
-```
-gdisk /dev/nvme0n1
-o
-```
-
-EFI-Boot-Partition erstellen (Code= ef00):
+Block-Geräte anzeigen:
 
 ```
-n
-[enter] # default 1
-[enter]
-+256M
-ef00
+lsblk
 ```
 
-Btrfs-Partition erstellen (Code= 8300/default). Die Grösse der Partition errechnent sich aus verbleibender Grösse minus dem benötigten SWAP-Speicher:
+UEFI-Systeme mit einer GPT-Partitionstabelle werden mit `gdisk` oder `fdisk` erstellt.
 
-```
-n
-[enter] # default 2
-[enter]
-+[errechnete_Grösse]G
-[enter]
-```
+[[ArchLinux Installation Partitionierung fdisk]]
 
-Anstelle einer SWAP-Partition kann neu unter Btrfs auch ein SWAP-File konfiguriert werden.
-
-Hier, Erstellung einer SWAP-Partition (Code= 8200):
-
-```
-n
-[enter] # default 3
-[enter]
-[enter]
-8200
-```
-
-Überprüfen und Änderungen schreiben:
-
-```
-p
-w
-```
+[[ArchLinux Installation Partitionierung gdisk]]
 
 [[Datenträger anzeigen]]
 
@@ -115,16 +121,27 @@ swapon /dev/nvme0n1p3
 SWAP überprüfen:
 
 ```
-free-h
+free -h
 ```
 
 !! Btrfs-Subvolumes
 
-Anstelle der fogenden Einzelbefehle diesen ausprobieren:
+''Nächstes Mal: Subvolume-Logik in [[Arch auf BtrFS – wiki.archlinux.de|https://wiki.archlinux.de/title/Arch_auf_BtrFS]] berücksichtigen!:''
 
-```
-btrfs sub create {@root_TESTING,@home,@pkg,@log,@images}
-```
+Das Subvolume für das Root-Verzeichnis wird `arch` genannt. Somit können später auch Subvolumes für weitere Root-Verzeichnisse anderer Linux-Distributionen erstellt werden z. B. `debian`.
+
+Beim Backup sollten einige Ordner in `var` ausgeschlossen werden. Für diese sind die folgenden Subvolumes zu erstellen: `cache`, `log`, `spool`, `temp`.
+
+Ausgeschlossen sollen auch das Home-Verzeichnis von Root `root` und `srv`. Somit auch für diese eigene Subvolumes erstellen.
+
+Zusätzlich Subvolumes für `snapshots` und ein Home-Verzeichnis für den Arch-Benutzer: `niggi`. Darin werden die Arch-Konfigurtations-Dateien gespeichert. Für eine andere Linux-Distribution käme ein anderes zum Zuge. Darin wiederum mounted man die Benutzer-Unterordner: z. B. `Bilder`, `Dokumente`, `Musik`, `Projekte` etc., die wiederum eigene Subvolumes darstellen. Dieses Vorgehen macht das Backup des Home-Verzeichnisses kompliziert und ist nur notwendig, wenn weitere Distributionen installiert werden sollen.
+
+Ein zusätzliches Subvolume `snapshots` für das Home-Verzeichnis des Benutzers ist meiner Meinung nach nur sinnvoll, falls Benutzer nicht Zugriff auf das `/brtrfs`-Verzeichnis nehmen sollen.
+
+Vorausgesetzt 2 Datenträger wurden verwendet, einer für das Root-Verzeichnis von ArchLinux, das andere für Home-Verzeichnisse der Benutzer, entsprechen die beiden Subvolumes `arch_pool` und `home_pool` den Btrfs-Top-Level-Verzeichnissen der beiden Datenträger. Somit 
+werden darin sämtliche Btrfs-Subvolumes angezeigt, die auf jedem Datenträger vorhanden ist. Bei einem einzigen Datenträger kann dies mit einem Subvolume namens `btrfs`, welches unter `/btrfs` oder `btrfs_pool` gemounted wird geschehen.
+
+!!! Bewärte Methode nach "Arch My Way"
 
 Btrfs-Subvolumes erstellen:
 
@@ -178,6 +195,7 @@ ls
 Btrfs unmounten:
 
 ```
+cd
 umount /mnt
 ```
 
@@ -187,8 +205,10 @@ Erstellte Partitionen und Subvolumes anhand geplantem System-Aufbau mounten.
 
 Bei grossen Systemen (viele Terrabytes) als Mount-Option u. U. `space_cache=v2` verwenden.
 
+''Bei der nächsten Installation anstelle `compress=lzo` `compress=zstd` ausprobieren.'' Mehr zum Thema: [[Arch auf BtrFS - fstab bearbeiten – wiki.archlinux.de|https://wiki.archlinux.de/title/Arch_auf_BtrFS#fstab_bearbeiten]]
+
 ```
-mount -o noatime,compress=lzo,space_cache,ssd,subvol=@root_TESTING /dev/nvme0n1p2 /mnt
+mount -o noatime,ssd,space_cache,compress=lzo,subvol=@root_TESTING /dev/nvme0n1p2 /mnt
 
 ```
 
@@ -221,15 +241,21 @@ df -Th
 https://wiki.archlinux.de/title/Anleitung_für_Einsteiger#Installation_der_Basispakete
 
 ```
-pacstrap /mnt base base-devel linux linux-firmware nano
+pacstrap /mnt base linux linux-firmware vim
 ```
 
 !! Weitere Pakete
 
-Für `systemd-boot` werden später folgende Pakete benötigt: `efibootmgr`, `dosfstools`, `gptfdisk`. Also gleich mitinstallieren:
+Für `systemd-boot` werden später folgende Pakete benötigt: `efibootmgr`, `dosfstools`, `gptfdisk`.
+
+`dhcpcd` oder `networkmanager` (NetworkManager)
+
+`gptfdisk`
+
+ Also gleich mitinstallieren:
 
 ```
-pacman --root /mnt -S btrfs-progs dosfstools bash-completion efibootmgr dosfstools gptfdisk dhcpcd wpa-supplicant netctl dialog
+pacman --root /mnt -S btrfs-progs dosfstools bash-completion efibootmgr networkmanager netctl dialog base-devel linux-headers
 ```
 
 !! fstab erzeugen
@@ -239,7 +265,9 @@ genfstab -Lp /mnt >> /mnt/etc/fstab
 cat /mnt/etc/fstab
 ```
 
-!! Systemkonfiguration
+''Link geänderte fstab einfügen''
+
+!! Rechnername und Localhost
 
 Hinweis: `>` in Datei schreiben/überschreiben, `>>` innerhalb Datei anhängen (bestehendes geht nicht verloren)
 
@@ -255,7 +283,21 @@ Rechnernamen:
 echo archbox > /etc/hostname
 ```
 
-Spracheinstellung:
+Konfiguration von /etc/hosts:
+
+Der zuvor konfigurierte Rechnername (archbox) in /etc/hostname muss hier verwendet werden. 
+
+```
+vim /etc/hosts
+```
+
+```
+127.0.0.1 localhost
+::1 localhost
+127.0.1.1 archbox.localdomain archbox
+```
+
+!! Spracheinstellung
 
 ```
 echo LANG=de_CH.UTF-8 > /etc/locale.conf
@@ -288,13 +330,72 @@ echo KEYMAP=de_CH-latin1 > /etc/vconsole.conf
 echo FONT=lat9w-16 >> /etc/vconsole.conf
 ```
 
+!! Zeiteinstellung
+
 Zeitzone durch einen symbolischen Link festlegen:
+
+[[System time - Time standard - ArchWiki|https://wiki.archlinux.org/index.php/System_time#Time_standard]]
 
 ```
 ln -sf /usr/share/zoneinfo/Europe/Zurich /etc/localtime
 ```
 
-Bei einer Btrfs Raid Installation kann man unter `Hooks=` `fsck` löschen. In jedem Fall aber `btrfs `vor Eintrag `filesystems` eintragen:
+Es ist empfohlen die Systemuhr auf UTC/GMT zu belassen.
+
+Überprüfung der Einstellung:
+
+```
+timedatectl | grep local
+RTC in local TZ: no
+```
+
+Rückstellung auf UTC/GTM:
+
+```
+timedatectl set-local-rtc 0
+```
+
+oder
+
+```
+hwclock -wu
+```
+
+(Unter Umständen Harware- mit Systemuhr synchronisieren):
+
+```
+hwclock --systohc
+```
+
+oder
+
+```
+timedatectl set-local-rtc 1
+```
+
+Automatische Zeiteinstellung aktivieren:
+
+[[Anleitung für Einsteiger - Automatische Zeiteinstellung – wiki.archlinux.de|https://wiki.archlinux.de/title/Anleitung_f%C3%BCr_Einsteiger#Automatische_Zeiteinstellung]]
+
+```
+systemctl enable --now systemd-timesyncd.service
+```
+
+Zeit überprüfen:
+
+```
+date
+```
+
+Anschließend kann man die Hardwareuhr oder auch RTC oder CMOS-Uhr auf der Hauptplatine korrigieren.
+
+```
+hwclock -w --verbose
+```
+
+!! Hooks
+
+Bei einer ''Btrfs Raid'' Installation kann man unter `Hooks=` `fsck` löschen. In jedem Fall aber `btrfs `vor Eintrag `filesystems` eintragen:
 
 https://youtu.be/oT7gs2CmsnQ?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH&t=1298
 
@@ -320,10 +421,62 @@ HOOKS=(base udev autodetect modconf block keymap keyboard filesystems fsck)
 mkinitcpio -p linux
 ```
 
-Root-Passwort eingeben:
+!! Benutzerverwaltung
+
+Root-Passwort vergeben:
 
 ```
 passwd
+```
+
+[[Anleitung für Einsteiger - Einen Benutzer hinzufügen und Gruppen wählen – wiki.archlinux.de|https://wiki.archlinux.de/title/Anleitung_f%C3%BCr_Einsteiger#Einen_Benutzer_hinzuf.C3.BCgen_und_Gruppen_w.C3.A4hlen]]
+
+Benutzer hinzufügen:
+
+```
+useradd -m -g users -G wheel,audio,video -s /bin/bash niggi
+passwd niggi
+```
+
+`-m`= `/home`-Verzeichnis wird erstellt für neuen Benutzer
+
+`-g`= Hautpgruppe des neuen Benutzers
+
+`-G`= zusätzliche Gruppen des neuen Benutzers
+
+`-s`= Shell des Benutzers
+
+zum Schluss den Benutzernamen angeben
+
+Benutzer `sudo`-Berechtigung vergeben:
+
+```
+EDITOR=vim visudo
+```
+
+`#` entfernen vor `%wheel ALL=(ALL) ALL` und speichern.
+
+Test:
+
+Als ROOT ausloggen:
+
+```
+exit
+```
+
+Als normaler Benutzer einloggen
+
+```
+archbox login: niggi
+passwort:
+sudo su
+passwort:
+```
+
+Nach erflogreichem Test kann man root deaktivieren, Passwort ablaufen lassen:
+
+```
+passwd -l root
 ```
 
 !! Systemd-Boot
@@ -388,10 +541,18 @@ Durch den Rollback verändert sich später die `subvolid=[]` von `@root_TESTING`
 
 `subvol=/@[]` ist doppelt mit `subvol=@[]` und wird daher entfernt. Das [[Script Update Rollback]] kann dadurch u. a. einfacher gehalten werden.
 
+Nachdem ein Benutzer hinzugefügt wurde, kann zusätzlich eine [[RAM-Disk]] erstellt werden. Damit wird das Schreiben auf die SSD verringert.
+
 ```
 nano /etc/fstab
 ```
 
 [[fstab Beispiel]]
 
-Weiterfahren mit [[ArchLinux Installation Xfce-Desktop]]
+Weiterfahren mit:
+
+[[ArchLinx Installation weitere nützliche Dienste]]
+
+[[ArchLinux Installation von X]]
+
+[[ArchLinux Installation Xfce-Desktop]]

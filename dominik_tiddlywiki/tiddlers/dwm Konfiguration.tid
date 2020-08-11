@@ -1,0 +1,39 @@
+created: 20200808070813099
+modified: 20200808073300985
+tags: archlinux
+title: dwm Konfiguration
+type: text/vnd.tiddlywiki
+
+`.xinitrc` in Heimverzeichnis kopieren um dort Änderungen vorzunehmen. Am Ende muss `exec dwm` stehen.
+
+```
+cp /etc/X11/xinit/xinitrc .xinitrc
+vim .xinitrc
+```
+
+Einträge vornehmen:
+
+! Keyboard
+
+```
+# keyboard
+setxkbmap ch &
+```
+
+! Loop
+
+Startet X und somit dwm automatisch nach beenden mit Modkey+Shift+Q:
+
+```
+# loop
+while true; do
+ dwm >/dev/null 2>&1
+done
+```
+
+! Execute dwm
+
+```
+# execute dwm
+exec dwm
+```

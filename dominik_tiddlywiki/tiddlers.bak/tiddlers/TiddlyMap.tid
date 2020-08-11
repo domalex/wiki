@@ -1,0 +1,143 @@
+created: 20200522093058983
+modified: 20200522093132400
+tags: node tw5
+title: TiddlyMap
+
+! Installation unter [[Node.js]]
+
+!! Plugin-Installation allgemeine Hinweise
+
+[[Installing a plugin from the plugin library|https://tiddlywiki.com/static/Installing%2520a%2520plugin%2520from%2520the%2520plugin%2520library.html]]
+
+[[Installing custom plugins on Node.js|https://tiddlywiki.com/static/Installing%2520custom%2520plugins%2520on%2520Node.js.html]]
+
+!! Installations-Ordner erstellen
+
+[[GitHub - felixhayashi/TW5-TiddlyMap: Map drawing and topic visualization for your wiki|https://github.com/felixhayashi/TW5-TiddlyMap#Installation]]
+
+Der Ordner trägt den Namen des Plugin-Entwicklers `/felixhayashi`
+
+!!! Linux
+
+```
+cd /usr/lib/node_modules/tiddlywiki/plugins
+sudo mkdir felixhayashi
+sudo chown $USER felixhayashi/
+```
+
+Dem Benutzer schreibrechte auf den Ordner gewähren:
+
+```
+ls -la felixhayashi/
+insgesamt 0
+drwxr-xr-x 1 niggi root   62 29. Apr 13:20 .
+drwxr-xr-x 1 root  root   44 29. Apr 13:29 ..
+```
+
+!!! Windows
+
+```
+PS C:\Users\niggi> mkdir C:\Users\niggi\AppData\Roaming\npm\node_modules\tiddlywiki\plugins\felixhayashi
+```
+
+!! Benötigte Plugin-Dateien im Zip-Format herunterladen
+
+[[GitHub - felixhayashi/**TW5-TiddlyMap**: Map drawing and topic visualization for your wiki|https://github.com/felixhayashi/TW5-TiddlyMap]]
+
+[[GitHub - felixhayashi/**TW5-Vis.js**: TiddlyWiki plugin for the vis.js library|https://github.com/felixhayashi/TW5-Vis.js]]
+
+[[GitHub - felixhayashi/**TW5-HotZone**: Be notified when tiddlers are scrolled into view|https://github.com/felixhayashi/TW5-HotZone]]
+
+[[GitHub - felixhayashi/**TW5-TopStoryView**: Always scroll navigated tiddlers to the top|https://github.com/felixhayashi/TW5-TopStoryView]]
+
+!! Teile der Dateien in den erstellten Ordner entpacken
+
+Jede Datei öffnen und jeweils den Inhalt unterhalb von `dist/felixhayashi/` in den erstellten Ordner `tiddlywiki/plugins/felixhayashi/` entpacken (oder symlinks erstellen):
+
+TW5-TiddlyMap-master: `/tiddlymap`
+
+TW5-Vis.js: `/vis`
+
+TW5-HotZone: `/hotzone`
+
+TW5-TopStoryView: `/topstoryview`
+
+!! JSON-Datei erstellen
+
+Sämtliche Bestandteile des Plugins in der JSON-Datei `tiddlywiki.info` unter `plugins` auflisten. Komma nach dem letzten bestehenden Eintrag nicht vergessen!
+
+Beispiel:
+
+```
+nano tiddlywiki.info
+```
+
+```
+{
+    "description": "Basic client-server edition",
+    "plugins": [
+        "tiddlywiki/tiddlyweb",
+        "tiddlywiki/filesystem",
+        "tiddlywiki/highlight",
+	"tiddlywiki/markdown",
+	"felixhayashi/tiddlymap",
+	"felixhayashi/vis",
+	"felixhayashi/hotzone",
+	"felixhayashi/topstoryview"
+    ],
+    "themes": [
+        "tiddlywiki/vanilla",
+        "tiddlywiki/snowwhite"
+    ],
+    "build": {
+        "index": [
+            "--rendertiddler",
+            "$:/plugins/tiddlywiki/tiddlyweb/save/offline",
+            "index.html",
+            "text/plain"
+        ],
+        "static": [
+            "--rendertiddler",
+            "$:/core/templates/static.template.html",
+            "static.html",
+            "text/plain",
+            "--rendertiddler",
+            "$:/core/templates/alltiddlers.template.html",
+            "alltiddlers.html",
+            "text/plain",
+            "--rendertiddlers",
+            "[!is[system]]",
+            "$:/core/templates/static.tiddler.html",
+            "static",
+            "text/plain",
+            "--rendertiddler",
+            "$:/core/templates/static.template.css",
+            "static/static.css",
+            "text/plain"
+        ]
+    }
+}
+```
+
+! Welcome Message
+
+```
+Welcome
+
+It seems that you freshly installed TiddlyMap.
+
+    In case you need any help, please consult the online docs first.
+    You are welcome to create an issue at GitHub for any bug you discover.
+    Make sure to revisit the demo site to see whether your version is up-to-date.
+    If you like TiddlyMap, please give it a star at GitHub or tell your friends about it :)
+    Please note: TiddlyMap is distributed under the BSD 2-Clause License, which belongs to the same license family, as the license used by TiddlyWiki. By using this plugin you agree to the product's License Terms.
+
+Enjoy!
+
+TiddlyMap will configure your wiki for optimal use. Everything can be changed back later by you, via the TiddlyWiki configurations panel, so no worries. If you checked some of the options below, please save & restart after closing this dialog.
+
+Optimize storyview: 		Sets the storyview to 'top' for optimal scrolling.
+Optimize sidebar: 		Sets sidebar layout to 'fixed-fluid' for larger editor.
+Optimize navigation: 		Sets navigation style to open tiddlers at top for better map navigation.
+Create demo welcome map: 		Creates a little hello world welcome map for you.
+```

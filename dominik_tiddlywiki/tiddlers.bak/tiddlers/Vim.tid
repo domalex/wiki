@@ -1,0 +1,38 @@
+created: 20200522094525826
+modified: 20200522094736744
+tags: 
+title: Vim
+
+[[Vim - ArchWiki|https://wiki.archlinux.org/index.php/Vim]]
+
+[[Shortcuts Vim]]
+
+Lernprogramm:
+
+```
+vimtutor
+```
+
+[[Creating a .vimrc file from scratch. - YouTube|https://www.youtube.com/watch?v=47nQgun4n-w]]
+
+! Plugin Manager
+
+Eingebauter [[Vim Paketmanager]] aktivieren
+
+[[vim-volt/volt: A meta-level vim package manager|https://github.com/vim-volt/volt]]
+
+[[VundleVim/Vundle.vim: Vundle, the plug-in manager for Vim|https://github.com/VundleVim/Vundle.vim]]
+
+! Plugins
+
+[[tpope/vim-fugitive: fugitive.vim: A Git wrapper so awesome, it should be illegal|https://github.com/tpope/vim-fugitive]]
+
+[[airblade/vim-gitgutter: A Vim plugin which shows git diff markers in the sign column and stages/previews/undoes hunks and partial hunks.|https://github.com/airblade/vim-gitgutter]]
+
+[[preservim/nerdtree: A tree explorer plugin for vim|https://github.com/preservim/nerdtree]]
+
+[[preservim/nerdcommenter: Vim plugin for intensely nerdy commenting powers|https://github.com/preservim/nerdcommenter]]
+
+[[frazrepo/vim-rainbow: Rainbow brackets for Vim|https://github.com/frazrepo/vim-rainbow]]
+
+[[sukima/vim-tiddlywiki: TiddlyWiki syntax/file plugin - Forked and modified|https://github.com/sukima/vim-tiddlywiki]]

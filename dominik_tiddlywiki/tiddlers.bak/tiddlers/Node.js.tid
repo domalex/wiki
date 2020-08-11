@@ -1,0 +1,35 @@
+created: 20200522091831495
+modified: 20200522091847370
+tags: node
+title: Node.js
+
+[[Node.js Tutorial For Absolute Beginners - YouTube|https://www.youtube.com/watch?v=U8XF6AFGqlc]]
+
+[[Node.js Crash Course - YouTube|https://www.youtube.com/watch?v=fBNz5xF-Kx4&t=2793s]]
+
+! Installation
+
+```
+sudo pacman -S nodejs
+```
+
+!! Paketmanager npm installieren
+
+```
+[niggi@archbox node]$ sudo pacman -S npm
+:: Synchronisiere Paketdatenbanken...
+ core ist aktuell
+ extra ist aktuell
+ community ist aktuell
+Löse Abhängigkeiten auf...
+Suche nach in Konflikt stehenden Paketen...
+
+Pakete (3) node-gyp-6.1.0-1  semver-7.1.3-1  npm-6.14.4-1
+
+Gesamtgröße des Downloads:            3.42 MiB
+Gesamtgröße der installierten Pakete:  27.05 MiB
+```
+
+! Git version control
+
+[[Node.js Tutorial for beginners - Use Git With C9io - YouTube|https://www.youtube.com/watch?v=IfGVC_nPWzU]]

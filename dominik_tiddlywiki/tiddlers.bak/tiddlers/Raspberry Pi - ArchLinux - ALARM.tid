@@ -1,0 +1,48 @@
+created: 20200522091558079
+modified: 20200522091740485
+tags: 
+title: Raspberry Pi - ArchLinux - ALARM
+
+[btrfs auf dem Raspberry Pi](http://www.linten.eu/btrfs)
+[Raspberry Pi | Arch Linux ARM](https://archlinuxarm.org/platforms/armv6/raspberry-pi)
+[Raspberry Pi Encrypted Btrfs Root · NicoHood/NicoHood.github.io Wiki](https://github.com/NicoHood/NicoHood.github.io/wiki/Raspberry-Pi-Encrypted-Btrfs-Root)
+[Arch Linux quick start guide - Sven and the Art of Computer Maintenance](https://kiljan.org/2019/02/24/arch-linux-quick-start-guide/)
+[Arch Linux ARM network boot on Raspberry Pi 4 - Sven and the Art of Computer Maintenance](https://kiljan.org/2019/11/16/arch-linux-arm-network-boot-on-raspberry-pi-4/)
+
+[Selfhosting EP1: Installing Arch Linux ARM - YouTube](https://www.youtube.com/watch?v=oHuv0U6FnKw)
+[Selfhosting EP2: Setting up the system - YouTube](https://www.youtube.com/watch?v=rwv4La_UZDM)
+[Selfhosting EP3: Setting up Nextcloud, DDClient and Certbot on Arch Linux ARM - YouTube](https://www.youtube.com/watch?v=H1tm4-BWNrU)
+[Selfhosting EP4: L A I N C L O U D レインクラウド - YouTube](https://www.youtube.com/watch?v=JtDFRthYdWc)
+[Full Setup Quad Sata Hat for Raspberry Pi 4 NAS Review - YouTube](https://www.youtube.com/watch?time_continue=284&v=Eix0PCB0byQ)
+[Nextcloud auf Synology Disk Station installieren - Schritt für Schritt Anleitung - YouTube](https://www.youtube.com/watch?v=am8YTABKz2I)
+
+shutoff timer for hard drives -> preventing constant spinning (systemd.timer)
+
+# Partitionierung
+
+```
+lsblk
+sudo fdisk /dev/mmcblk0
+o
+n
+p
+1
+
++100M
+y
+t
+c
+n
+p
+
+
+y
+w
+```
+
+# Formatieren
+
+```
+
+sudo mkfs-btrfs -L SYSTEM /dev/mmcblk02
+```

@@ -1,0 +1,273 @@
+created: 20200805194041434
+modified: 20200808091655377
+tags: archlinux
+title: ArchLinux Installation dwm
+type: text/vnd.tiddlywiki
+
+[[dwm - ArchWiki|https://wiki.archlinux.org/index.php/Dwm]]
+
+[[Playlist: Suckless's dwm - Dominik Schmid - YouTube|https://www.youtube.com/watch?v=unqsQJaECv0&list=PLreRhBYslVSLHCsQp07y9tkjOM0YvRlwq]]
+
+! Voraussetzungen
+
+! Abhängigkeien
+
+` xorg-xsetroot` zur Konfiguration und Kontrolle des Status Bars in dwm
+
+''Welche Abhängigkeiten werden wirklich benötigt - überprüfen''
+
+```
+sudo pacman -S (xorg-server) (xorg-init) libxft libxinerama (xorg-xrandr) xorg-xsetroot (picom)
+```
+
+Die Installation gelang mir erst nach der Installation eins Browsers `firefox-i18n-de`
+
+```
+sudo pacman -S firefox-i18n-de
+```
+
+! Download
+
+Download der Komponenten in Ordner für Git-Projekte:
+
+```
+cd /home/niggi/.projects
+git clone https://git.suckless.org/dwm
+git clone https://git.suckless.org/st
+git clone https://git.suckless.org/dmenu
+```
+
+! Installation
+
+In jeden der drei Ordner gehen und folgenden Befehl ausführen:
+
+```
+cd /home/niggi/.projects/[App_Ordner]
+make && sudo make clean install
+```
+
+! X starten
+
+```
+startx
+```
+
+! Git
+
+[[[10b\] - DWM: Git Install & Patching - YouTube|https://www.youtube.com/watch?v=XJk1AIOWR4o&t=51s]]
+
+Benutzername und E-Mail angeben:
+
+```
+git config user.name "domalex"
+
+git config user.email "niggi@cyberdude.com"
+```
+
+!! dwm-Konfigurationsänderung
+
+!!! Mod-Taste von `Alt` auf `Windows` wechseln
+
+Vorhandene Branches anzeigen. Masterbranch aufräumen und anschliessend mit sauberem Code neuen Branch mit Namen `config` eröffnen:
+
+```
+git branch
+make clean && rm -f config.h && git reset --hard origin/master
+git branch config
+```
+
+Vorhandene Branches anzeigen und in neuen wechseln:
+
+```
+git branch
+git checkout config
+```
+
+Inhalt anzeigen:
+
+```
+ls
+```
+
+Mod-Taste von `Alt` auf `Windows` wechseln:
+
+```
+vim config.def.h
+```
+
+Unter `/* key definitions */` folgende Änderung vornehmen:
+
+```
+#define Modkey Mod4Mask
+```
+
+File adden und an Git commiten unter Angabe des Branch-Namens `config`:
+
+```
+git add config.def.h
+git commit -m "Wechsel Modkey: von Alt- auf Windows-Taste" config
+```
+
+Wechsel auf Master-Branch und Änderungen mergen:
+
+```
+git checkout master
+git merge config -m config
+```
+
+Programm neu kompilieren:
+
+```
+make && sudo make clean install
+```
+
+dwm mit Modkey+Shift+Q neu starten
+
+!! dwm-Patching
+
+!!! Fullgaps installieren
+
+Aufräumen:
+
+```
+git branch
+make clean && rm -f config.h && git reset --hard origin/master
+```
+Neuen Branch mit Name `fullgaps` erstellen:
+
+```
+git branch fullgaps
+```
+
+Auf dwm.suckless.org/patches/ Patch `fullgaps/` suchen. File `dwm-fullgaps-6.2.diff` anklicken. Mit Rechtsklick angezeigten Source-Code mit `speichern als` im Download-Ordner speichern.
+
+In neuen Branch wechseln:
+
+```
+git checkout fullgaps
+```
+
+Patch anwenden Methode 1:
+
+```
+git apply ~/Downloads/dwm-fullgaps-6.2.diff
+```
+
+Fehlermeldung:
+
+```
+error: patch failed: dwm.c:1683
+error: dwm.c:patch does not apply
+```
+
+Patch anwenden Methode 2:
+
+```
+patch < ~/Downloads/dwm-fullgaps-6.2.diff
+```
+
+Funktioniert teilweise. Fehlermeldung:
+
+```
+patching file config.def.h
+patching file dwm.c
+Hunk #2 succeeded at 201 (offset 1 line).
+Hunk #3 succeeded at 641 (offset 1 line).
+Hunk #4 succeeded at 1501 (offset 1 line).
+Hunk #5 FAILED at 1696
+1 out of 5 hunks FAILED -- saving rejects to file dwm.c.rej
+```
+
+Besagte Datei öffnen und Unstimmigkeiten begutachten:
+
+```
+vim dwm.c.rej
+```
+
+`dwm.c` in neuem Vim-Tab öffnen:
+
+```
+:tabnew
+:e dwm.c
+```
+
+Zu `dwm.c.rej` zurückkehren. Neue Zeilen kopieren und in `dwm.c` ersetzen.
+
+Zum Schluss alle `+`-Komentarindikatoren am Zeilenanfang löschen.
+
+Speichern und beide Tabs schliessen:
+
+```
+:wq
+:q
+```
+
+Geänderte Dateien in Git commiten:
+
+```
+git add dwm.c config.def.h
+git commit -m "Patch fullgaps integriert" fullgaps
+```
+
+Zürich in den Master-Branch und mergen:
+
+```
+git checkout master
+git branch 
+git merge config -m config
+git merge fullgaps - fullgaps
+```
+
+Neu kompilieren und installieren:
+
+```
+make && sudo make clean install
+```
+
+Restart dwm:
+
+```
+Modkey+Shift+Q
+```
+
+!! Patch entfernen
+
+
+```
+patch -R < dwm-fullgaps-6.2.diff
+```
+
+Erfolgsmeldung:
+
+```
+patching file config.def.h
+patching file dwm.c
+```
+
+Programm neu kompilieren:
+
+```
+make && sudo make clean install
+```
+
+dwm mit Modkey+Shift+Q neu starten
+
+Weiter mit:
+
+[[dwm Konfiguration]]
+
+! Deinstallieren
+
+[[If I build a package from source how can I uninstall or remove completely? - Ask Ubuntu|https://askubuntu.com/questions/87111/if-i-build-a-package-from-source-how-can-i-uninstall-or-remove-completely]]
+
+Aufzeigen wohin Installiert wird:
+
+```
+make -n install
+```
+
+Im Normalfall kann so deisnstalliert werden:
+
+```
+sudo make uninstall
+```

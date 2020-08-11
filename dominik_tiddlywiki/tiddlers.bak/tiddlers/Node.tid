@@ -1,0 +1,9 @@
+created: 20200531072802814
+modified: 20200604091800724
+tags: mind
+title: Node
+type: text/vnd.tiddlywiki
+
+Ein in sich abgeschlossener, ausformulierter Themenblock oder Gedanke. In TiddlyWiki werden diese als [[Tiddler|https://tiddlywiki.com/#Tiddlers]] bezeichnet. Node kommt aus dem englischen und bedeutet Knoten. In der Informatik dienen Nodes als Austauschpunkte/Schnittstellen. In Hypertext ist ein Node ein zentrales Element der Atomisierung von ''Wissenseinheiten'' (chunks of knowledge). Diese können durch textuelle Elemente (Textausschnitte, Transklusion, Links) verknüpft und miteinander verwoben werden. Dadurch entsteht vernetztes Wissen. Der Vorteil von Nodes besteht in deren Wiederverwendbarkeit.
+
+Das festhalten von Wissen mittels Nodes und deren Vernetzung entspricht dem Denken und Gedächtnis des Menschen (BrainBasic). Beim Verfassen ist der NodeStil zu beachten.

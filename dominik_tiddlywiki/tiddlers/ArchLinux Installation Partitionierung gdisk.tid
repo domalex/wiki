@@ -1,0 +1,50 @@
+created: 20200805070553292
+modified: 20200805070604912
+title: ArchLinux Installation Partitionierung gdisk
+type: text/vnd.tiddlywiki
+
+`o` erzeugt nicht nur eine neue GUID Parttitionstabelle sondern löscht auch vorhandene Daten.
+
+```
+gdisk /dev/nvme0n1
+o
+```
+
+EFI-Boot-Partition erstellen (Code= ef00):
+
+```
+n
+[enter] # default 1
+[enter]
++256M
+ef00
+```
+
+Btrfs-Partition erstellen (Code= 8300/default). Die Grösse der Partition errechnent sich aus verbleibender Grösse minus dem benötigten SWAP-Speicher:
+
+```
+n
+[enter] # default 2
+[enter]
++[errechnete_Grösse]G
+[enter]
+```
+
+Anstelle einer SWAP-Partition kann neu unter Btrfs auch ein SWAP-File konfiguriert werden. Überprüfen, ob Systemd-Boot damit zurecht kommt.
+
+Hier, Erstellung einer SWAP-Partition (Code= 8200):
+
+```
+n
+[enter] # default 3
+[enter]
+[enter]
+8200
+```
+
+Überprüfen und Änderungen schreiben:
+
+```
+p
+w
+```

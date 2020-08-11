@@ -1,0 +1,65 @@
+created: 20200522085800312
+modified: 20200522085819279
+tags: btrfs
+title: Btrfs konvertieren
+
+! Single - Raid
+
+[[01.02.2017 - Arch My Way 1 - Grundsystem installierenArch My Way 5 - Sicherheit und Backups - Btrfs Read Only SnapshotsArch My Way 6 - Dateisysteme und Systemwartung 06.35|https://youtu.be/WeppT9SDmOA?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH&t=395]]
+
+Achtung: bei einer Konvertierung darauf achten, dass genügend freier Speicherplatz vorhanden ist. Der Speicherbedarf verdoppelt sich und Btrfs sollte nie voll laufen.
+
+Anzeigen gegenwärtige Konfiguration:
+
+```
+[niggi@archbox ~]$ sudo btrfs fi usage /btrfs/
+[sudo] Passwort für niggi: 
+Overall:
+    Device size:		 449.52GiB
+    Device allocated:		 195.04GiB
+    Device unallocated:		 254.48GiB
+    Device missing:		     0.00B
+    Used:			 181.66GiB
+    Free (estimated):		 266.63GiB	(min: 266.63GiB)
+    Data ratio:			      1.00
+    Metadata ratio:		      1.00
+    Global reserve:		 214.36MiB	(used: 0.00B)
+
+Data,single: Size:193.01GiB, Used:180.85GiB (93.70%)
+   /dev/nvme0n1p2	 193.01GiB
+
+Metadata,single: Size:2.00GiB, Used:827.66MiB (40.41%)
+   /dev/nvme0n1p2	   2.00GiB
+
+System,single: Size:32.00MiB, Used:48.00KiB (0.15%)
+   /dev/nvme0n1p2	  32.00MiB
+
+Unallocated:
+   /dev/nvme0n1p2	 254.48GiB
+```
+
+Nach dem zufügen zusätzlicher Festplatten mit `btrfs add` die Daten zu Raid1 konvertieren. Falls bereits mehrere Datenträger verbaut sind, sollten sich die Metadaten bereits in einem Raid1 befinden. In diesem fall den Befehl um `-mconvert=raid1` kürzen:
+
+1. Terminal für die Überprüfung des Fortschritts der folgenden Änderungen:
+
+''Überprüfen:'' Befehl ohne `watch`. Beides nebeneinander ausführen.
+
+```
+sudo watch btrfs balance status /btrfs/
+```
+
+2. Terminal:
+
+```
+sudo btrfs balance start -dconvert=raid1 -mconvert=raid1 /btrfs/
+sudo btrfs fi usage /btrfs/
+```
+
+Für eine vollständige Konvertierung muss dieser Schritt u. U. zweimal durchgeführt werden:
+
+```
+sudo btrfs balance start -dconvert=raid1 -mconvert=raid1 /btrfs/
+sudo btrfs fi usage /btrfs/
+```
+
+Anschliessend `btfs scrub`. Siehe [[ArchLinux periodischer Unterhalt]].

@@ -1,0 +1,137 @@
+created: 20200522085550334
+modified: 20200522085642526
+tags: btrfs
+title: Btrfs Backup inkrementell
+
+[[30.01.2017 - Arch My Way 1 - Grundsystem installierenArch My Way 5 - Sicherheit und Backups - Btrfs Read Only Snapshots - 11:58|https://youtu.be/IZCKlGGSyGM?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH&t=718]]
+
+Auf beiden Datenträgern (Ursprung-Backup) wird Btrfs benötigt um inkrementelle Backups auszuführen.
+
+Falls innerhalb eines Snapshots ein weiterer Snapshot liegt und vom ersten ein weiterer Snapshot erstellt wird, wird der zweite nicht mit berücksichtigt.
+
+! Backup Suffix
+
+Variante 1:
+
+_backup
+_backup_new
+
+Variante 2:
+
+_backup_[zeitstempel]
+
+! USB-Device formatieren
+
+USB-Festplatte einstecken. Diese wird automatisch unter `/run/media/[user_name]/[usb_device]` gemounted.
+
+```
+sudo t /run/media/niggi/[usb_device]
+lsblk
+sudo mkfs-btrfs -L BACKUP /dev/sdc1
+```
+
+Falls der Device bereits zuvor mit Btrfs formatiert wurde muss zusätzlich `-f` verwendet werden:
+
+```
+sudo mkfs-btrfs -f -L BACKUP /dev/sdc1
+```
+
+Im Explorer mit Rechtsklick überprüfen, ob "neuer Ordner erstellen", respektive "neue Datei erstellen" nicht mehr ausgegraut sind.
+
+USB-Device aus- und wieder einstecken. Da der Device von `root` formatiert wurde hat auch nur dieser Schreibrechte. Falls das Gerät auch anderen Zwecken dienen soll muss das geändert werden:
+
+```
+sudo chown -R niggi:users /run/media/niggi/BACKUP/
+```
+
+! Backup-Verzeichnis erstellen
+
+Wieder Root werden:
+
+```
+sudo su
+```
+
+Backup-Verzeichnis erstellen, damit die Festplatte auch für andere Zwecke verwendet werden kann. Name des Ursprungsgerätes wählen:
+
+```
+cd /run/media/niggi/BACKUP/
+ls
+btrfs sub create @NUC_archbox
+ls
+```
+
+! Erstmaliger	Übertrag
+
+!! 1. Snapshot erstellen
+
+Root werden:
+
+```
+sudo su
+```
+
+Subvolums auflisten:
+
+```
+btrfs sub list /btrfs/
+```
+
+Aus Sicherheitsüberlegungen werden read only Snapshots erstellt:
+
+```
+btrfs sub snap -r /home /btrfs/@home_backup
+ls /btrfs/
+```
+
+```
+btrfs sub list /btrfs/
+btrfs send /btrfs/@home_backup | btrfs receive /run/media/niggi/BACKUP/@NUC_archbox
+ls -la /run/media/niggi/BACKUP/@NUC_archbox/@home_backup
+ls -la /run/media/niggi/BACKUP/@NUC_archbox/@home_backup/niggi/
+```
+
+! Inkrementeller Übertrag
+
+!! 2. Snapshot erstellen
+
+```
+btrfs sub snap -r /home /btrfs/@home_backup_new
+btrfs sub list /btrfs/
+btrfs send -p /btrfs/@home_backup /btrfs/@home_backup_new | btrfs receive /run/media/niggi/BACKUP/@NUC_archbox
+```
+
+Diese Abfrage funktioniert, obwohl die Subvolumes auf dem Device verschachtelt sind:
+
+```
+btrfs sub list /run/media/niggi/BACKUP/
+```
+
+Altes Backup löschen und neues umbenennen:
+
+Ursprungsgerät:
+
+```
+btrfs sub del /btrfs/@home_backup
+mv /btrfs/@home_backup_new /btrfs/@home/backup
+```
+
+Backupgerät:
+
+```
+btrfs sub del /run/media/niggi/BACKUP/@NUC_archbox/@home_backup
+mv /run/media/niggi/BACKUP/@NUC_archbox/@home_backup_new /run/media/niggi/BACKUP/@NUC_archbox/@home_backup
+```
+
+! Btrfs balance
+
+Falls längere Zeit mit `-dusage=5` nichts geschieht, muss die Zahl erhöht werden. Die Metadaten können zusätzlich mit `-musage=5` angesprochen werden. Diese nehmen hingegen bedeutend weniger Platz ein als die eigentlichen Daten.
+
+```
+btrfs balance start -dusage=5 /btrfs
+btrfs balance start -dusage=5 /run/media/niggi/BACKUP
+```
+
+[[Btrfs Script Backup]]
+
+Information integrieren betreffend Backup aus [[Btrfs]]

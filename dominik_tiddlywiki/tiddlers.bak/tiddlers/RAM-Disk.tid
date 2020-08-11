@@ -1,0 +1,27 @@
+created: 20200522092232230
+modified: 20200522092245809
+tags: 
+title: RAM-Disk
+
+! Grundsätzliches
+
+[[01.02.2017 - Arch My Way 1 - Grundsystem installierenArch My Way 5 - Sicherheit und Backups - Btrfs Read Only SnapshotsArch My Way 6 - Dateisysteme und Systemwartung - 14:48|https://youtu.be/WeppT9SDmOA?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH&t=888]]
+
+Wichtig: Inhalt geht verloren bei einem System-Neustart! Alles was im Arbeitsspeicher ist geht verloren. Gewisse Anwendungen erwarten nach einem Reboot diese Daten wieder im Cache vorzufinden.
+
+Wenn man wie beschrieben die Ram-Disk unter `/home/"user"/.cache` mounted funktioniert daher z. B. unter Xfce die Sitzungsauswahl nicht: Sitzung und Startverhalten - Sitzungsauswahl beim Starten.
+
+Eine Alternative ist die Ram-Disk nicht unter `/home/"user"/.cache` zu mounten sondern z. B. unter `/mnt/ramdisk`. Das bedingt allerdings, dass man jede Anwendung entsprechend konfiguriert Daten darauf abzulegen:
+
+Beispiel: [[Chromium › Wiki › ubuntuusers.de #Verlagerung des Browser Caches|https://wiki.ubuntuusers.de/Chromium/#Verlagerung-des-Browser-Caches]]
+
+! Installation
+
+[[30.01.2017 - Arch My Way 1 - Grundsystem installierenArch My Way 5 - Sicherheit und Backups - Btrfs Read Only Snapshots - 02:10|https://youtu.be/IZCKlGGSyGM?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH&t=130]]
+
+Folgede Zeile an `/etc/fstab` anhängen:
+
+```
+# Ramdisk
+tmpfs			/home/niggi/.cache	tmpfs	noatime,nodev,nosuid,size=2G	0 0
+```

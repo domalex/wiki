@@ -1,0 +1,175 @@
+created: 20200522084412262
+modified: 20200522084437657
+tags: archlinux
+title: ArchLinux Installation Rollback
+
+[[ArchLinux Installation Partitionsschema]]
+
+[[Btrfs Snapshots - Systemwiederherstellung - Grub [Natenoms Wiki|https://wiki.natenom.de/linux/verschiedenes/btrfs/snapshots]]
+
+In `@root_TESTING` booten
+
+Anzeige bestehender Subvolumes:
+
+```
+sudo su
+btrfs sub list /btrfs/
+```
+
+! Stable
+
+Snapshot `/btrfs/@root_STABLE` von `/` oder `/btrfs/@root_TESTING` erstellen und kontrollieren:
+
+```
+btrfs sub snap / /btrfs/@root_STABLE
+btrfs sub list /btrfs/
+```
+
+Kernel kopieren:
+
+```
+cd /boot
+cp vmlinuz-linux vmlinuz-linux-stable
+```
+
+`initramfs` kopieren:
+
+```
+cp initramfs-linux.img initramfs-linux-stable.img
+```
+
+```
+cd /boot/loader/entries/
+ls
+```
+
+`arch-uefi_05-testing.conf` kopieren:
+
+```
+cp arch-uefi_05-testing.conf arch-uefi_07-stable.conf
+```
+
+Konfiguration ändern:
+
+```
+nano arch-uefi_07-stable.conf
+```
+
+Inhalt:
+
+```
+title    Arch Linux Stable
+linux    /vmlinuz-linux-stable
+initrd   /initramfs-linux-stable.img
+options  root=LABEL=ROOT rootflags=subvol=@root_STABLE rw resume=LABEL=SWAP
+```
+
+`fstab` ändern:
+
+`@root_TESTING` mit `@root_STABLE` ersetzen:
+
+```
+nano /btrfs/@root_STABLE/etc/fstab
+```
+
+! Oldstable
+
+!! Variante Script
+
+Es ist noch kein `@root_OLDSTABLE` vorhanden und kann daher nicht gelöscht werden.
+
+Daher im [[Scipt Update Rollback]] unter OLDSTABLE erste Zeile mit #, wie folgt gezeigt, auskommentieren. Speichern. Script ausführen.
+
+Script ''als normaler Benutzer'' öffnen:
+
+```
+nano .scripts/update
+```
+
+Zeile auskommentieren:
+
+```
+#$SUDO $BTRFS subvolume delete /.snapshots/OLDSTABLE
+```
+
+Script ausführen:
+
+```
+.scripts/update
+```
+
+Script erneut öffnen:
+
+```
+nano .scripts/update
+```
+
+Änderungen rückgängig machen. # entfernen. Speichern:
+
+```
+$SUDO $BTRFS subvolume delete /.snapshots/OLDSTABLE
+```
+
+!! Variante Hand
+
+Snapshot `/btrfs/@root_OLDSTABLE` von `/` oder `/btrfs/@root_TESTING` erstellen und kontrollieren:
+
+```
+btrfs sub snap / /btrfs/@root_OLDSTABLE
+btrfs sub list /btrfs/
+```
+
+Kernel kopieren:
+
+```
+cd /boot
+cp vmlinuz-linux vmlinuz-linux-oldstable
+```
+
+`initramfs` kopieren:
+
+```
+cp initramfs-linux.img initramfs-linux-oldstable.img
+```
+
+```
+cd /boot/loader/entries/
+ls
+```
+
+`arch-uefi_05-testing.conf` kopieren:
+
+```
+cp arch-uefi_05-testing.conf arch-uefi_09-oldstable.conf
+```
+
+Konfiguration ändern:
+
+```
+nano arch-uefi_09-oldstable.conf
+```
+
+Inhalt:
+
+```
+title    Arch Linux Oldstable
+linux    /vmlinuz-linux-oldstable
+initrd   /initramfs-linux-oldstable.img
+options  root=LABEL=ROOT rootflags=subvol=@root_OLDSTABLE rw resume=LABEL=SWAP
+```
+
+`fstab` ändern:
+
+`@root_TESTING` mit `@root_OLDSTABLE` ersetzen:
+
+```
+nano /btrfs/@root_OLDSTABLE/etc/fstab
+```
+
+! Überprüfen
+
+Alle Booteinträge ausprobieren und in jedem System unter `/dev/nvme0n1p2 on / type btrfs` überprüfen, welches Subvolume gemounted wurde:
+
+```
+mount
+```

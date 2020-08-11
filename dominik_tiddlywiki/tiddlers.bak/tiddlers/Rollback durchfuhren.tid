@@ -1,0 +1,104 @@
+created: 20200522092303395
+modified: 20200522092328893
+tags: btrfs
+title: Rollback durchführen
+
+[[29.01.2017 - Arch My Way 1 - Grundsystem installierenArch My Way 4 - Kernel Rollback und LTS Kernel (Deutsch) - 08:42|https://youtu.be/yRnbh5SbRf8?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH&t=522]]
+
+Booten mit Stable.
+
+Überprüfung:
+
+Subvolume:
+
+```
+mount
+```
+
+evtl. Kernel:
+
+```
+uname -r
+```
+
+Root werden:
+
+```
+sudo su
+```
+
+Subvolumes auflisten:
+
+```
+btrfs sub list /btrfs
+```
+Je kleiner die linke ID Nr. desto älter ist das Subvolume. Gegenwärtig ist `@root_TESTING` somit älter als `@root_STABLE`.
+
+! TESTING löschen
+
+Defektes System/Subvolume löschen:
+
+```
+btrfs sub del /btrfs/@root_TESTING/
+```
+
+! Snapshot von STABLE
+
+Snapshot von Gegenwärtigem gemountetem und funktionierendem System anfertigen:
+
+```
+btrfs sub snap / /btrfs/@root_TESTING
+```
+
+Überprüfung:
+
+```
+btrfs sub list /btrfs
+```
+
+Jetzt ist die linke ID Nr. von `@root_TESTING` grösser als die von `@root_STABLE` und somit jünger.
+
+! fstab ändern
+
+```
+nano /btrfs/@root_TESTING/etc/fstab
+```
+
+Darin `@root_STABLE` mit `@root_TESTING` überschreiben.
+
+! Kernel überschreiben
+
+```
+cd /boot
+cp vmlinuz-linux-stable vmlinuz-linux
+```
+
+! initramfs überschreiben
+
+```
+cp initramfs-linux-stable.img initramfs-linux.img
+```
+
+! Neustart
+
+System neu starten in TESTING:
+
+```
+reboot
+```
+
+Überprüfung:
+
+Subvolume:
+
+```
+mount
+```
+
+evtl. Kernel:
+
+```
+uname -r
+```
+
+[[Debugging]]

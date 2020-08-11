@@ -1,0 +1,49 @@
+created: 20200522083724717
+modified: 20200522083750832
+tags: archlinux
+title: ArchLinux Downgrade
+
+! Pakete auf System
+
+[[01.02.2017 - Arch My Way 1 - Grundsystem installierenArch My Way 5 - Sicherheit und Backups - Btrfs Read Only SnapshotsArch My Way 6 - Dateisysteme und Systemwartung - 27:16|https://youtu.be/WeppT9SDmOA?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH&t=1636]]
+
+[[Downgrading packages - ArchWiki|https://wiki.archlinux.org/index.php/Downgrading_packages]]
+[[Ältere Paketversion installieren (Downgrade) – wiki.archlinux.de|https://wiki.archlinux.de/title/%C3%84ltere_Paketversion_installieren_%28Downgrade%29]]
+
+Alle auf dem System befindlichen Pakete ansehen:
+
+```
+ls /var/cache/pacman/pkg
+```
+
+Downgrade durchführen:
+
+[[29.01.2017 - Arch My Way 1 - Grundsystem installierenArch My Way 4 - Kernel Rollback und LTS Kernel (Deutsch) - 12:23|https://youtu.be/yRnbh5SbRf8?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH&t=743]]
+
+```
+sudo pacman -U [Pfad Paket]
+```
+
+Bis auf weiteres auf Upgrades eines Paketes (z. B. `private-internet-access-vpn`) oder einer Paketgruppe (z. B. `xorg`) verzichten. Paket in `/etc/pacman/conf` eintragen. Geht auch für [[AUR]] Pakete:
+
+```
+sudo nano /etc/pacman/conf
+
+IgnorePkg = [einzelner Paketname]
+
+# oder
+
+IgnoreGroup = [Gruppe Pakete]
+```
+
+[[Pacman Cache leeren]]
+
+! Pakete Online
+
+[[01.02.2017 - Arch My Way 1 - Grundsystem installierenArch My Way 5 - Sicherheit und Backups - Btrfs Read Only SnapshotsArch My Way 6 - Dateisysteme und Systemwartung - 29:01|https://youtu.be/WeppT9SDmOA?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH&t=1741]]
+
+[[Arch Linux Archive - ArchWiki|https://wiki.archlinux.org/index.php/Arch_Linux_Archive]]
+
+evtl. kann man sich entscheiden nur Pakete der letzten Woche oder des letzten Monats aus [[Index of /repos/|https://archive.archlinux.org/repos/]] zu installieren. Zwischenzeitlich sind allenfalls auftretende Probleme wahrscheinlich bereits behoben worden.
+
+Pacman kann konfiguriert werden, das System zu einem bestimmten Datum zurück zu rollen. Dazu entsprechende Einträge in der `/etc/pacman/conf` vornehmen oder den entsprechenden Server als einzelnen Server in `/etc/pacman.d/mirrorlist` eintragen.

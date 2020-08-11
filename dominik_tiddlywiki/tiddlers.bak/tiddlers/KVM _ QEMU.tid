@@ -1,0 +1,60 @@
+created: 20200522091212429
+modified: 20200522091230651
+tags: 
+title: KVM / QEMU
+
+! Backup / Archive
+[[How To Backup A Virt-Manager Virtual Machine On Linux|https://www.addictivetips.com/ubuntu-linux-tips/backup-a-virt-manager-virtual-machine-on-linux/]]
+
+[[kvm virtualization - Exporting libvirt+KVM virtual machines to files - Server Fault|https://serverfault.com/questions/707544/exporting-libvirtkvm-virtual-machines-to-files]]
+
+! NOCOW unter Btrfs
+
+[[30.01.2017 - Arch My Way 1 - Grundsystem installierenArch My Way 5 - Sicherheit und Backups - Btrfs Read Only Snapshots - 03:37|https://youtu.be/IZCKlGGSyGM?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH&t=217]]
+
+!! Attribute anzeigen 
+
+```
+[niggi@archbox ~]$ cd /btrfs/
+[niggi@archbox btrfs]$ lsattr
+-------------------- ./@
+-------------------- ./@home
+-------------------- ./@log
+-------------------- ./@pkg
+-------------------- ./@snapshots
+---------------C---- ./@images
+-------------------- ./@home_snapshots
+-------------------- ./@images_snapshots
+```
+
+Das grosse `C` bedeutet ''no copy on write''. Das kann im Manual von change attributes nachgelesen werden `man chattr`.
+
+```
+[niggi@archbox btrfs]$ cd /btrfs/@images
+[niggi@archbox @images]$ sudo lsattr
+---------------C---- ./win10-3.qcow2
+---------------C---- ./TempWin10.qcow2
+---------------C---- ./win10.qcow2
+```
+
+!! COW ausschalten
+
+Wichtig: Die Änderung wirkt sich nur auf Dateien aus, die nach der Deaktivierung von copy on write in das betreffende Verzeichnis geschrieben werden.
+
+```
+chattr +C /btrfs/@images
+```
+
+! Defragmentierung
+
+Kopiere von altem in einen neuen Block. Rascheste Methode.
+
+```
+cp --reflink=never vbox.vdi vbox.vdi.new; rm vbox.vdi
+```
+
+Alternativ aber viel langsamer und nicht empfohlen. btrfs filesystem defragment can be used to recompress files while defragmenting, but can be very slow if you have snapshots.
+
+```
+btrfs filesystem defragment vbox.vdi
+```

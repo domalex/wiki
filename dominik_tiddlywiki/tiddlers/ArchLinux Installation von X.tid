@@ -1,0 +1,40 @@
+created: 20200805174711483
+modified: 20200807085002770
+tags: archlinux
+title: ArchLinux Installation von X
+type: text/vnd.tiddlywiki
+
+[[Anleitung für Einsteiger - Installation und Konfiguration von X – wiki.archlinux.de|https://wiki.archlinux.de/title/Anleitung_f%C3%BCr_Einsteiger#Installation_und_Konfiguration_von_X]]
+
+[[27.01.2017 - Arch My Way 1 - Grundsystem installierenArch My Way 2 - Desktop-Umgebung - 04:24|https://youtu.be/QFNjmGehsYk?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH&t=265]]
+
+! Grafiktreiber
+
+Welchen Treiber man braucht, bekommt man am einfachsten wie folgt heraus:
+
+```
+[lspci | grep VGA
+00:02.0 VGA compatible controller: Intel Corporation Iris Plus Graphics 655 (rev 01)
+```
+
+```
+pacman -S xf86-video-intel
+```
+
+! Dislplayserver
+
+LightDM
+
+! Xorg
+
+Installation von X. `mesa-libgl` wählen für Intel- und AMD-Grafikkarten:
+
+```
+pacman -S xorg-server xorg-xinit
+```
+
+Weiter mit
+
+[[ArchLinux Installation dwm]]
+
+[[ArchLinux Installation Xfce-Desktop]]

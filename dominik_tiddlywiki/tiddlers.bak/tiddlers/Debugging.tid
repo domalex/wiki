@@ -1,0 +1,12 @@
+created: 20200522090042836
+modified: 20200522090101033
+tags: archlinux
+title: Debugging
+
+[[ArchLinux Downgrade]]
+
+[[Displaymanager LightDM]] deaktivieren
+
+Auf LTS-Kernel umstellen: [[Script Update Rollback]]
+
+[[Btrfs]]

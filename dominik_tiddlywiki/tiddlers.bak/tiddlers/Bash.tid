@@ -1,0 +1,34 @@
+created: 20200522085101340
+modified: 20200522090533085
+tags: bash
+title: Bash
+
+! Konfiguration
+
+!! Vi-Mode
+
+[[TFW You Learn There's a Vim Mode in Bash... - YouTube|https://www.youtube.com/watch?v=GqoJQft5R2E]]
+
+Bash-Konfigurations-File ändern:
+
+```
+nano .bashrc
+```
+
+Folgende Zeilen zufügen:
+
+```
+# Meine Konfiguration
+# Acivate vi mode with <Escape>:
+set -o vi
+```
+
+Zeige alle Vi-Funktions-Shortcuts:
+
+```
+bind -P
+```
+
+Der Output ist abhängig vom jewiligen Mode (Insert/Comand), in welchem der Befehl eingegeben wird.
+
+! Tipps & Tricks

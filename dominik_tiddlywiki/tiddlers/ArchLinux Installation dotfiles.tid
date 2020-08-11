@@ -1,0 +1,15 @@
+created: 20200807061331449
+modified: 20200807081240372
+tags: archlinux
+title: ArchLinux Installation dotfiles
+type: text/vnd.tiddlywiki
+
+! Konfigurtationsdateien zu sichern
+
+`/etc/fstab`
+
+`/home/niggi/.scripts/update.sh`
+
+`/home/niggi/.xinitrc`
+
+`/home/niggi/.viminfo`

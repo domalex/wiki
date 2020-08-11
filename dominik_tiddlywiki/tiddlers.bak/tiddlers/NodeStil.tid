@@ -1,0 +1,21 @@
+created: 20200604080147204
+modified: 20200615082413623
+tags: mind
+title: NodeStil
+type: text/vnd.tiddlywiki
+
+! Einfach verständlich
+
+Klares, verständliches Formulieren von [[Nodes|Node]] sichert das Verständnis nicht nur für andere sondern auch für unser zukünftiges selbst. Grundsätzlich gilt: so kurz wie möglich, so ausführlich wie nötig.
+
+! Fokus auf Inhalt
+
+Einfachheit und Wiederverwendbarkeit hat beim Verfassen und Gestalten von Text Priorität. Wir sind bedacht etwas einmal richtig festzuhalten, um es fortlaufend wieder verwenden und weiter spinnen zu können. Es kommen ausschliesslich TiddlyWiki-Bordmitteln zum Zug.
+
+! Keine Doppelspurigkeiten
+
+Die Granularität der [[Nodes|Node]] ist entscheidend. Ähnliches sollte zusammengeführt und auf die Essenz reduziert werden. Wiederholungen ist mit Aufsplittung, Transclusion und Verweisen zu begegnen (BrainWork).
+
+! Kategorisierung
+
+Tiddler werden mithilfe des [[TagSystems|TagSystem]] kategorisiert.

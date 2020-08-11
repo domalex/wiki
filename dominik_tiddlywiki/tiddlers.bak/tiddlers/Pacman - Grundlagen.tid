@@ -1,0 +1,132 @@
+created: 20200522092105400
+modified: 20200522092127764
+tags: archlinux
+title: Pacman - Grundlagen
+
+[[27.11.2017 - Total Arch Linux - 6. Grundlagen der Paketeverwaltung|https://www.youtube.com/watch?v=XmhoqY0TgLg&index=14&list=PLTeOo_Khba2MlTJnuW1RLmwQSdaUrwzbx]]
+
+[[How to Remove a Package and Its Dependencies with Pacman on Arch Linux|https://linuxhint.com/remove_package_dependencies_pacman_arch_linux/]]
+
+[[ArchLinux - Wiki (de) - Pacman|https://wiki.archlinux.de/title/Pacman]]
+
+[[ArchLinux - Wiki (en) - Pacman|https://wiki.archlinux.org/index.php/pacman]]
+
+`pactree filezilla` - zeigt alle Abhängigkeiten der Paketes "Filezilla"
+`pactree -d 1 filezilla` - zeigt einzig die erste Ebene der Abhängigkeiten. 1 kann mit einer beliebigen Ebene N = 1, 2 ,3 ... verwendet werden.
+`pactree -d 1 -u filezilla` - zeigt die Abhängigkeiten als normale Liste an
+`pactree -d 1 -u filezilla > filezilla.txt` - Exportiert die Liste in ein File
+
+`sudo pacman -R filezilla` - entfernt nur ein einziges Paket
+`sudo pacman -Rcns filezilla` - entfernt das Paket inklusive aller nicht mehr benötigten Abhängigkeiten
+
+! Abfagen
+
+To retrieve a list of the files installed by a package:
+
+```
+pacman -Ql package_name
+```
+
+To retrieve a list of the files installed by a remote package:
+
+```
+pacman -Fl package_name
+```
+
+To list all packages no longer required as dependencies (orphans):
+
+```
+pacman -Qdt
+```
+
+To list all packages explicitly installed and not required as dependencies:
+
+```
+pacman -Qet
+```
+
+Pakete anzeigen, die sich in keinem aktivierten Repo laut `/etc/pacman.conf` befinden (AUR-Pakete, lokal):
+
+```
+pacman -Qm
+```
+
+Zeigt das Paket an, welches die gesuchte Datei enthält:
+
+```
+pacman -Qo <Pfad zur Datei>
+```
+
+To view the dependency tree of a package:
+
+```
+pactree package_name
+```
+
+To view the dependant tree of a package, pass the reverse flag `-r` to pactree
+
+
+`pacman -Qdtq` - findet sämtliche unnötigen Pakete
+
+`sudo pacman -R $(pacman -Qdtq)` - entfernt sämtliche unnötigen Pakete
+
+! [[Pacman Cache leeren]]
+
+! Korrupte Datenbank reparieren
+
+[[Arch Linux Wiki - Pacman-Datenbank reparieren|https://wiki.archlinux.de/title/Pacman-Datenbank_reparieren]]
+
+`Fehler: Konnte core nicht aktualisieren (Kann Datenbank nicht sperren)`
+
+Lösung: Datenbank löschen
+
+```
+sudo rm /var/lib/pacman/db.lck
+```
+
+! Liste installierter Pakete sichern
+
+[[Arch Linux Wiki - Pacman-Datenbank reparieren|https://wiki.archlinux.de/title/Pacman-Datenbank_reparieren]]
+
+Folgender Befehl erstellt eine Liste der Pakete, die aus den Pacman-Repos **über die Grundinstallation** des Metapaketes `base` und der Paketgruppe `base-devel` hinausgehend **ausdrücklich installiert** worden sind:
+
+```
+pkg=$(comm -23 <(pacman -Qenq | sort) <(pactree -ld1 base | sort)) && comm -23 <(echo -e "$pkg") <(pacman -Qgq base-devel | sort) > Pakete-Repos
+```
+
+**Hinweis:** Um den Befehl ausführen zu können, muss das Paket `pacman-contrib` installiert sein.
+
+Nach einer Neuinstallation des Grundsystems können die in der Liste enthaltenen Pakete reinstalliert werden:
+
+```
+pacman -S -< Pakete-Repos
+```
+
+Eine Liste der Pakete, die außerhalb der Pacman-Repos wie z.B. aus dem **AUR** installiert worden sind, kann man mit diesem Befehl erstellen:
+
+```
+pacman -Qqem > Pakete-AUR
+```
+
+! Abhängigkeiten
+
+When installing a package, it is possible to force its installation reason to dependency with:
+
+```
+pacman -S --asdeps package_name
+```
+
+Tip: Installing optional dependencies with `--asdeps` will cause it such that if you remove orphans, pacman will also remove leftover optional dependencies.
+
+When reinstalling a package, though, the current installation reason is preserved by default.
+
+The list of `explicitly-installed` packages can be shown with pacman `-Qe`, while the complementary list of dependencies can be shown with pacman `-Qd`.
+
+To change the installation reason of an already installed package, execute:
+
+```
+pacman -D --asdeps package_name
+```
+
+Use `--asexplicit` to do the opposite operation.
+Note: Using `--asdeps` and `--asexplicit` options when upgrading, such as with `pacman -Syu package_name --asdeps`, is discouraged. This would change the installation reason of not only the package being installed, but also the packages being upgraded.

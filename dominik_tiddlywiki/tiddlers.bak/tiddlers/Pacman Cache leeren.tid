@@ -1,0 +1,12 @@
+created: 20200522092147267
+modified: 20200522092204417
+tags: archlinux
+title: Pacman Cache leeren
+
+[The Recommended Way To Clean The Package Cache In Arch Linux](https://www.ostechnix.com/recommended-way-clean-package-cache-arch-linux/)
+
+The paccache script, provided within the `pacman-contrib` package, deletes all cached versions of installed and uninstalled packages, except for the most recent 3, by default:
+
+```
+sudo paccache -r
+```
