@@ -1,0 +1,19 @@
+created: 20200811195111605
+modified: 20200811195421160
+tags: archlinux
+title: ArchLinux Installation Audio
+type: text/vnd.tiddlywiki
+
+
+```
+[niggi@archbox wiki]$ sudo pacman -S pulseaudio
+[sudo] Passwort für niggi:
+Löse Abhängigkeiten auf...
+Suche nach in Konflikt stehenden Paketen...
+
+Pakete (4) orc-0.4.31-2  rtkit-0.13-1  webrtc-audio-processing-0.3.1-2  pulseaudio-13.0-3
+
+Gesamtgröße der installierten Pakete:  8.20 MiB
+
+:: Installation fortsetzen? [J/n]
+```

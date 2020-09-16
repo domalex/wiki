@@ -1,5 +1,5 @@
 created: 20200522085505419
-modified: 20200728170856241
+modified: 20200903155343872
 tags: btrfs
 title: Btrfs
 type: text/vnd.tiddlywiki
@@ -46,10 +46,13 @@ oder
 
  ''Achtung'': zwischen `-d` und `-f24` müssen zwei Leehrschläge eingefügt werden!
 
-`dmesg | grep "checksum error at" | cut -d\  -f24- | sed 's/.$//' | sort | uniq`
+```
+dmesg | grep "checksum error at" | cut -d\  -f24- | sed 's/.$//' | sort | uniq
+```
 
-sudo systemctl start btrfs-scrub@- -> verweist auf Subvolume (ROOT)
-sudo systemctl start btrfs-scrub@home -> verweist auf @home-Subvolume
+`sudo systemctl start btrfs-scrub@` -> verweist auf Subvolume (ROOT)
+`sudo systemctl start btrfs-scrub@home` -> verweist auf @home-Subvolume
+
 sudo systemctl start btrfs-scrub@var/cache/pacman/pkg
 journalctl -b -> zeigt Ergebnisse an
 sudo systemctl enable btrfs-scrub@-.timer
@@ -108,7 +111,8 @@ Copy/move a file across subvolumes without duplicating data blocks:
 ```
 cp --reflink /mnt/btrfs_pool/subvol_1/src /mnt/btrfs_pool/subvol_2/dest
 ```
-## btrfs-diff
+!! btrfs-diff
+
 [Marc's Blog: btrfs - Btrfs-diff Between Snapshots](http://marc.merlins.org/perso/btrfs/post_2014-05-19_Btrfs-diff-Between-Snapshots.html)
 
 `btrfs-diff` shows most files changed, use this to sync changes with `cp --reflink` instead of reboot
@@ -138,8 +142,9 @@ Uhr - Zeiteinstellungen - Benutzerdefiniertes Format: `%a %d %b %Y | %X %Z`
 
 !! /boot
 
-[rsync Ubuntu](https://wiki.ubuntuusers.de/rsync/)
-[rsync Arch Linux](https://wiki.archlinux.org/index.php/Rsync)
+[[rsync Ubuntu|https://wiki.ubuntuusers.de/rsync/]]
+
+[[rsync Arch Linux|https://wiki.archlinux.org/index.php/Rsync]]
 
 !!! verwenden für mein Backup
 
@@ -151,7 +156,9 @@ Uhr - Zeiteinstellungen - Benutzerdefiniertes Format: `%a %d %b %Y | %X %Z`
 
 `--numeric-ids` und `-z` scheinen nur bei Speicherung übers Netzwerk sinnvoll
 
-`sudo rsync --numeric-ids -avz /boot /run/media/niggi/BACKUP/@NUC_archbox/`
+```
+sudo rsync --numeric-ids -avz /boot /run/media/niggi/BACKUP/@NUC_archbox/
+```
 
 !! Vorgehen für jedes btrfs subvolume
 
@@ -169,63 +176,97 @@ sudo btrfs send -p /btrfs/@snapshots/@_backup_OLD /btrfs/@snapshots/@_backup_NEW
 
 !! @
 
-`sudo btrfs sub snap -r /btrfs/@ /btrfs/@snapshots/@_backup_$(date +%F_%R)`
+```
+sudo btrfs sub snap -r /btrfs/@ /btrfs/@snapshots/@_backup_$(date +%F_%R)
+```
 
 (erstmaliger Übertrag)
 
-`sudo btrfs send /btrfs/@snapshots/@_backup_2019-10-09_15\:22/ | sudo btrfs receive /run/media/niggi/BACKUP/@NUC_archbox/`
+```
+sudo btrfs send /btrfs/@snapshots/@_backup_2019-10-09_15\:22/ | sudo btrfs receive /run/media/niggi/BACKUP/@NUC_archbox/
+```
 
 inkrementelles Backup
 
-`sudo btrfs send -p /btrfs/@snapshots/@_backup_2019-10-09_15\:22 /btrfs/@snapshots/@_backup_2019-10-21_14\:02 | sudo btrfs receive /run/media/niggi/BACKUP/@NUC_archbox/`
+```
+sudo btrfs send -p /btrfs/@snapshots/@_backup_2019-10-09_15\:22 /btrfs/@snapshots/@_backup_2019-10-21_14\:02 | sudo btrfs receive /run/media/niggi/BACKUP/@NUC_archbox/
+```
 
 alte Subvolumes löschen
 
-`sudo btrfs sub del /btrfs/@snapshots/@_backup_2019-10-09_15\:22/`
+```
+sudo btrfs sub del /btrfs/@snapshots/@_backup_2019-10-09_15\:22/
+```
 
-`sudo btrfs sub del /run/media/niggi/BACKUP/@NUC_archbox/@_backup_2019-10-09_15\:22/`
+```
+sudo btrfs sub del /run/media/niggi/BACKUP/@NUC_archbox/@_backup_2019-10-09_15\:22/
+```
 
 !! /home
 
-`sudo btrfs sub snap -r /home/ /home/.home_snapshots/home_backup_$(date +%F_%R)`
+```
+sudo btrfs sub snap -r /home/ /home/.home_snapshots/home_backup_$(date +%F_%R)
+```
 
 (erstmaliger Übertrag)
 
-`sudo btrfs send /home/.home_snapshots/home_backup_2019-10-09_10\:06/ | sudo btrfs receive /run/media/niggi/BACKUP/@NUC_archbox/`
+```
+sudo btrfs send /home/.home_snapshots/home_backup_2019-10-09_10\:06/ | sudo btrfs receive /run/media/niggi/BACKUP/@NUC_archbox/
+```
 
 inkrementelles Backup
 
-`sudo btrfs send -p /home/.home_snapshots/home_backup_2019-10-09_10\:06/ /home/.home_snapshots/home_backup_2019-10-21_14\:44/ | sudo btrfs receive /run/media/niggi/BACKUP/@NUC_archbox/`
+```
+sudo btrfs send -p /home/.home_snapshots/home_backup_2019-10-09_10\:06/ /home/.home_snapshots/home_backup_2019-10-21_14\:44/ | sudo btrfs receive /run/media/niggi/BACKUP/@NUC_archbox/
+```
 
 alte Subvolumes löschen
 
-`sudo btrfs sub delete /home/.home_snapshots/home_backup_2019-10-09_10\:06/`
+```
+sudo btrfs sub delete /home/.home_snapshots/home_backup_2019-10-09_10\:06/
+```
 
-`sudo btrfs sub del /run/media/niggi/BACKUP/@NUC_archbox/home_backup_2019-10-09_10\:06/`
+```
+sudo btrfs sub del /run/media/niggi/BACKUP/@NUC_archbox/home_backup_2019-10-09_10\:06/
+```
 
 !! @images
 
-`sudo btrfs sub snap -r /btrfs/@images /btrfs/@images_snapshots/image_backup_$(date +%F_%R)`
+```
+sudo btrfs sub snap -r /btrfs/@images /btrfs/@images_snapshots/image_backup_$(date +%F_%R)
+```
 
 (erstmaliger Übertrag)
 
-`sudo btrfs send /btrfs/@images_snapshots/image_backup_2019-10-09_10\:37/ | sudo btrfs receive /run/media/niggi/BACKUP/@NUC_archbox/`
+```
+sudo btrfs send /btrfs/@images_snapshots/image_backup_2019-10-09_10\:37/ | sudo btrfs receive /run/media/niggi/BACKUP/@NUC_archbox/
+```
 
 inkrementelles Backup
 
-`sudo btrfs send -p /btrfs/@images_snapshots/image_backup_2019-10-09_10\:37/ /btrfs/@images_snapshots/image_backup_2019-10-21_14\:59/ | sudo btrfs receive /run/media/niggi/BACKUP/@NUC_archbox/`
+```
+sudo btrfs send -p /btrfs/@images_snapshots/image_backup_2019-10-09_10\:37/ /btrfs/@images_snapshots/image_backup_2019-10-21_14\:59/ | sudo btrfs receive /run/media/niggi/BACKUP/@NUC_archbox/
+```
 
 alte Subvolumes löschen
 
-`sudo btrfs sub del /btrfs/@images_snapshots/image_backup_2019-10-09_10\:37/`
+```
+sudo btrfs sub del /btrfs/@images_snapshots/image_backup_2019-10-09_10\:37/
+```
 
-`sudo btrfs sub del /run/media/niggi/BACKUP/@NUC_archbox/image_backup_2019-10-09_10\:37/`
+```
+sudo btrfs sub del /run/media/niggi/BACKUP/@NUC_archbox/image_backup_2019-10-09_10\:37/
+```
 
 !! balance
 
-`sudo btrfs balance start -dusage=5 -musage=5 /btrfs`
+```
+sudo btrfs balance start -dusage=5 -musage=5 /btrfs
+```
 
-`sudo btrfs balance start -dusage=5 -musage=5 /run/media/niggi/BACKUP`
+```
+sudo btrfs balance start -dusage=5 -musage=5 /run/media/niggi/BACKUP
+```
 
 sudo mkfs.btrfs /dev/sdc1
 sudo mount /dev/sdc1 /mnt
@@ -259,4 +300,10 @@ sudo btrfs filesystem df /mnt - Kontrolle (falls Raid0 und Raid1 angezeigt werde
 
 ```
 sudo btrfs rescue zero-log /dev/nvme0n1p2 -> nach Stromunterbruch
+```
+
+auch ausprobieren:
+
+```
+sudo btrfs restore /dev/one_dev /mnt/your_backup
 ```

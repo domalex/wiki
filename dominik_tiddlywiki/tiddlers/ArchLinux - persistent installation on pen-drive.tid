@@ -1,10 +1,12 @@
 created: 20200522083608227
-modified: 20200807164324581
+modified: 20200827124727143
 tags: archlinux
 title: ArchLinux - persistent installation on pen-drive
 type: text/vnd.tiddlywiki
 
 [[Arch Linux on a USB Stick - YouTube|https://www.youtube.com/watch?v=yaThYGr37DI&t=20s]]
+
+[[Arch Linux: Hybrid Install With Encrypted UEFI & Legacy BIOS On a USB Stick - YouTube|https://www.youtube.com/watch?v=9F_LFTUn75Q]]
 
 ## Partitioning
 `sudo fdisk -l` or `lsblk`

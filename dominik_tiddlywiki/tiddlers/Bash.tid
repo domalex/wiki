@@ -1,7 +1,8 @@
 created: 20200522085101340
-modified: 20200522090533085
+modified: 20200818150746077
 tags: bash
 title: Bash
+type: text/vnd.tiddlywiki
 
 ! Konfiguration
 
@@ -32,3 +33,7 @@ bind -P
 Der Output ist abhängig vom jewiligen Mode (Insert/Comand), in welchem der Befehl eingegeben wird.
 
 ! Tipps & Tricks
+
+[[How To Format Date For Display or Use In a Shell Script - nixCraft|https://www.cyberciti.biz/faq/linux-unix-formatting-dates-for-display/]]
+
+[[How To Format Date and Time in Linux, macOS, and Bash?|https://www.shell-tips.com/linux/how-to-format-date-and-time-in-linux-macos-and-bash/]]

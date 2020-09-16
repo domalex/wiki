@@ -1,7 +1,8 @@
 created: 20200522084412262
-modified: 20200522084437657
+modified: 20200822191940431
 tags: archlinux
 title: ArchLinux Installation Rollback
+type: text/vnd.tiddlywiki
 
 [[ArchLinux Installation Partitionsschema]]
 
@@ -165,6 +166,8 @@ options  root=LABEL=ROOT rootflags=subvol=@root_OLDSTABLE rw resume=LABEL=SWAP
 ```
 nano /btrfs/@root_OLDSTABLE/etc/fstab
 ```
+
+! [[ArchLinux Installation LTS-Kernel]]
 
 ! Überprüfen
 

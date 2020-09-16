@@ -1,7 +1,8 @@
 created: 20200522085800312
-modified: 20200522085819279
+modified: 20200814175131345
 tags: btrfs
 title: Btrfs konvertieren
+type: text/vnd.tiddlywiki
 
 ! Single - Raid
 
@@ -62,4 +63,4 @@ sudo btrfs balance start -dconvert=raid1 -mconvert=raid1 /btrfs/
 sudo btrfs fi usage /btrfs/
 ```
 
-Anschliessend `btfs scrub`. Siehe [[ArchLinux periodischer Unterhalt]].
+Anschliessend `btrfs scrub`. Siehe [[ArchLinux periodischer Unterhalt]].

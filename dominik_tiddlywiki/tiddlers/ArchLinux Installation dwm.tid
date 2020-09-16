@@ -1,5 +1,5 @@
 created: 20200805194041434
-modified: 20200808091655377
+modified: 20200911060930067
 tags: archlinux
 title: ArchLinux Installation dwm
 type: text/vnd.tiddlywiki
@@ -8,23 +8,31 @@ type: text/vnd.tiddlywiki
 
 [[Playlist: Suckless's dwm - Dominik Schmid - YouTube|https://www.youtube.com/watch?v=unqsQJaECv0&list=PLreRhBYslVSLHCsQp07y9tkjOM0YvRlwq]]
 
+[[A dwm (Dynamic Window Manager) Journey- 2 – eirenicon llc|https://eirenicon.org/a-dwm-dynamic-window-manager-journey-2/]]
+
+! Info
+
+Unter ArchLInux wurden automatisch dwm und dazugehörige Komponenten unter `/usr/local/bin/` installiert.
+
 ! Voraussetzungen
 
 ! Abhängigkeien
 
-` xorg-xsetroot` zur Konfiguration und Kontrolle des Status Bars in dwm
+''Welche Abhängigkeiten werden wirklich benötigt? - überprüfen''
 
-''Welche Abhängigkeiten werden wirklich benötigt - überprüfen''
+`xorg-server` sollte während [[Basisinstallation|ArchLinux Installation Basissystem]] bereits installiert worden sein
 
-```
-sudo pacman -S (xorg-server) (xorg-init) libxft libxinerama (xorg-xrandr) xorg-xsetroot (picom)
-```
+`xorg-xsetroot` zur Konfiguration des Status Bars in dwm
 
-Die Installation gelang mir erst nach der Installation eins Browsers `firefox-i18n-de`
+`libxft` angeblich für Kompilierung von `C`-Source Code benötigt (überprüfen)
 
-```
-sudo pacman -S firefox-i18n-de
-```
+`libxinerama` angeblich für Kompilierung von `C`-Source Code benötigt (überprüfen)
+
+`xorg-xrandr` manuelle Einstellung der Bildschirmauflösung (virtuelle Maschinen)
+
+`xorg-xsetroot` für das Konfigurieren des Bildschirmhintergrunds. Für Bilder wird zusätzlich `nitrogen` oder besser `feh` benötigt.
+
+`picom` für Transparenz der Fenster und des Statusbars
 
 ! Download
 
@@ -39,12 +47,43 @@ git clone https://git.suckless.org/dmenu
 
 ! Installation
 
+Die Installation gelang mir erst nach der Installation eins Browsers `firefox-i18n-de`
+
+```
+sudo pacman -S firefox-i18n-de
+```
+
 In jeden der drei Ordner gehen und folgenden Befehl ausführen:
 
 ```
 cd /home/niggi/.projects/[App_Ordner]
 make && sudo make clean install
 ```
+
+!! Tearing
+
+[[Intel graphics - ArchWiki|https://wiki.archlinux.org/index.php/Intel_graphics#Tearing]]
+
+Sollte z.B. im Browser tearing auftreten folgende Datei erstellen:
+
+```
+cd /etc/X11/xorg.conf.d/
+ls
+sudo vim /etc/X11/xorg.conf.d/20-intel.conf
+```
+
+Inhalt:
+
+```
+Section "Device"
+  Identifier "Intel Graphics"
+  Driver "intel"
+
+  Option "TearFree" "true"
+EndSection
+```
+
+Neutstart
 
 ! X starten
 
@@ -124,6 +163,10 @@ make && sudo make clean install
 dwm mit Modkey+Shift+Q neu starten
 
 !! dwm-Patching
+
+[[How to patch dwm (slowly) & use suckless software - YouTube|https://www.youtube.com/watch?v=m8b9fq3o0XA]]
+
+[[suckless.org - Hacking|https://suckless.org/hacking/]]
 
 !!! Fullgaps installieren
 
@@ -266,8 +309,18 @@ Aufzeigen wohin Installiert wird:
 make -n install
 ```
 
-Im Normalfall kann so deisnstalliert werden:
+Im Normalfall kann so deinstalliert werden:
 
 ```
 sudo make uninstall
 ```
+
+! Patches
+
+!! dwm
+
+[[dwm - dynamic window manager - suckless.org software that sucks less|https://dwm.suckless.org/patches/centeredmaster/]]
+
+!! st - simple terminal
+
+[[st - simple terminal - solarized|https://st.suckless.org/patches/solarized/]]

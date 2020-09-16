@@ -1,8 +1,10 @@
 created: 20200808070813099
-modified: 20200808073300985
+modified: 20200819183036832
 tags: archlinux
 title: dwm Konfiguration
 type: text/vnd.tiddlywiki
+
+! .xinitrc
 
 `.xinitrc` in Heimverzeichnis kopieren um dort Änderungen vorzunehmen. Am Ende muss `exec dwm` stehen.
 
@@ -13,14 +15,84 @@ vim .xinitrc
 
 Einträge vornehmen:
 
-! Keyboard
+!! Keyboard
 
 ```
 # keyboard
 setxkbmap ch &
 ```
 
-! Loop
+!! Numlock
+
+[[Activating numlock on bootup - ArchWiki|https://wiki.archlinux.org/index.php/Activating_numlock_on_bootup]]
+
+!!! X.org
+
+`numlockx`-Paket installierren und es in der `~/.xinitrc`-Datei vor exec einfügen: 
+
+```
+sudo pacman -S numlockx
+```
+
+```
+# numlock on
+numlockx &
+```
+
+!!! tty
+
+```
+cd /usr/local/bin/
+sudo vim numlock
+```
+
+Inhalt:
+
+```
+#!/bin/bash
+
+for tty in /dev/tty{1..6}
+do
+    /usr/bin/setleds -D +num < "$tty";
+done
+```
+
+Ausführbar machen:
+
+```
+sudo chmod +x numlock
+```
+
+Systemd-Service erstellen:
+
+```
+cd /etc/systemd/system/
+sudo vim numlock.service
+```
+
+Inhalt:
+
+```
+[Unit]
+Description=numlock
+
+[Service]
+ExecStart=/usr/local/bin/numlock
+StandardInput=tty
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Systemd-Service enablen und überprüfen:
+
+```
+sudo systemctl enable numlock.service
+sudo systemctl status numlock.service
+```
+
+!! Loop
 
 Startet X und somit dwm automatisch nach beenden mit Modkey+Shift+Q:
 
@@ -31,9 +103,80 @@ while true; do
 done
 ```
 
-! Execute dwm
+!! Execute dwm
 
 ```
 # execute dwm
 exec dwm
+```
+
+!! Pulseaudio - Lautstärkenknöpfe
+
+=> [[Xbindkeys - ArchWiki|https://wiki.archlinux.org/index.php/Xbindkeys#Audio_control]]
+
+=> [[Advanced Linux Sound Architecture - ArchWiki|https://wiki.archlinux.org/index.php/Advanced_Linux_Sound_Architecture]]
+
+=> [[PulseAudio - ArchWiki|https://wiki.archlinux.org/index.php/PulseAudio#Keyboard_volume_control]]
+
+[[ALSA User Info - AlsaProject|https://www.alsa-project.org/wiki/ALSA_User_Info]]
+
+[[xmodmap - ArchWiki|https://wiki.archlinux.org/index.php/Xmodmap]]
+
+[[Xorg/Keyboard configuration - ArchWiki|https://wiki.archlinux.org/index.php/Xorg/Keyboard_configuration]]
+
+[[Advanced Linux Sound Architecture/Troubleshooting - ArchWiki|https://wiki.archlinux.org/index.php/Advanced_Linux_Sound_Architecture/Troubleshooting]]
+
+Voraussetzung: [[ArchLinux Installation Audio]]
+
+Konfiguration:
+
+[[dwm volume control with hardware multimedia keys (pulseaudio)|https://gist.github.com/palopezv/efd34059af6126ad970940bcc6a90f2e]]
+
+[[dwm - Pulseaudio & Hardwareknöpfe konfigurieren|https://youtu.be/w8NE_1ylnDw?t=95]]
+
+
+```
+cd projects/suckless/dwm
+vim config.def.h
+```
+
+Am Anfang der Datei eintragen:
+
+```
+/* Pulseaudio - Kontrolle von Lautstärkenknöpfen */
+#include <X11/XF86keysym.h>
+static const char *upvol[]   = { "/usr/bin/pactl", "set-sink-volume", "0", "+5%",     NULL };
+static const char *downvol[] = { "/usr/bin/pactl", "set-sink-volume", "0", "-5%",     NULL };
+static const char *mutevol[] = { "/usr/bin/pactl", "set-sink-mute",   "0", "toggle",  NULL };
+```
+
+Unter `static Key keys[] = {` die Definition der Knöpfe anhängen und speichern:
+
+```
+	{ 0,                       XF86XK_AudioLowerVolume, spawn, {.v = downvol } },
+	{ 0,                       XF86XK_AudioMute, spawn, {.v = mutevol } },
+	{ 0,                       XF86XK_AudioRaiseVolume, spawn, {.v = upvol   } },
+```
+
+```
+sudo cp config.def.h config.h
+make && sudo make clean install
+reboot
+```
+
+Die Installation weiterer Software-Pakete (`alsa-utils`, `pamixer`, `playerctl`) war nicht notwenig. Ein ''Neustart des Coputers'' allerdings schon!
+
+! .inputrc
+
+Delete-Taste aktivieren:
+
+```
+vim ~/.inputrc
+```
+
+Eintrag:
+
+```
+# Delete-Taste aktivieren
+set enable-keypad on
 ```

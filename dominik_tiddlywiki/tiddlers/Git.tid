@@ -1,5 +1,5 @@
 created: 20200604150948994
-modified: 20200609091159514
+modified: 20200818065905496
 tags: git
 title: Git
 type: text/vnd.tiddlywiki
@@ -56,6 +56,8 @@ All commands need to be executed within the repository folder
 `git branch <new branch name> -b` make new branch and `-b` flag switches directly into it
 
 `git checkout <new branch name>` switches you from the current working branch to the new branch
+
+`git checkout -b <new branch name to be created>` `-b` creates a new branch
 
 `git push origin <new branch name>` push to remote origin new repository branch
 

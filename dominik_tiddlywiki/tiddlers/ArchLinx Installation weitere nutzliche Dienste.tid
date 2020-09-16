@@ -1,5 +1,6 @@
 created: 20200805093429977
-modified: 20200808095756042
+modified: 20200822191601517
+tags: archlinux
 title: ArchLinx Installation weitere nützliche Dienste
 type: text/vnd.tiddlywiki
 
@@ -7,15 +8,29 @@ type: text/vnd.tiddlywiki
 
 Sollte mittlerweile schon installiert sein `dbus`
 
+`acpid` Advanced Configurtation and Power Interface (ACPI), auch für Volume-Tasten
+
+`avahi` Freie Implementierung von Zeroconf, einer Technik zur Vernetzung von Geräten in einem lokalen Netzwerk, ohne dass diese manuell konfiguriert werden müssen. 
+
 evtl. `inetutils` - überprüfen
 
-evtl. (`intel-ucode`) - überprüfen. Der Intel CPU [[Microcode - ArchWiki|https://wiki.archlinux.org/index.php/Microcode]] müsste noch in die Bootloader-Konfiguration von `systemd-boot` unter `/boot/loader/entries/arch.conf` integriert werden: [[systemd-boot - Adding loaders - ArchWiki|https://wiki.archlinux.org/index.php/Systemd-boot#Adding_loaders]]
+evtl. (`intel-ucode`) - überprüfen. Bei Verwendung müsste der Intel CPU [[Microcode - ArchWiki|https://wiki.archlinux.org/index.php/Microcode]] noch in die Bootloader-Konfiguration von `systemd-boot` unter `/boot/loader/entries/arch.conf` integriert werden: [[systemd-boot - Adding loaders - ArchWiki|https://wiki.archlinux.org/index.php/Systemd-boot#Adding_loaders]]
 
 `wget`
 
 `git`
 
-`xdg-user-dirs` XDG user directories
+[[npm]]
+
+`xdg-user-dirs` XDG Benutzerordner erstellen
+
+`nfs-utils`
+
+`zathura` PDF Betrachter
+
+`mpv` Media Player
+
+`keepassxc` Passwortmanager
 
 ```
 pacman -S acpid (dbus) avahi cups cronie man-db man-pages
@@ -47,5 +62,5 @@ Cronjobs aktivieren:
 systemctl enable cronie
 ```
 
-! Audio
+[[ArchLinux Installation Audio]]
 

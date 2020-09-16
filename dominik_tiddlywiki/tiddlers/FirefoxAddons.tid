@@ -1,0 +1,13 @@
+created: 20200815073104975
+modified: 20200815073421378
+tags: 
+title: FirefoxAddons
+type: text/vnd.tiddlywiki
+
+[[Firefox Addons - Format Link|https://addons.mozilla.org/de/firefox/addon/format-link3/]]
+
+Eintrag für WikiText:
+
+```
+[[{{text.s("\\[","\\[").s("\\]","\\]").s("\\|","\-")}}|{{url.s("\\)","%29")}}]]
+```

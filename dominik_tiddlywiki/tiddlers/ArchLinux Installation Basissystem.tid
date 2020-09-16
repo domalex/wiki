@@ -1,7 +1,7 @@
 created: 20200522084029687
-modified: 20200809035620220
+modified: 20200822191336251
 tags: archlinux
-title: ArchLinux Installation Grundsystem
+title: ArchLinux Installation Basissystem
 type: text/vnd.tiddlywiki
 
 [[Arch My Way - YouTube|https://www.youtube.com/playlist?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH]]
@@ -551,8 +551,12 @@ nano /etc/fstab
 
 Weiterfahren mit:
 
+[[ArchLinux Installation Rollback]]
+
 [[ArchLinx Installation weitere nützliche Dienste]]
 
 [[ArchLinux Installation von X]]
+
+[[ArchLinux Installation Audio]]
 
 [[ArchLinux Installation Xfce-Desktop]]

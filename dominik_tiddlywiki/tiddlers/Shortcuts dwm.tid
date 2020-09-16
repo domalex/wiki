@@ -1,0 +1,48 @@
+created: 20200812032541538
+modified: 20200911063642900
+title: Shortcuts dwm
+type: text/vnd.tiddlywiki
+
+[[Dave's Visual Guide to dwm - ratfactor|https://ratfactor.com/dwm]]
+
+```
+man dwm
+```
+
+mod + p dmenu open
+
+mod + shift + enter st open
+
+mod + shift +c st close
+
+mod + shift + space tiled windows return
+
+mod + i prominent window +1
+
+mod + d prominent window -1
+
+mod + enter prominent window choose
+
+mod + # tag go to
+
+mod + shift + # tag move to
+
+mod + shift + 0 tag move to all
+
+mod + shift + ctrl + #s tag give/remove additional
+
+mod + ctrl + #s tag show together
+
+mod + 0 tag show all
+
+mod + b sidebar toggle
+
+```
+man st
+```
+
+ctrl + shift + page_up increase font size
+
+```
+man dmenu
+```

@@ -1,9 +1,12 @@
 created: 20200522083724717
-modified: 20200522083750832
+modified: 20200827121024486
 tags: archlinux
 title: ArchLinux Downgrade
+type: text/vnd.tiddlywiki
 
 ! Pakete auf System
+
+[[ArchLinux - fix system - downgrade - Luke Smith|https://www.youtube.com/watch?v=-1K5vi-q9bo]]
 
 [[01.02.2017 - Arch My Way 1 - Grundsystem installierenArch My Way 5 - Sicherheit und Backups - Btrfs Read Only SnapshotsArch My Way 6 - Dateisysteme und Systemwartung - 27:16|https://youtu.be/WeppT9SDmOA?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH&t=1636]]
 

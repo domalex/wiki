@@ -1,24 +1,26 @@
 created: 20200522085550334
-modified: 20200522085642526
+modified: 20200907155918603
 tags: btrfs
 title: Btrfs Backup inkrementell
+type: text/vnd.tiddlywiki
 
 [[30.01.2017 - Arch My Way 1 - Grundsystem installierenArch My Way 5 - Sicherheit und Backups - Btrfs Read Only Snapshots - 11:58|https://youtu.be/IZCKlGGSyGM?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH&t=718]]
 
-Auf beiden Datenträgern (Ursprung-Backup) wird Btrfs benötigt um inkrementelle Backups auszuführen.
+Auf beiden Datenträgern (Ursprung -> Backup) wird Btrfs benötigt um inkrementelle Backups auszuführen.
 
-Falls innerhalb eines Snapshots ein weiterer Snapshot liegt und vom ersten ein weiterer Snapshot erstellt wird, wird der zweite nicht mit berücksichtigt.
+Falls innerhalb eines Snapshots ein weiterer (verschachtelter) Snapshot liegt und vom ersten ein Snapshot erstellt wird, wird der zweite nicht mit berücksichtigt.
 
 ! Backup Suffix
 
-Variante 1:
+!! Variante wiederkehrendes Suffix
 
 _backup
+
 _backup_new
 
-Variante 2:
+!!Variante Zeitstempel
 
-_backup_[zeitstempel]
+_backup_[zeitstempel] z.B. _backup_`$(date +%F_%R)` -> _backup_2020-08-14_19:53
 
 ! USB-Device formatieren
 
