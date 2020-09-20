@@ -1,5 +1,5 @@
 created: 20200522084502664
-modified: 20200805193920966
+modified: 20200916125755281
 tags: archlinux
 title: ArchLinux Installation Xfce-Desktop
 type: text/vnd.tiddlywiki
@@ -32,7 +32,7 @@ pacman -S (netowrkmanager) network-manager-applet (nm-connection-editor)
 systemctl enable NetworkManager
 ```
 
-[[ArchLinx Installation weitere nützliche Dienste]]
+[[ArchLinux Installation weitere nützliche Dienste]]
 
 schauen, ob `firefox` und `libreoffice-fresh`automatisch mit dem deutschen Sprachpacket installiert wird. Falls nachgefragt wird `libx264`-Variante
 
