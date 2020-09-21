@@ -1,1 +1,2 @@
+# ignoriert $__StoryList.tid und $__StroyList_1.tid etc.
 *$__StoryList*.tid*
