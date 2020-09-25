@@ -1,7 +1,8 @@
 created: 20200522091212429
-modified: 20200522091230651
+modified: 20200924115831273
 tags: 
 title: KVM / QEMU
+type: text/vnd.tiddlywiki
 
 ! Backup / Archive
 [[How To Backup A Virt-Manager Virtual Machine On Linux|https://www.addictivetips.com/ubuntu-linux-tips/backup-a-virt-manager-virtual-machine-on-linux/]]
@@ -9,6 +10,8 @@ title: KVM / QEMU
 [[kvm virtualization - Exporting libvirt+KVM virtual machines to files - Server Fault|https://serverfault.com/questions/707544/exporting-libvirtkvm-virtual-machines-to-files]]
 
 ! NOCOW unter Btrfs
+
+[[Btrfs virtual machine's disk image fragmentation - Turn off COW with NOCOW|https://youtu.be/6DplcPrQjvA?t=1713]]
 
 [[30.01.2017 - Arch My Way 1 - Grundsystem installierenArch My Way 5 - Sicherheit und Backups - Btrfs Read Only Snapshots - 03:37|https://youtu.be/IZCKlGGSyGM?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH&t=217]]
 

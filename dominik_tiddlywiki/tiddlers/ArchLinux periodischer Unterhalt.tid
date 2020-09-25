@@ -1,5 +1,5 @@
 created: 20200522084706788
-modified: 20200918092353146
+modified: 20200924070905941
 tags: archlinux
 title: ArchLinux periodischer Unterhalt
 type: text/vnd.tiddlywiki
@@ -105,7 +105,7 @@ sudo journalctl --vacuum-time 2weeks
 
 ! Backup
 
-[[Btrfs Backup inkrementell]]
+ArchLinuxBackup
 
 ! Btrfs
 

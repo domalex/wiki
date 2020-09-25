@@ -1,7 +1,8 @@
 created: 20200522094525826
-modified: 20200522094736744
+modified: 20200923104253069
 tags: 
 title: Vim
+type: text/vnd.tiddlywiki
 
 [[Vim - ArchWiki|https://wiki.archlinux.org/index.php/Vim]]
 
@@ -12,12 +13,11 @@ Lernprogramm:
 ```
 vimtutor
 ```
+! Konfiguration mittels [[.vimrc]]-Datei
 
-[[Creating a .vimrc file from scratch. - YouTube|https://www.youtube.com/watch?v=47nQgun4n-w]]
+! Vim Plugin Managers
 
-! Plugin Manager
-
-Eingebauter [[Vim Paketmanager]] aktivieren
+VimPluginManager
 
 [[vim-volt/volt: A meta-level vim package manager|https://github.com/vim-volt/volt]]
 
@@ -35,4 +35,4 @@ Eingebauter [[Vim Paketmanager]] aktivieren
 
 [[frazrepo/vim-rainbow: Rainbow brackets for Vim|https://github.com/frazrepo/vim-rainbow]]
 
-[[sukima/vim-tiddlywiki: TiddlyWiki syntax/file plugin - Forked and modified|https://github.com/sukima/vim-tiddlywiki]]
+[[vim-tiddlywiki]]

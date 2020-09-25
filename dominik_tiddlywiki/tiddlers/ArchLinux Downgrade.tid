@@ -1,5 +1,5 @@
 created: 20200522083724717
-modified: 20200827121024486
+modified: 20200924081656656
 tags: archlinux
 title: ArchLinux Downgrade
 type: text/vnd.tiddlywiki
@@ -11,6 +11,7 @@ type: text/vnd.tiddlywiki
 [[01.02.2017 - Arch My Way 1 - Grundsystem installierenArch My Way 5 - Sicherheit und Backups - Btrfs Read Only SnapshotsArch My Way 6 - Dateisysteme und Systemwartung - 27:16|https://youtu.be/WeppT9SDmOA?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH&t=1636]]
 
 [[Downgrading packages - ArchWiki|https://wiki.archlinux.org/index.php/Downgrading_packages]]
+
 [[Ältere Paketversion installieren (Downgrade) – wiki.archlinux.de|https://wiki.archlinux.de/title/%C3%84ltere_Paketversion_installieren_%28Downgrade%29]]
 
 Alle auf dem System befindlichen Pakete ansehen:
@@ -27,7 +28,7 @@ Downgrade durchführen:
 sudo pacman -U [Pfad Paket]
 ```
 
-Bis auf weiteres auf Upgrades eines Paketes (z. B. `private-internet-access-vpn`) oder einer Paketgruppe (z. B. `xorg`) verzichten. Paket in `/etc/pacman/conf` eintragen. Geht auch für [[AUR]] Pakete:
+Bis auf weiteres auf Upgrades eines Paketes (z. B. `private-internet-access-vpn`) oder einer Paketgruppe (z. B. `xorg`) verzichten. Paket in `/etc/pacman/conf` eintragen. Geht auch für ArchUserRepository Pakete:
 
 ```
 sudo nano /etc/pacman/conf

@@ -1,0 +1,21 @@
+created: 20200924084257094
+modified: 20200924115556554
+title: BackupXFCE
+type: text/vnd.tiddlywiki
+
+! Backup Einstellungen
+
+* Fensterverwaltung_Tastatur
+* Tastatur_Tastaturkürzel-für-Anwendungen
+* E-Mail-Überwachung - Ausführen bei Klick: `exo-open https://mail.google.com/mail/u/0/#inbox#container-freizeit`
+* Bevorzugte Andwendungen - E-Mail-Program - Befehl: `exo-open https://mail.google.com/a/dominikschmid.com#container-arbeit "%s"`
+* Uhr - Zeiteinstellungen - Benutzerdefiniertes Format: `%a %d %b %Y | %X %Z`
+
+* Browser:
+** Liste Addons
+** Anmelde Namen für Profil
+** andere Einstellungen
+
+[[Easy sync BTRFS snapshots with btrfs-sync|https://ownyourbits.com/2018/03/09/easy-sync-of-btrfs-snapshots-with-btrfs-sync/]]
+
+[[Marc's Blog: btrfs - Btrfs Tips: Doing Fast Incremental Backups With Btrfs Send and Receive|http://marc.merlins.org/perso/btrfs/post_2014-03-22_Btrfs-Tips_-Doing-Fast-Incremental-Backups-With-Btrfs-Send-and-Receive.html]]

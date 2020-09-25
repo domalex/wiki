@@ -1,0 +1,13 @@
+created: 20200923104259116
+modified: 20200923104626713
+tags: vim
+title: .vimrc
+type: text/vnd.tiddlywiki
+
+! .vimrc erstellen
+
+[[Creating a .vimrc file from scratch. - YouTube|https://www.youtube.com/watch?v=47nQgun4n-w]]
+
+```
+ cp /usr/share/vim/vim82/vimrc_example.vim ~/.vimrc
+```

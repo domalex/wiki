@@ -1,0 +1,18 @@
+created: 20200923101906602
+modified: 20200923104711961
+tags: vim tw5
+title: vim-tiddlywiki
+type: text/vnd.tiddlywiki
+
+[[sukima/vim-tiddlywiki: TiddlyWiki syntax/file plugin - Forked and modified|https://github.com/sukima/vim-tiddlywiki]]
+
+! Installation
+
+VimPluginManager aktivieren.
+
+Plugin in Start-Ordner klonen:
+
+```
+cd ~/.vim/pack/plugins/start/
+git clone --depth=1 git@github.com:sukima/vim-tiddlywiki.git
+```

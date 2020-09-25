@@ -1,0 +1,49 @@
+created: 20200924072629944
+modified: 20200924075109374
+tags: archlinux
+title: BackupBoot
+type: text/vnd.tiddlywiki
+
+[[rsync Ubuntu|https://wiki.ubuntuusers.de/rsync/]]
+
+[[rsync Arch Linux|https://wiki.archlinux.org/index.php/Rsync]]
+
+! Backup auf USB-Festplatte
+
+!! rsync Optionen
+
+`--delete` für das Löschen und `-b` für die Sicherung gelöschter und veränderter Dateien. Diese Dateien finden sich später in dem mit `--backup-dir` angegebenen Verzeichnis.
+
+`-a` fasst folgende Optionen zusammen:
+
+<<<
+`-r` kopiert Unterverzeichnisse
+
+`-l` kopiert symbolische Links
+
+`-p` behält Rechte der Quelldatei bei
+
+`-t` behält Zeiten der Quelldatei bei
+
+`-g` behält Gruppenrechte der Quelldatei bei
+
+`-o` behält Besitzrechte der Quelldatei bei (nur root)
+
+`-D` behält Gerätedateien der Quelldatei bei (nur root) 
+<<<
+
+`-v` verbose: zeigt während des Synchronisierens alle ausgeführten Schritte an
+
+```
+sudo rsync --delete -avb /boot /run/media/niggi/BACKUP/@NUC_archbox/boot_backup --backup-dir=/run/media/niggi/BACKUP/@NUC_archbox/boot_backup/boot_old-files
+```
+
+! Backup über SSH
+
+Überprüfen: zusätzliche Optionen bei der Sicherung über SSH:
+
+`--numeric-ids` und `-z` scheinen nur bei Speicherung übers Netzwerk sinnvoll
+
+```
+sudo rsync --numeric-ids -avz /boot /run/media/niggi/BACKUP/@NUC_archbox/
+```

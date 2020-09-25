@@ -1,0 +1,19 @@
+created: 20200924070015591
+modified: 20200924091340140
+tags: archlinux
+title: ArchLinuxBackup
+type: text/vnd.tiddlywiki
+
+! Manueller Backup
+
+BackupBtrfs
+
+BackupBoot
+
+BackupXFCE
+
+BackupScript
+
+! Backup Tools
+
+[[How To Back Up Your Linux Installation with Gnome disks|https://www.addictivetips.com/ubuntu-linux-tips/back-up-your-linux-installation/]]

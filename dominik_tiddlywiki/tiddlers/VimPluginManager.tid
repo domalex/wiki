@@ -1,0 +1,32 @@
+created: 20200522094606157
+modified: 20200923105046754
+tags: vim
+title: VimPluginManager
+type: text/vnd.tiddlywiki
+
+!Plugin Manger aktivieren
+
+Installation: [[How to install ANY Vim plugin with Vim 8+ Packages|https://youtu.be/XIxsD7l4zww?t=44]]
+
+Konfigurationsdatei [[.vimrc]] erstellen 
+
+oder bestehende öffnen:
+
+```
+vim ~/.vimrc
+```
+
+Mit folgendem Eintrag Paketmanager aktivieren:
+
+```
+" Activation vim plugin manager
+packloadall
+```
+
+Plugin-Sammelverzeichnis erstellen:
+
+```
+mkdir -p ~/.vim/pack/plugins/start
+```
+
+Darin die gewünschten Plugins clonen (z.B. [[vim-tiddlywiki]])

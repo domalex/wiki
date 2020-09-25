@@ -1,4 +1,11 @@
 created: 20200522092637797
-modified: 20200522092742943
-tags: 
+modified: 20200923104654158
+tags: vim
 title: Shortcuts Vim
+type: text/vnd.tiddlywiki
+
+`:vsp` vertical split
+
+`ctrl+wl` go to left split
+
+`ctrl+wr` go to right split

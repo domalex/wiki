@@ -1,11 +1,12 @@
 created: 20200522084847669
-modified: 20200522084910712
+modified: 20200924081611434
 tags: archlinux
 title: ArchLinux Software
+type: text/vnd.tiddlywiki
 
 [[List of applications - ArchWiki|https://wiki.archlinux.org/index.php/List_of_applications]]
 
-[[AUR]]
+ArchUserRepository
 
 ! Auto-Mounting
 

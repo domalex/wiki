@@ -1,26 +1,16 @@
 created: 20200522085550334
-modified: 20200907155918603
+modified: 20200924091758486
 tags: btrfs
-title: Btrfs Backup inkrementell
+title: BackupBtrfs
 type: text/vnd.tiddlywiki
 
 [[30.01.2017 - Arch My Way 1 - Grundsystem installierenArch My Way 5 - Sicherheit und Backups - Btrfs Read Only Snapshots - 11:58|https://youtu.be/IZCKlGGSyGM?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH&t=718]]
 
+[[Btrfs Incremental Backup|https://btrfs.wiki.kernel.org/index.php/Incremental_Backup]]
+
 Auf beiden Datenträgern (Ursprung -> Backup) wird Btrfs benötigt um inkrementelle Backups auszuführen.
 
 Falls innerhalb eines Snapshots ein weiterer (verschachtelter) Snapshot liegt und vom ersten ein Snapshot erstellt wird, wird der zweite nicht mit berücksichtigt.
-
-! Backup Suffix
-
-!! Variante wiederkehrendes Suffix
-
-_backup
-
-_backup_new
-
-!!Variante Zeitstempel
-
-_backup_[zeitstempel] z.B. _backup_`$(date +%F_%R)` -> _backup_2020-08-14_19:53
 
 ! USB-Device formatieren
 
@@ -48,7 +38,7 @@ sudo chown -R niggi:users /run/media/niggi/BACKUP/
 
 ! Backup-Verzeichnis erstellen
 
-Wieder Root werden:
+Root werden:
 
 ```
 sudo su
@@ -63,9 +53,19 @@ btrfs sub create @NUC_archbox
 ls
 ```
 
-! Erstmaliger	Übertrag
+! Backup Suffix
 
-!! 1. Snapshot erstellen
+!! Variante wiederkehrendes Suffix
+
+_bak
+
+_bak_new
+
+!!Variante Zeitstempel
+
+_backup_[zeitstempel] z.B. _backup_`$(date +%F_%R)` -> _backup_2020-08-14_19:53
+
+! Erstmaliger	Übertrag
 
 Root werden:
 
@@ -95,7 +95,11 @@ ls -la /run/media/niggi/BACKUP/@NUC_archbox/@home_backup/niggi/
 
 ! Inkrementeller Übertrag
 
-!! 2. Snapshot erstellen
+Root werden:
+
+```
+sudo su
+```
 
 ```
 btrfs sub snap -r /home /btrfs/@home_backup_new
@@ -134,6 +138,6 @@ btrfs balance start -dusage=5 /btrfs
 btrfs balance start -dusage=5 /run/media/niggi/BACKUP
 ```
 
-[[Btrfs Script Backup]]
+BackupScript
 
 Information integrieren betreffend Backup aus [[Btrfs]]

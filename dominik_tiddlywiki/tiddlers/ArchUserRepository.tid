@@ -1,7 +1,8 @@
 created: 20200522085033177
-modified: 20200522085047313
+modified: 20200924082127070
 tags: archlinux
-title: AUR
+title: ArchUserRepository
+type: text/vnd.tiddlywiki
 
 Arch User Repository
 
@@ -13,7 +14,7 @@ Arch User Repository
 
 [[AUR - Home|https://aur.archlinux.org/]]
 
-[[Arch User Repository|https://wiki.archlinux.org/index.php/Arch_User_Repository]]
+[[Arch User Repository Wiki|https://wiki.archlinux.org/index.php/Arch_User_Repository]]
 
 Sammelordner für AUR-Pakete erstellen:
 

@@ -1,20 +1,18 @@
 created: 20200522085505419
-modified: 20200903155343872
+modified: 20200924141239992
 tags: btrfs
 title: Btrfs
 type: text/vnd.tiddlywiki
 
-[Why you should consider using btrfs ... like Google does. - YouTube](https://www.youtube.com/watch?time_continue=1732&v=6DplcPrQjvA)
+[[Finding files with BTRFS Uncorrectable Errors|https://superuser.com/questions/858237/finding-files-with-btrfs-uncorrectable-errors]]
 
-[Finding files with BTRFS Uncorrectable Errors](https://superuser.com/questions/858237/finding-files-with-btrfs-uncorrectable-errors)
+[[Fixing btrfs - Floating little leaves of code|https://silverhammermba.github.io/blog/2017/12/17/btrfs]]
 
-[Fixing btrfs | Floating little leaves of code](https://silverhammermba.github.io/blog/2017/12/17/btrfs)
+[[BTRFS Dateisystem Befehle Beginner - Überblick|https://www.libe.net/BTRFS-Befehle]]
 
-[BTRFS Dateisystem Befehle Beginner - Überblick](https://www.libe.net/BTRFS-Befehle)
+[[Understanding and Working With BtrFS Filesystem in Linux - ComputingForGeeks|https://computingforgeeks.com/working-with-btrfs-filesystem-in-linux/]]
 
-[Understanding and Working With BtrFS Filesystem in Linux | ComputingForGeeks](https://computingforgeeks.com/working-with-btrfs-filesystem-in-linux/)
-
-[Experimenting with btrfs in production](https://drwho.virtadpt.net/archive/2019-10-19/experimenting-with-btrfs-in-production)
+[[Experimenting with btrfs in production|https://drwho.virtadpt.net/archive/2019-10-19/experimenting-with-btrfs-in-production]]
 
 sudo btrfs scrub status /
 
@@ -116,183 +114,6 @@ cp --reflink /mnt/btrfs_pool/subvol_1/src /mnt/btrfs_pool/subvol_2/dest
 [Marc's Blog: btrfs - Btrfs-diff Between Snapshots](http://marc.merlins.org/perso/btrfs/post_2014-05-19_Btrfs-diff-Between-Snapshots.html)
 
 `btrfs-diff` shows most files changed, use this to sync changes with `cp --reflink` instead of reboot
-
-! Backup auf externe Festplatte
-
-!! Einstellungen
-
-!!! XFCE
-
-- Fensterverwaltung_Tastatur
-- Tastatur_Tastaturkürzel-für-Anwendungen
-- E-Mail-Überwachung - Ausführen bei Klick:`exo-open https://mail.google.com/mail/u/0/#inbox#container-freizeit`
-- Bevorzugte Andwendungen - E-Mail-Program - Befehl: `exo-open https://mail.google.com/a/dominikschmid.com#container-arbeit "%s"`
-Uhr - Zeiteinstellungen - Benutzerdefiniertes Format: `%a %d %b %Y | %X %Z`
-
-- Browser:
- - Liste Addons
- - Anmelde Namen für Profil
- - andere Einstellungen
-
-[How To Back Up Your Linux Installation with Gnome disks](https://www.addictivetips.com/ubuntu-linux-tips/back-up-your-linux-installation/)
-[Incremental Backup](https://btrfs.wiki.kernel.org/index.php/Incremental_Backup)
-[Arch My Way 5 | Sicherheit und Backups - Btrfs Read Only Snapshots](https://www.youtube.com/watch?v=IZCKlGGSyGM&t=870s)
-[Easy sync BTRFS snapshots with btrfs-sync](https://ownyourbits.com/2018/03/09/easy-sync-of-btrfs-snapshots-with-btrfs-sync/)
-[Marc's Blog: btrfs - Btrfs Tips: Doing Fast Incremental Backups With Btrfs Send and Receive](http://marc.merlins.org/perso/btrfs/post_2014-03-22_Btrfs-Tips_-Doing-Fast-Incremental-Backups-With-Btrfs-Send-and-Receive.html)
-
-!! /boot
-
-[[rsync Ubuntu|https://wiki.ubuntuusers.de/rsync/]]
-
-[[rsync Arch Linux|https://wiki.archlinux.org/index.php/Rsync]]
-
-!!! verwenden für mein Backup
-
-`--delete` für das Löschen und `-b` für die Sicherung gelöschter und veränderter Dateien. Diese Dateien finden sich später in dem mit `--backup-dir` angegebenen Verzeichnis.
-
-`sudo rsync --delete -avb /boot /run/media/niggi/BACKUP/@NUC_archbox/boot_backup --backup-dir=/run/media/niggi/BACKUP/@NUC_archbox/boot_backup/boot_old-files`
-
-!!! (alternativ z.B. bei Sicherung via SSH)
-
-`--numeric-ids` und `-z` scheinen nur bei Speicherung übers Netzwerk sinnvoll
-
-```
-sudo rsync --numeric-ids -avz /boot /run/media/niggi/BACKUP/@NUC_archbox/
-```
-
-!! Vorgehen für jedes btrfs subvolume
-
-1. aktuellen Snapshot erstellen
-2. **initiales** verschieben des gesamten Snapshots auf die USB-Festplatte
-3. incrementelles Backup mit Schalter `-p`
-4. löschen von altem Snapshot auf ArchBox
-5. löschen von altem Snapshot auf BACKUP
-6. balance btrfs ArchBox
-7. balance btrfs BACKUP
-
-```
-sudo btrfs send -p /btrfs/@snapshots/@_backup_OLD /btrfs/@snapshots/@_backup_NEW | sudo btrfs receive /run/media/niggi/BACKUP/@NUC_archbox/
-```
-
-!! @
-
-```
-sudo btrfs sub snap -r /btrfs/@ /btrfs/@snapshots/@_backup_$(date +%F_%R)
-```
-
-(erstmaliger Übertrag)
-
-```
-sudo btrfs send /btrfs/@snapshots/@_backup_2019-10-09_15\:22/ | sudo btrfs receive /run/media/niggi/BACKUP/@NUC_archbox/
-```
-
-inkrementelles Backup
-
-```
-sudo btrfs send -p /btrfs/@snapshots/@_backup_2019-10-09_15\:22 /btrfs/@snapshots/@_backup_2019-10-21_14\:02 | sudo btrfs receive /run/media/niggi/BACKUP/@NUC_archbox/
-```
-
-alte Subvolumes löschen
-
-```
-sudo btrfs sub del /btrfs/@snapshots/@_backup_2019-10-09_15\:22/
-```
-
-```
-sudo btrfs sub del /run/media/niggi/BACKUP/@NUC_archbox/@_backup_2019-10-09_15\:22/
-```
-
-!! /home
-
-```
-sudo btrfs sub snap -r /home/ /home/.home_snapshots/home_backup_$(date +%F_%R)
-```
-
-(erstmaliger Übertrag)
-
-```
-sudo btrfs send /home/.home_snapshots/home_backup_2019-10-09_10\:06/ | sudo btrfs receive /run/media/niggi/BACKUP/@NUC_archbox/
-```
-
-inkrementelles Backup
-
-```
-sudo btrfs send -p /home/.home_snapshots/home_backup_2019-10-09_10\:06/ /home/.home_snapshots/home_backup_2019-10-21_14\:44/ | sudo btrfs receive /run/media/niggi/BACKUP/@NUC_archbox/
-```
-
-alte Subvolumes löschen
-
-```
-sudo btrfs sub delete /home/.home_snapshots/home_backup_2019-10-09_10\:06/
-```
-
-```
-sudo btrfs sub del /run/media/niggi/BACKUP/@NUC_archbox/home_backup_2019-10-09_10\:06/
-```
-
-!! @images
-
-```
-sudo btrfs sub snap -r /btrfs/@images /btrfs/@images_snapshots/image_backup_$(date +%F_%R)
-```
-
-(erstmaliger Übertrag)
-
-```
-sudo btrfs send /btrfs/@images_snapshots/image_backup_2019-10-09_10\:37/ | sudo btrfs receive /run/media/niggi/BACKUP/@NUC_archbox/
-```
-
-inkrementelles Backup
-
-```
-sudo btrfs send -p /btrfs/@images_snapshots/image_backup_2019-10-09_10\:37/ /btrfs/@images_snapshots/image_backup_2019-10-21_14\:59/ | sudo btrfs receive /run/media/niggi/BACKUP/@NUC_archbox/
-```
-
-alte Subvolumes löschen
-
-```
-sudo btrfs sub del /btrfs/@images_snapshots/image_backup_2019-10-09_10\:37/
-```
-
-```
-sudo btrfs sub del /run/media/niggi/BACKUP/@NUC_archbox/image_backup_2019-10-09_10\:37/
-```
-
-!! balance
-
-```
-sudo btrfs balance start -dusage=5 -musage=5 /btrfs
-```
-
-```
-sudo btrfs balance start -dusage=5 -musage=5 /run/media/niggi/BACKUP
-```
-
-sudo mkfs.btrfs /dev/sdc1
-sudo mount /dev/sdc1 /mnt
-cd /mnt
-sudo btrfs subvolume create @backup
-ls
-cd
-sudo umount /mnt
-mkdir /.backup
-sudo btrfs subvol list /mnt -> ID ...
-sudo blkid /dev/sdc1 >> /etc/fstab
-sudo nano /etc/fstab -> UUID von /dev/sdc1 /.backup btrfs rw,compress=lzo,ssd,space_cache=v2,subvolid=(###),subvol=/@backup,subvol=@backup 0 0
-sudo mount /.backup
-df -Th -> Kontrolle
-sudo btrfs send /.snapshots/ROOT01 | btrfs receieve /.backup
-ls /.backup - Kontrolle
-sudo btrfs sub snapshot -r / /.snapshots/ROOT02
-sudo btrfs send -p /.snapshots/ROOT01 /.snapshots/ROOT02 | btrfs receive /.backup -> incremental backup
-ls /.backup - Kontrolle -> alte Backups u.U. löschen wegen Speicherplatz
-sudo btrfs filesystem usage /
-
-# Raid-Level ändern (Raid0 auf Raid1)
-sudo mount /dev/sda2 /mnt
-sudo btrfs filesystem df /mnt
-sudo btrfs filesystem balance start -dconvert=raid1 /mnt
-sudo btrfs filesystem df /mnt - Kontrolle (falls Raid0 und Raid1 angezeigt werden reboot und Prozedur wiederholen)
 
 ! Reparatur
 

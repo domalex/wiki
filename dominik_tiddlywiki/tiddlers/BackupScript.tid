@@ -1,0 +1,142 @@
+created: 20200924083243089
+modified: 20200924084250917
+title: BackupScript
+type: text/vnd.tiddlywiki
+
+! Vorstufe für zukünftiges Script
+
+! Backup auf externe Festplatte
+
+!! Vorgehen für jedes btrfs subvolume
+
+1. aktuellen Snapshot erstellen
+2. **initiales** verschieben des gesamten Snapshots auf die USB-Festplatte
+3. incrementelles Backup mit Schalter `-p`
+4. löschen von altem Snapshot auf ArchBox
+5. löschen von altem Snapshot auf BACKUP
+6. balance btrfs ArchBox
+7. balance btrfs BACKUP
+
+```
+sudo btrfs send -p /btrfs/@snapshots/@_backup_OLD /btrfs/@snapshots/@_backup_NEW | sudo btrfs receive /run/media/niggi/BACKUP/@NUC_archbox/
+```
+
+!! @
+
+```
+sudo btrfs sub snap -r /btrfs/@ /btrfs/@snapshots/@_backup_$(date +%F_%R)
+```
+
+(erstmaliger Übertrag)
+
+```
+sudo btrfs send /btrfs/@snapshots/@_backup_2019-10-09_15\:22/ | sudo btrfs receive /run/media/niggi/BACKUP/@NUC_archbox/
+```
+
+inkrementelles Backup
+
+```
+sudo btrfs send -p /btrfs/@snapshots/@_backup_2019-10-09_15\:22 /btrfs/@snapshots/@_backup_2019-10-21_14\:02 | sudo btrfs receive /run/media/niggi/BACKUP/@NUC_archbox/
+```
+
+alte Subvolumes löschen
+
+```
+sudo btrfs sub del /btrfs/@snapshots/@_backup_2019-10-09_15\:22/
+```
+
+```
+sudo btrfs sub del /run/media/niggi/BACKUP/@NUC_archbox/@_backup_2019-10-09_15\:22/
+```
+
+!! /home
+
+```
+sudo btrfs sub snap -r /home/ /home/.home_snapshots/home_backup_$(date +%F_%R)
+```
+
+(erstmaliger Übertrag)
+
+```
+sudo btrfs send /home/.home_snapshots/home_backup_2019-10-09_10\:06/ | sudo btrfs receive /run/media/niggi/BACKUP/@NUC_archbox/
+```
+
+inkrementelles Backup
+
+```
+sudo btrfs send -p /home/.home_snapshots/home_backup_2019-10-09_10\:06/ /home/.home_snapshots/home_backup_2019-10-21_14\:44/ | sudo btrfs receive /run/media/niggi/BACKUP/@NUC_archbox/
+```
+
+alte Subvolumes löschen
+
+```
+sudo btrfs sub delete /home/.home_snapshots/home_backup_2019-10-09_10\:06/
+```
+
+```
+sudo btrfs sub del /run/media/niggi/BACKUP/@NUC_archbox/home_backup_2019-10-09_10\:06/
+```
+
+!! @images
+
+```
+sudo btrfs sub snap -r /btrfs/@images /btrfs/@images_snapshots/image_backup_$(date +%F_%R)
+```
+
+(erstmaliger Übertrag)
+
+```
+sudo btrfs send /btrfs/@images_snapshots/image_backup_2019-10-09_10\:37/ | sudo btrfs receive /run/media/niggi/BACKUP/@NUC_archbox/
+```
+
+inkrementelles Backup
+
+```
+sudo btrfs send -p /btrfs/@images_snapshots/image_backup_2019-10-09_10\:37/ /btrfs/@images_snapshots/image_backup_2019-10-21_14\:59/ | sudo btrfs receive /run/media/niggi/BACKUP/@NUC_archbox/
+```
+
+alte Subvolumes löschen
+
+```
+sudo btrfs sub del /btrfs/@images_snapshots/image_backup_2019-10-09_10\:37/
+```
+
+```
+sudo btrfs sub del /run/media/niggi/BACKUP/@NUC_archbox/image_backup_2019-10-09_10\:37/
+```
+
+!! balance
+
+```
+sudo btrfs balance start -dusage=5 -musage=5 /btrfs
+```
+
+```
+sudo btrfs balance start -dusage=5 -musage=5 /run/media/niggi/BACKUP
+```
+
+sudo mkfs.btrfs /dev/sdc1
+sudo mount /dev/sdc1 /mnt
+cd /mnt
+sudo btrfs subvolume create @backup
+ls
+cd
+sudo umount /mnt
+mkdir /.backup
+sudo btrfs subvol list /mnt -> ID ...
+sudo blkid /dev/sdc1 >> /etc/fstab
+sudo nano /etc/fstab -> UUID von /dev/sdc1 /.backup btrfs rw,compress=lzo,ssd,space_cache=v2,subvolid=(###),subvol=/@backup,subvol=@backup 0 0
+sudo mount /.backup
+df -Th -> Kontrolle
+sudo btrfs send /.snapshots/ROOT01 | btrfs receieve /.backup
+ls /.backup - Kontrolle
+sudo btrfs sub snapshot -r / /.snapshots/ROOT02
+sudo btrfs send -p /.snapshots/ROOT01 /.snapshots/ROOT02 | btrfs receive /.backup -> incremental backup
+ls /.backup - Kontrolle -> alte Backups u.U. löschen wegen Speicherplatz
+sudo btrfs filesystem usage /
+
+# Raid-Level ändern (Raid0 auf Raid1)
+sudo mount /dev/sda2 /mnt
+sudo btrfs filesystem df /mnt
+sudo btrfs filesystem balance start -dconvert=raid1 /mnt
+sudo btrfs filesystem df /mnt - Kontrolle (falls Raid0 und Raid1 angezeigt werden reboot und Prozedur wiederholen)

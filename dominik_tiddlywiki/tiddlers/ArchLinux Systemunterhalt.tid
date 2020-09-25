@@ -1,7 +1,8 @@
 created: 20200522084930632
-modified: 20200522085015949
+modified: 20200924081726901
 tags: archlinux
 title: ArchLinux Systemunterhalt
+type: text/vnd.tiddlywiki
 
 [[01.02.2017 - Arch My Way 1 - Grundsystem installierenArch My Way 5 - Sicherheit und Backups - Btrfs Read Only SnapshotsArch My Way 6 - Dateisysteme und Systemwartung - 24:06|https://youtu.be/WeppT9SDmOA?list=PLTeOo_Khba2O1IOlAqV7S2t6H1BXjLrkH&t=1445]]
 
@@ -13,7 +14,7 @@ title: ArchLinux Systemunterhalt
 
 [[ArchLinux Downgrade]]
 
-[[Arch User Repository (AUR)|AUR]]
+ArchUserRepository
 
 [[Arch Build System]]
 
